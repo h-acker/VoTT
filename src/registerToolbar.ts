@@ -41,7 +41,7 @@ export default function registerToolbar() {
         icon: "fa-mouse-pointer",
         group: ToolbarItemGroup.Canvas,
         type: ToolbarItemType.State,
-        accelerators: ["V", "v"],
+        accelerators: ["V", "v"]
     });
 
     ToolbarItemFactory.register({
@@ -50,7 +50,7 @@ export default function registerToolbar() {
         icon: "fa-vector-square",
         group: ToolbarItemGroup.Canvas,
         type: ToolbarItemType.State,
-        accelerators: ["R", "r"],
+        accelerators: ["R", "r"]
     });
 
     ToolbarItemFactory.register({
@@ -59,7 +59,7 @@ export default function registerToolbar() {
         icon: "fa-draw-polygon",
         group: ToolbarItemGroup.Canvas,
         type: ToolbarItemType.State,
-        accelerators: ["P", "p"],
+        accelerators: ["P", "p"]
     });
 
     ToolbarItemFactory.register({
@@ -68,7 +68,7 @@ export default function registerToolbar() {
         icon: "far fa-clone",
         group: ToolbarItemGroup.Canvas,
         type: ToolbarItemType.State,
-        accelerators: ["CmdOrCtrl+W", "CmdOrCtrl+w"],
+        accelerators: ["CmdOrCtrl+W", "CmdOrCtrl+w"]
     });
 
     ToolbarItemFactory.register({
@@ -77,7 +77,7 @@ export default function registerToolbar() {
         icon: "fa-copy",
         group: ToolbarItemGroup.Regions,
         type: ToolbarItemType.Action,
-        accelerators: ["CmdOrCtrl+C", "CmdOrCtrl+c"],
+        accelerators: ["CmdOrCtrl+C", "CmdOrCtrl+c"]
     });
 
     ToolbarItemFactory.register({
@@ -86,7 +86,7 @@ export default function registerToolbar() {
         icon: "fa-cut",
         group: ToolbarItemGroup.Regions,
         type: ToolbarItemType.Action,
-        accelerators: ["CmdOrCtrl+X", "CmdOrCtrl+x"],
+        accelerators: ["CmdOrCtrl+X", "CmdOrCtrl+x"]
     });
 
     ToolbarItemFactory.register({
@@ -95,7 +95,7 @@ export default function registerToolbar() {
         icon: "fa-paste",
         group: ToolbarItemGroup.Regions,
         type: ToolbarItemType.Action,
-        accelerators: ["CmdOrCtrl+V", "CmdOrCtrl+v"],
+        accelerators: ["CmdOrCtrl+V", "CmdOrCtrl+v"]
     });
 
     ToolbarItemFactory.register({
@@ -104,7 +104,7 @@ export default function registerToolbar() {
         icon: "fa-ban",
         group: ToolbarItemGroup.Regions,
         type: ToolbarItemType.Action,
-        accelerators: ["CmdOrCtrl+Delete", "CmdOrCtrl+Backspace"],
+        accelerators: ["CmdOrCtrl+Delete", "CmdOrCtrl+Backspace"]
     });
 
     ToolbarItemFactory.register({
@@ -113,7 +113,7 @@ export default function registerToolbar() {
         icon: "fas fa-graduation-cap",
         group: ToolbarItemGroup.Canvas,
         type: ToolbarItemType.Action,
-        accelerators: ["CmdOrCtrl+D", "CmdOrCtrl+d"],
+        accelerators: ["CmdOrCtrl+D", "CmdOrCtrl+d"]
     });
 
     ToolbarItemFactory.register({
@@ -122,7 +122,7 @@ export default function registerToolbar() {
         icon: "fas fa-arrow-circle-up",
         group: ToolbarItemGroup.Navigation,
         type: ToolbarItemType.Action,
-        accelerators: ["ArrowUp", "W", "w"],
+        accelerators: ["ArrowUp", "W", "w"]
     });
 
     ToolbarItemFactory.register({
@@ -131,33 +131,39 @@ export default function registerToolbar() {
         icon: "fas fa-arrow-circle-down",
         group: ToolbarItemGroup.Navigation,
         type: ToolbarItemType.Action,
-        accelerators: ["ArrowDown", "S", "s"],
+        accelerators: ["ArrowDown", "S", "s"]
     });
 
-    ToolbarItemFactory.register({
-        name: ToolbarItemName.SaveProject,
-        tooltip: strings.editorPage.toolbar.saveProject,
-        icon: "fa-save",
-        group: ToolbarItemGroup.Project,
-        type: ToolbarItemType.Action,
-        accelerators: ["CmdOrCtrl+S", "CmdOrCtrl+s"],
-    }, SaveProject);
+    ToolbarItemFactory.register(
+        {
+            name: ToolbarItemName.SaveProject,
+            tooltip: strings.editorPage.toolbar.saveProject,
+            icon: "fa-save",
+            group: ToolbarItemGroup.Project,
+            type: ToolbarItemType.Action,
+            accelerators: ["CmdOrCtrl+S", "CmdOrCtrl+s"]
+        },
+        SaveProject
+    );
 
-    ToolbarItemFactory.register({
-        name: ToolbarItemName.ExportProject,
-        tooltip: strings.editorPage.toolbar.exportProject,
-        icon: "fa-external-link-square-alt",
-        group: ToolbarItemGroup.Project,
-        type: ToolbarItemType.Action,
-        accelerators: ["CmdOrCtrl+E", "CmdOrCtrl+e"],
-    }, ExportProject);
+    ToolbarItemFactory.register(
+        {
+            name: ToolbarItemName.ExportProject,
+            tooltip: strings.editorPage.toolbar.exportProject,
+            icon: "fa-external-link-square-alt",
+            group: ToolbarItemGroup.Project,
+            type: ToolbarItemType.Action,
+            accelerators: ["CmdOrCtrl+E", "CmdOrCtrl+e"]
+        },
+        ExportProject
+    );
 
     ToolbarItemFactory.register({
         name: ToolbarItemName.Magnifier,
         tooltip: strings.editorPage.toolbar.magnifier,
         icon: "fas fa-search-plus",
         group: ToolbarItemGroup.Helper,
-        type: ToolbarItemType.Action,
+        type: ToolbarItemType.Action
     });
 
     ToolbarItemFactory.register({
@@ -165,6 +171,6 @@ export default function registerToolbar() {
         tooltip: strings.editorPage.toolbar.deletePicture,
         icon: "fas fa-trash-alt",
         group: ToolbarItemGroup.Action,
-        type: ToolbarItemType.Action,
+        type: ToolbarItemType.Action
     });
 }
