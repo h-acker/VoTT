@@ -235,6 +235,7 @@ export const english: IAppStrings = {
             exportProject: "Export Project",
             activeLearning: "Active Learning",
             magnifier: "Magnifier",
+            deletePicture: "Delete Picture"
         },
         videoPlayer: {
             previousTaggedFrame: {
@@ -283,6 +284,7 @@ export const english: IAppStrings = {
                     continuing to next asset.",
             },
         },
+        deletePictureError: "There was an error while deleting the image. You might not have the authorization to delete it.",
     },
     export: {
         title: "Export",

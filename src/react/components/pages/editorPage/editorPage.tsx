@@ -33,6 +33,8 @@ import { ActiveLearningService } from "../../../../services/activeLearningServic
 import { toast } from "react-toastify";
 import ITrackingActions, * as trackingActions from "../../../../redux/actions/trackingActions";
 import { MagnifierModalMessage } from "./MagnifierModalMessage";
+import apiService from "../../../../services/apiService";
+import { sizeToSquarishShape } from "@tensorflow/tfjs-core/dist/util";
 
 /**
  * Properties for Editor Page
@@ -173,10 +175,11 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         const { project } = this.props;
         const { assets, selectedAsset } = this.state;
         const rootAssets = assets.filter((asset) => !asset.parent);
-
         if (!project) {
             return (<div>Loading...</div>);
         }
+        console.log("assets: ");
+        console.log(this.state.assets);
 
         return (
             <div className="editor-page">
@@ -212,6 +215,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                             onBeforeAssetSelected={this.onBeforeAssetSelected}
                             onAssetSelected={this.selectAsset}
                             thumbnailSize={this.state.thumbnailSize}
+                            onDeletePictureClick={this.handleDeletePictureClick}
                         />
                     </div>
                     <div className="editor-page-content" onClick={this.onPageClick}>
@@ -595,6 +599,8 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             case ToolbarItemName.Magnifier:
                 this.showNativeMagnifierModal();
                 break;
+            case ToolbarItemName.DeletePicture:
+                this.handleDeletePictureClick();
         }
     }
 
@@ -748,5 +754,17 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         });
 
         this.setState({ assets: updatedAssets });
+    }
+
+    private async handleDeletePictureClick() {
+        try {
+            await apiService.flagDeleteImage(3/* this.state.selectedAsset.asset.id */);
+            await apiService.deleteImage(3/* this.state.selectedAsset.asset.id */);
+        } catch(error) {
+            toast.error(strings.editorPage.deletePictureError);
+        } finally {
+            this.forceUpdate();
+        }
+        
     }
 }

@@ -29,10 +29,24 @@ interface IUser {
     updated_at: string;
   }
 
+  interface IPicture {
+        path: string;
+        size: {
+          width: number;
+          height: number;
+        },
+        predicted: boolean;
+        type: number;
+        state: number;
+        is_deleted: boolean;
+        tagger_id: number;
+        id: number;
+  }
+
 export class ApiService implements IApiService {
     private client: AxiosInstance;
-
     constructor() {
+
         this.client = axios.create({
             baseURL: Env.getApiUrl(),
             timeout: 10 * 1000,
@@ -40,16 +54,17 @@ export class ApiService implements IApiService {
                 "Content-Type": "application/x-www-form-urlencoded",
             },
         });
-
         this.client.interceptors.request.use(
             (config) => {
-                const token = JSON.parse(localStorage.getItem("auth")).accessToken;
-                if (token) {
-                    config.headers.Authorization = `Bearer ${token}`;
+                if(localStorage.getItem("auth")) {
+                    const token = JSON.parse(localStorage.getItem("auth")).accessToken;
+                    if (token) {
+                        config.headers.Authorization = `Bearer ${token}`;
+                    }
                 }
                 return config;
             },
-            (error) => Promise.reject(error),
+            (error) => {Promise.reject(error)},
         );
 
     }
@@ -67,6 +82,16 @@ export class ApiService implements IApiService {
     public getCurrentUser = (): AxiosPromise<IUser> => {
         const url = "api/v1/users/me";
         return this.client.get(url);
+    }
+
+    public flagDeleteImage = (imageId: number): AxiosPromise<number> => {
+        const url = "api/v1/images/flag_delete/" + imageId;
+        return this.client.put(url);
+    }
+
+    public deleteImage = (imageId: number): AxiosPromise<IPicture> => {
+        const url = "api/v1/images/" + imageId;
+        return this.client.delete(url);
     }
 }
 

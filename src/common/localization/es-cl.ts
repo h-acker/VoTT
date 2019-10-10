@@ -237,6 +237,7 @@ export const spanish: IAppStrings = {
             exportProject: "Exprtar Proyecto",
             activeLearning: "Aprendizaje Activo",
             magnifier: "Lupa",
+            deletePicture: "Eliminar"
         },
         videoPlayer: {
             previousTaggedFrame: {
@@ -286,6 +287,7 @@ export const spanish: IAppStrings = {
                     Por favor, etiquete todas las regiones antes de continuar con el siguiente activo.",
             },
         },
+        deletePictureError: "Se produjo un error al eliminar la imagen. Es posible que no tenga la autorización para eliminarlo.",
     },
     export: {
         title: "Exportar",

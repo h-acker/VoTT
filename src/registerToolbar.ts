@@ -19,6 +19,7 @@ export enum ToolbarItemName {
     ExportProject = "exportProject",
     ActiveLearning = "activeLearning",
     Magnifier = "magnifier",
+    DeletePicture = "deletePicture"
 }
 
 export enum ToolbarItemGroup {
@@ -27,6 +28,7 @@ export enum ToolbarItemGroup {
     Navigation = "navigation",
     Project = "project",
     Helper = "helper",
+    Action = "action"
 }
 
 /**
@@ -155,6 +157,14 @@ export default function registerToolbar() {
         tooltip: strings.editorPage.toolbar.magnifier,
         icon: "fas fa-search-plus",
         group: ToolbarItemGroup.Helper,
+        type: ToolbarItemType.Action,
+    });
+
+    ToolbarItemFactory.register({
+        name: ToolbarItemName.DeletePicture,
+        tooltip: strings.editorPage.toolbar.deletePicture,
+        icon: "fas fa-trash-alt",
+        group: ToolbarItemGroup.Action,
         type: ToolbarItemType.Action,
     });
 }
