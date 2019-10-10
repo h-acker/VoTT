@@ -238,7 +238,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                             onBeforeAssetSelected={this.onBeforeAssetSelected}
                             onAssetSelected={this.selectAsset}
                             thumbnailSize={this.state.thumbnailSize}
-                            onDeletePictureClick={this.handleDeletePictureClick}
                         />
                     </div>
                     <div className="editor-page-content" onClick={this.onPageClick}>
