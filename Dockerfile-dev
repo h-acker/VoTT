@@ -11,4 +11,6 @@ VOLUME ["/app/src"]
 
 RUN npm ci
 
+ENV CORTEXIA_VERSION ${CORTEXIA_VERSION}
+
 CMD npm run react-start

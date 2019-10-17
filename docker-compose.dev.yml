@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile-dev
     env_file:
      - ./.env
+    environment: 
+     - CORTEXIA_VERSION:${CORTEXIA_VERSION}
     volumes:
       - ./src:/app/src
     ports:

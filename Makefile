@@ -67,7 +67,7 @@ create-release: check-release
 	git push --set-upstream origin release-$(VERSION)
 
 	git tag $(VERSION)
-	git tag -f stag
+	git tag -f qa
 	git push --tags --force
 
 	# git merge $(BRANCH)
@@ -87,7 +87,9 @@ push-prod: login
 	git push --tags --force
 
 	# build and push docker image
-	DOCKER_TAG=prod PUBLIC_URL=vott.${DOMAIN} docker-compose -f docker-compose.deploy.yml build
+	DOCKER_TAG=prod PUBLIC_URL=vott.${DOMAIN} \
+		CORTEXIA_VERSION=$(VERSION) \
+		docker-compose -f docker-compose.deploy.yml build
 	DOCKER_TAG=prod docker-compose -f docker-compose.deploy.yml push
 
 deploy-prod:
@@ -96,6 +98,7 @@ deploy-prod:
 		STACK_NAME=vott \
 		DOMAIN=${DOMAIN} \
 		TRAEFIK_PUBLIC_TAG=${TRAEFIK_PUBLIC_TAG} \
+		CORTEXIA_VERSION=$(VERSION) \
 		docker-compose \
 			-f docker-compose.deploy.yml \
 			-f docker-compose.deploy.networks.yml \
@@ -110,7 +113,9 @@ push-qa: login
 	git push --tags --force
 
 	# build docker image
-	DOCKER_TAG=qa PUBLIC_URL=vott-qa.${DOMAIN} docker-compose -f docker-compose.deploy.yml build
+	DOCKER_TAG=qa PUBLIC_URL=vott-qa.${DOMAIN} \
+		CORTEXIA_VERSION=$(VERSION) \
+		docker-compose -f docker-compose.deploy.yml build
 	DOCKER_TAG=qa docker-compose -f docker-compose.deploy.yml push
 
 deploy-qa:
@@ -119,6 +124,7 @@ deploy-qa:
 		STACK_NAME=vott-qa \
 		DOMAIN=${DOMAIN} \
 		TRAEFIK_PUBLIC_TAG=${TRAEFIK_PUBLIC_TAG} \
+		CORTEXIA_VERSION=$(VERSION) \
 		docker-compose \
 			-f docker-compose.deploy.yml \
 			-f docker-compose.deploy.networks.yml \
@@ -133,7 +139,9 @@ push-dev: login
 	git push --tags --force
 
 	# build docker image
-	DOCKER_TAG=latest PUBLIC_URL=vott-dev.${DOMAIN} docker-compose -f docker-compose.deploy.yml build
+	DOCKER_TAG=latest PUBLIC_URL=vott-dev.${DOMAIN} \
+		CORTEXIA_VERSION=$(VERSION) \
+		docker-compose -f docker-compose.deploy.yml build
 	DOCKER_TAG=latest docker-compose -f docker-compose.deploy.yml push
 
 deploy-dev:
@@ -142,6 +150,7 @@ deploy-dev:
 		STACK_NAME=vott-dev \
 		DOMAIN=${DOMAIN} \
 		TRAEFIK_PUBLIC_TAG=${TRAEFIK_PUBLIC_TAG} \
+		CORTEXIA_VERSION=$(VERSION) \
 		docker-compose \
 			-f docker-compose.deploy.yml \
 			-f docker-compose.deploy.networks.yml \
@@ -163,13 +172,13 @@ ps:
 
 pull: check-env
 	rm -rf build node_modules
-	docker-compose -f docker-compose.dev.yml build --pull
+	CORTEXIA_VERSION=$(VERSION) docker-compose -f docker-compose.dev.yml build --pull
 
 build: check-env
-	docker-compose -f docker-compose.dev.yml build
+	CORTEXIA_VERSION=$(VERSION) docker-compose -f docker-compose.dev.yml build
 
 up: check-env
-	docker-compose -f docker-compose.dev.yml up -d
+	CORTEXIA_VERSION=$(VERSION) docker-compose -f docker-compose.dev.yml up -d
 
 down:
 	docker-compose -f docker-compose.dev.yml down

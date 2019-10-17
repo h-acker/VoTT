@@ -12,4 +12,6 @@ RUN npm ci \
 RUN mv /tmp/build /app
 WORKDIR /app
 
+ENV CORTEXIA_VERSION ${CORTEXIA_VERSION}
+
 CMD serve -s .
