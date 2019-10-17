@@ -2,6 +2,8 @@
 # Default values, can be overridden either on the command line of make
 # or in .env
 
+VERSION:=$(shell python update_release.py -v)
+
 check-env:
 ifeq ($(wildcard .env),)
 	@echo ".env file is missing. Create it first"
@@ -11,11 +13,11 @@ include .env
 export
 endif
 
-version: check-env
-	@echo $(shell node -pe "require('./package.json').version")
-
 init:
 	cp .env.sample .env
+
+init-githook:
+	cp update_release.py .git/hooks/pre-commit
 
 vars: check-env
 	@echo 'Sensible defaults values (for local dev)'
@@ -30,7 +32,54 @@ vars: check-env
 	@echo '  TRAEFIK_PUBLIC_NETWORK=${TRAEFIK_PUBLIC_NETWORK}'
 	@echo '  TRAEFIK_PUBLIC_TAG=${TRAEFIK_PUBLIC_TAG}'
 
+
+# version management
+
+version: check-env
+	@echo $(shell node -pe "require('./package.json').version")-$(VERSION)
+
+version-up:
+	@python update_release.py
+
+check-release: check-env
+	# make sure we are in master
+	@python update_release.py check --branch=master
+
+	git pull
+
+	# update versions and ask for confirmation
+	@python update_release.py
+
+	VERSION=$(shell python update_release.py -v)
+
+	@echo Version used will be $(VERSION)
+
+	@python update_release.py confirm
+
+create-release: check-release
+	# create branch and tag
+	git checkout -b release-$(VERSION)
+	cp versions.py backend/app/app/core/
+	git add .
+	git commit -m "Prepared release $(VERSION)"
+	git push --set-upstream origin release-$(VERSION)
+
+	git tag $(VERSION)
+	git tag -f stag
+	git push --tags --force
+
+	# git merge master
+	git checkout master
+	git merge release-$(VERSION)
+	git push
+
+
+# deployment
+
 push-prod: login
+	@# confirm push to production
+	@python update_release.py confirm --prod
+
 	# update tags
 	git tag -f prod
 	git push --tags --force
