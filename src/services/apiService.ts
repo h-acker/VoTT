@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosPromise } from "axios";
 import qs from "qs";
 import { Env } from "../common/environment";
+import { ISize } from "../models/applicationState";
 
 export interface ILoginRequestPayload {
     username: string;
@@ -31,10 +32,7 @@ interface IUser {
 
 interface IPicture {
     path: string;
-    size: {
-        width: number;
-        height: number;
-    };
+    size: ISize;
     predicted: boolean;
     type: number;
     state: number;

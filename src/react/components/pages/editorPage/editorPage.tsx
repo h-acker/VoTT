@@ -193,8 +193,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         if (!project) {
             return <div>Loading...</div>;
         }
-        console.log("assets: ");
-        console.log(this.state.assets);
 
         return (
             <div className="editor-page">
