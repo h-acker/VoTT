@@ -61,7 +61,6 @@ check-release: check-env
 create-release: check-release
 	# create branch and tag
 	git checkout -b release-$(VERSION)
-	cp versions.py backend/app/app/core/
 	git add .
 	git commit -m "Prepared release $(VERSION)"
 	git push --set-upstream origin release-$(VERSION)
