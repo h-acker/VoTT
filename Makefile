@@ -19,6 +19,7 @@ init:
 
 init-githook:
 	cp update_release.py .git/hooks/pre-commit
+	cd .git/hooks/ && ln -s ../../versions.py
 
 vars: check-env
 	@echo 'Sensible defaults values (for local dev)'
