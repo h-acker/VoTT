@@ -9,7 +9,7 @@ import {
     IApplicationState,
     IAsset,
     IAssetMetadata,
-    IProject,
+    IProject
 } from "../../models/applicationState";
 import { createAction, createPayloadAction, IPayloadAction } from "./actionCreators";
 import { ExportAssetState, IExportResults } from "../../providers/export/exportProvider";
@@ -38,15 +38,17 @@ export default interface IProjectActions {
  * Dispatches Load Project action and resolves with IProject
  * @param project - Project to load
  */
-export function loadProject(project: IProject):
-    (dispatch: Dispatch, getState: () => IApplicationState) => Promise<IProject> {
+export function loadProject(
+    project: IProject
+): (dispatch: Dispatch, getState: () => IApplicationState) => Promise<IProject> {
     return async (dispatch: Dispatch, getState: () => IApplicationState) => {
         const appState = getState();
         const projectService = new ProjectService();
 
         // Lookup security token used to decrypt project settings
-        const projectToken = appState.appSettings.securityTokens
-            .find((securityToken) => securityToken.name === project.securityToken);
+        const projectToken = appState.appSettings.securityTokens.find(
+            securityToken => securityToken.name === project.securityToken
+        );
 
         if (!projectToken) {
             throw new AppError(ErrorCode.SecurityTokenNotFound, "Security Token Not Found");
@@ -62,19 +64,24 @@ export function loadProject(project: IProject):
  * Dispatches Save Project action and resolves with IProject
  * @param project - Project to save
  */
-export function saveProject(project: IProject)
-    : (dispatch: Dispatch, getState: () => IApplicationState) => Promise<IProject> {
+export function saveProject(
+    project: IProject
+): (dispatch: Dispatch, getState: () => IApplicationState) => Promise<IProject> {
     return async (dispatch: Dispatch, getState: () => IApplicationState) => {
         const appState = getState();
         const projectService = new ProjectService();
 
         if (projectService.isDuplicate(project, appState.recentProjects)) {
-            throw new AppError(ErrorCode.ProjectDuplicateName, `Project with name '${project.name}
-                already exists with the same target connection '${project.targetConnection.name}'`);
+            throw new AppError(
+                ErrorCode.ProjectDuplicateName,
+                `Project with name '${project.name}
+                already exists with the same target connection '${project.targetConnection.name}'`
+            );
         }
 
-        const projectToken = appState.appSettings.securityTokens
-            .find((securityToken) => securityToken.name === project.securityToken);
+        const projectToken = appState.appSettings.securityTokens.find(
+            securityToken => securityToken.name === project.securityToken
+        );
 
         if (!projectToken) {
             throw new AppError(ErrorCode.SecurityTokenNotFound, "Security Token Not Found");
@@ -94,15 +101,17 @@ export function saveProject(project: IProject)
  * Dispatches Delete Project action and resolves with project
  * @param project - Project to delete
  */
-export function deleteProject(project: IProject)
-    : (dispatch: Dispatch, getState: () => IApplicationState) => Promise<void> {
+export function deleteProject(
+    project: IProject
+): (dispatch: Dispatch, getState: () => IApplicationState) => Promise<void> {
     return async (dispatch: Dispatch, getState: () => IApplicationState) => {
         const appState = getState();
         const projectService = new ProjectService();
 
         // Lookup security token used to decrypt project settings
-        const projectToken = appState.appSettings.securityTokens
-            .find((securityToken) => securityToken.name === project.securityToken);
+        const projectToken = appState.appSettings.securityTokens.find(
+            securityToken => securityToken.name === project.securityToken
+        );
 
         if (!projectToken) {
             throw new AppError(ErrorCode.SecurityTokenNotFound, "Security Token Not Found");
@@ -160,7 +169,8 @@ export function loadAssetMetadata(project: IProject, asset: IAsset): (dispatch: 
  */
 export function saveAssetMetadata(
     project: IProject,
-    assetMetadata: IAssetMetadata): (dispatch: Dispatch) => Promise<IAssetMetadata> {
+    assetMetadata: IAssetMetadata
+): (dispatch: Dispatch) => Promise<IAssetMetadata> {
     const newAssetMetadata = { ...assetMetadata, version: appInfo.version };
 
     return async (dispatch: Dispatch) => {
@@ -178,22 +188,25 @@ export function saveAssetMetadata(
  * @param oldTagName The old tag name
  * @param newTagName The new tag name
  */
-export function updateProjectTag(project: IProject, oldTagName: string, newTagName: string)
-    : (dispatch: Dispatch, getState: () => IApplicationState) => Promise<IAssetMetadata[]> {
+export function updateProjectTag(
+    project: IProject,
+    oldTagName: string,
+    newTagName: string
+): (dispatch: Dispatch, getState: () => IApplicationState) => Promise<IAssetMetadata[]> {
     return async (dispatch: Dispatch, getState: () => IApplicationState) => {
         // Find tags to rename
         const assetService = new AssetService(project);
         const assetUpdates = await assetService.renameTag(oldTagName, newTagName);
 
         // Save updated assets
-        await assetUpdates.forEachAsync(async (assetMetadata) => {
+        await assetUpdates.forEachAsync(async assetMetadata => {
             await saveAssetMetadata(project, assetMetadata)(dispatch);
         });
 
         const currentProject = getState().currentProject;
         const updatedProject = {
             ...currentProject,
-            tags: project.tags.map((t) => (t.name === oldTagName) ? { ...t, name: newTagName } : t),
+            tags: project.tags.map(t => (t.name === oldTagName ? { ...t, name: newTagName } : t))
         };
 
         // Save updated project tags
@@ -209,22 +222,24 @@ export function updateProjectTag(project: IProject, oldTagName: string, newTagNa
  * @param project The project to delete tags
  * @param tagName The tag to delete
  */
-export function deleteProjectTag(project: IProject, tagName)
-    : (dispatch: Dispatch, getState: () => IApplicationState) => Promise<IAssetMetadata[]> {
+export function deleteProjectTag(
+    project: IProject,
+    tagName
+): (dispatch: Dispatch, getState: () => IApplicationState) => Promise<IAssetMetadata[]> {
     return async (dispatch: Dispatch, getState: () => IApplicationState) => {
         // Find tags to rename
         const assetService = new AssetService(project);
         const assetUpdates = await assetService.deleteTag(tagName);
 
         // Save updated assets
-        await assetUpdates.forEachAsync(async (assetMetadata) => {
+        await assetUpdates.forEachAsync(async assetMetadata => {
             await saveAssetMetadata(project, assetMetadata)(dispatch);
         });
 
         const currentProject = getState().currentProject;
         const updatedProject = {
             ...currentProject,
-            tags: project.tags.filter((t) => t.name !== tagName),
+            tags: project.tags.filter(t => t.name !== tagName)
         };
 
         // Save updated project tags
@@ -249,7 +264,8 @@ export function exportProject(project: IProject): (dispatch: Dispatch) => Promis
             const exportProvider = ExportProviderFactory.create(
                 project.exportFormat.providerType,
                 project,
-                project.exportFormat.providerOptions);
+                project.exportFormat.providerOptions
+            );
 
             const results = await exportProvider.export();
             dispatch(exportProjectAction(project));
@@ -348,30 +364,34 @@ export const deleteProjectAction = createPayloadAction<IDeleteProjectAction>(Act
 /**
  * Instance of Load Project Assets action
  */
-export const loadProjectAssetsAction =
-    createPayloadAction<ILoadProjectAssetsAction>(ActionTypes.LOAD_PROJECT_ASSETS_SUCCESS);
+export const loadProjectAssetsAction = createPayloadAction<ILoadProjectAssetsAction>(
+    ActionTypes.LOAD_PROJECT_ASSETS_SUCCESS
+);
 /**
  * Instance of Load Asset Metadata action
  */
-export const loadAssetMetadataAction =
-    createPayloadAction<ILoadAssetMetadataAction>(ActionTypes.LOAD_ASSET_METADATA_SUCCESS);
+export const loadAssetMetadataAction = createPayloadAction<ILoadAssetMetadataAction>(
+    ActionTypes.LOAD_ASSET_METADATA_SUCCESS
+);
 /**
  * Instance of Save Asset Metadata action
  */
-export const saveAssetMetadataAction =
-    createPayloadAction<ISaveAssetMetadataAction>(ActionTypes.SAVE_ASSET_METADATA_SUCCESS);
+export const saveAssetMetadataAction = createPayloadAction<ISaveAssetMetadataAction>(
+    ActionTypes.SAVE_ASSET_METADATA_SUCCESS
+);
 /**
  * Instance of Export Project action
  */
-export const exportProjectAction =
-    createPayloadAction<IExportProjectAction>(ActionTypes.EXPORT_PROJECT_SUCCESS);
+export const exportProjectAction = createPayloadAction<IExportProjectAction>(ActionTypes.EXPORT_PROJECT_SUCCESS);
 /**
  * Instance of Update project tag action
  */
-export const updateProjectTagAction =
-    createPayloadAction<IUpdateProjectTagAction>(ActionTypes.UPDATE_PROJECT_TAG_SUCCESS);
+export const updateProjectTagAction = createPayloadAction<IUpdateProjectTagAction>(
+    ActionTypes.UPDATE_PROJECT_TAG_SUCCESS
+);
 /**
  * Instance of Delete project tag action
  */
-export const deleteProjectTagAction =
-    createPayloadAction<IDeleteProjectTagAction>(ActionTypes.DELETE_PROJECT_TAG_SUCCESS);
+export const deleteProjectTagAction = createPayloadAction<IDeleteProjectTagAction>(
+    ActionTypes.DELETE_PROJECT_TAG_SUCCESS
+);

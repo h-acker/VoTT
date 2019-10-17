@@ -3,8 +3,14 @@ import _ from "lodash";
 import * as shortid from "shortid";
 import Guard from "../common/guard";
 import {
-    IAsset, AssetType, IProject, IAssetMetadata, AssetState,
-    IRegion, RegionType, ITFRecordMetadata,
+    IAsset,
+    AssetType,
+    IProject,
+    IAssetMetadata,
+    AssetState,
+    IRegion,
+    RegionType,
+    ITFRecordMetadata
 } from "../models/applicationState";
 import { AssetProviderFactory, IAssetProvider } from "../providers/storage/assetProviderFactory";
 import { StorageProviderFactory, IStorageProvider } from "../providers/storage/storageProviderFactory";
@@ -20,22 +26,23 @@ import { encodeFileURI } from "../common/utils";
  * @description - Functions for dealing with project assets
  */
 export class AssetService {
-
     /**
      * Create IAsset from filePath
      * @param filePath - filepath of asset
      * @param fileName - name of asset
      */
-    public static createAssetFromFilePath(filePath: string, fileName?: string): IAsset {
+    public static createAssetFromFilePath(filePath: string, fileName?: string, id?: number): IAsset {
         Guard.empty(filePath);
 
         const normalizedPath = filePath.toLowerCase();
 
         // If the path is not already prefixed with a protocol
         // then assume it comes from the local file system
-        if (!normalizedPath.startsWith("http://") &&
+        if (
+            !normalizedPath.startsWith("http://") &&
             !normalizedPath.startsWith("https://") &&
-            !normalizedPath.startsWith("file:")) {
+            !normalizedPath.startsWith("file:")
+        ) {
             // First replace \ character with / the do the standard url encoding then encode unsupported characters
             filePath = encodeFileURI(filePath, true);
         }
@@ -54,13 +61,13 @@ export class AssetService {
         const assetType = this.getAssetType(assetFormat);
 
         return {
-            id: md5Hash,
+            id: id || md5Hash,
             format: assetFormat,
             state: AssetState.NotVisited,
             type: assetType,
             name: fileName,
             path: filePath,
-            size: null,
+            size: null
         };
     }
 
@@ -106,7 +113,7 @@ export class AssetService {
         if (!this.assetProviderInstance) {
             this.assetProviderInstance = AssetProviderFactory.create(
                 this.project.sourceConnection.providerType,
-                this.project.sourceConnection.providerOptions,
+                this.project.sourceConnection.providerOptions
             );
 
             return this.assetProviderInstance;
@@ -120,7 +127,7 @@ export class AssetService {
         if (!this.storageProviderInstance) {
             this.storageProviderInstance = StorageProviderFactory.create(
                 this.project.targetConnection.providerType,
-                this.project.targetConnection.providerOptions,
+                this.project.targetConnection.providerOptions
             );
         }
 
@@ -145,9 +152,8 @@ export class AssetService {
             return [];
         }
 
-        return _
-            .values(this.project.assets)
-            .filter((asset) => asset.parent && asset.parent.id === rootAsset.id)
+        return _.values(this.project.assets)
+            .filter(asset => asset.parent && asset.parent.id === rootAsset.id)
             .sort((a, b) => a.timestamp - b.timestamp);
     }
 
@@ -192,13 +198,13 @@ export class AssetService {
                 return {
                     asset: { ...asset },
                     regions: await this.getRegionsFromTFRecord(asset),
-                    version: appInfo.version,
+                    version: appInfo.version
                 };
             } else {
                 return {
                     asset: { ...asset },
                     regions: [],
-                    version: appInfo.version,
+                    version: appInfo.version
                 };
             }
         }
@@ -209,7 +215,7 @@ export class AssetService {
      * @param tagName Name of tag to delete
      */
     public async deleteTag(tagName: string): Promise<IAssetMetadata[]> {
-        const transformer = (tags) => tags.filter((t) => t !== tagName);
+        const transformer = tags => tags.filter(t => t !== tagName);
         return await this.getUpdatedAssets(tagName, transformer);
     }
 
@@ -218,7 +224,7 @@ export class AssetService {
      * @param tagName Name of tag to rename
      */
     public async renameTag(tagName: string, newTagName: string): Promise<IAssetMetadata[]> {
-        const transformer = (tags) => tags.map((t) => (t === tagName) ? newTagName : t);
+        const transformer = tags => tags.map(t => (t === tagName ? newTagName : t));
         return await this.getUpdatedAssets(tagName, transformer);
     }
 
@@ -227,17 +233,19 @@ export class AssetService {
      * @param tagName Name of tag to update within project
      * @param transformer Function that accepts array of tags from a region and returns a modified array of tags
      */
-    private async getUpdatedAssets(tagName: string, transformer: (tags: string[]) => string[])
-        : Promise<IAssetMetadata[]> {
+    private async getUpdatedAssets(
+        tagName: string,
+        transformer: (tags: string[]) => string[]
+    ): Promise<IAssetMetadata[]> {
         // Loop over assets and update if necessary
-        const updates = await _.values(this.project.assets).mapAsync(async (asset) => {
+        const updates = await _.values(this.project.assets).mapAsync(async asset => {
             const assetMetadata = await this.getAssetMetadata(asset);
             const isUpdated = this.updateTagInAssetMetadata(assetMetadata, tagName, transformer);
 
             return isUpdated ? assetMetadata : null;
         });
 
-        return updates.filter((assetMetadata) => !!assetMetadata);
+        return updates.filter(assetMetadata => !!assetMetadata);
     }
 
     /**
@@ -250,18 +258,19 @@ export class AssetService {
     private updateTagInAssetMetadata(
         assetMetadata: IAssetMetadata,
         tagName: string,
-        transformer: (tags: string[]) => string[]): boolean {
+        transformer: (tags: string[]) => string[]
+    ): boolean {
         let foundTag = false;
 
         for (const region of assetMetadata.regions) {
-            if (region.tags.find((t) => t === tagName)) {
+            if (region.tags.find(t => t === tagName)) {
                 foundTag = true;
                 region.tags = transformer(region.tags);
             }
         }
         if (foundTag) {
-            assetMetadata.regions = assetMetadata.regions.filter((region) => region.tags.length > 0);
-            assetMetadata.asset.state = (assetMetadata.regions.length) ? AssetState.Tagged : AssetState.Visited;
+            assetMetadata.regions = assetMetadata.regions.filter(region => region.tags.length > 0);
+            assetMetadata.asset.state = assetMetadata.regions.length ? AssetState.Tagged : AssetState.Visited;
             return true;
         }
 
@@ -282,16 +291,18 @@ export class AssetService {
                     left: objectArray.xminArray[index] * objectArray.width,
                     top: objectArray.yminArray[index] * objectArray.height,
                     width: (objectArray.xmaxArray[index] - objectArray.xminArray[index]) * objectArray.width,
-                    height: (objectArray.ymaxArray[index] - objectArray.yminArray[index]) * objectArray.height,
+                    height: (objectArray.ymaxArray[index] - objectArray.yminArray[index]) * objectArray.height
                 },
-                points: [{
-                    x: objectArray.xminArray[index] * objectArray.width,
-                    y: objectArray.yminArray[index] * objectArray.height,
-                },
-                {
-                    x: objectArray.xmaxArray[index] * objectArray.width,
-                    y: objectArray.ymaxArray[index] * objectArray.height,
-                }],
+                points: [
+                    {
+                        x: objectArray.xminArray[index] * objectArray.width,
+                        y: objectArray.yminArray[index] * objectArray.height
+                    },
+                    {
+                        x: objectArray.xmaxArray[index] * objectArray.width,
+                        y: objectArray.ymaxArray[index] * objectArray.height
+                    }
+                ]
             });
         }
 

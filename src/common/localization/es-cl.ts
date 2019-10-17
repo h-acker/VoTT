@@ -217,6 +217,9 @@ export const spanish: IAppStrings = {
                 folderPath: "Ruta de la carpeta",
                 selectFolder: "Seleccionar la carpeta",
                 chooseFolder: "Elijir la carpeta"
+            },
+            cortexiaApi: {
+                title: "Cortexia Api"
             }
         }
     },

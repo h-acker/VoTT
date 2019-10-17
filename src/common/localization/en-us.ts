@@ -214,6 +214,9 @@ export const english: IAppStrings = {
                 folderPath: "Folder Path",
                 selectFolder: "Select Folder",
                 chooseFolder: "Choose Folder"
+            },
+            cortexiaApi: {
+                title: "Cortexia Api"
             }
         }
     },

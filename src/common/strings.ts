@@ -211,6 +211,9 @@ export interface IAppStrings {
                 selectFolder: string;
                 chooseFolder: string;
             };
+            cortexiaApi: {
+                title: string;
+            };
         };
     };
     editorPage: {
