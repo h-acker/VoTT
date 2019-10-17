@@ -240,7 +240,8 @@ export const english: IAppStrings = {
             saveProject: "Save Project",
             exportProject: "Export Project",
             activeLearning: "Active Learning",
-            magnifier: "Magnifier"
+            magnifier: "Magnifier",
+            deletePicture: "Delete Picture"
         },
         videoPlayer: {
             previousTaggedFrame: {
@@ -290,7 +291,9 @@ export const english: IAppStrings = {
                     "1 or more regions have not been tagged.  Ensure all regions are tagged before \
                     continuing to next asset."
             }
-        }
+        },
+        deletePictureError:
+            "There was an error while deleting the image. You might not have the authorization to delete it."
     },
     export: {
         title: "Export",

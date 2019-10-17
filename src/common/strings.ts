@@ -237,6 +237,7 @@ export interface IAppStrings {
             exportProject: string;
             activeLearning: string;
             magnifier: string;
+            deletePicture: string;
         };
         videoPlayer: {
             nextTaggedFrame: {
@@ -283,6 +284,7 @@ export interface IAppStrings {
                 description: string;
             };
         };
+        deletePictureError: string;
     };
     export: {
         title: string;

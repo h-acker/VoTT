@@ -2,8 +2,8 @@ import axios, { AxiosInstance, AxiosPromise } from "axios";
 import qs from "qs";
 import { Env } from "../common/environment";
 import { ITrackingAction } from "../models/trackingAction";
-import { Api } from "./ApiEnum";
 import { mapTrackingActionToApiBody } from "./ApiMapper";
+import { Api } from "./ApiEnum";
 import { IRegion, ISize } from "../models/applicationState";
 
 export interface ILoginRequestPayload {
@@ -64,7 +64,6 @@ export interface IImageWithAction extends IImage {
 
 export class ApiService implements IApiService {
     private client: AxiosInstance;
-
     constructor() {
         this.client = axios.create({
             baseURL: Env.getApiUrl(),
@@ -73,12 +72,13 @@ export class ApiService implements IApiService {
                 "Content-Type": "application/x-www-form-urlencoded"
             }
         });
-
         this.client.interceptors.request.use(
             config => {
-                const token = JSON.parse(localStorage.getItem("auth")).accessToken;
-                if (token) {
-                    config.headers.Authorization = `Bearer ${token}`;
+                if (localStorage.getItem("auth")) {
+                    const token = JSON.parse(localStorage.getItem("auth")).accessToken;
+                    if (token) {
+                        config.headers.Authorization = `Bearer ${token}`;
+                    }
                 }
                 return config;
             },
@@ -95,6 +95,17 @@ export class ApiService implements IApiService {
     };
 
     public getCurrentUser = (): AxiosPromise<IUser> => {
+        const url = "api/v1/users/me";
+        return this.client.get(url);
+    };
+
+    public flagDeleteImage = (imageId: number): AxiosPromise<number> => {
+        const url = "api/v1/images/flag_delete/" + imageId;
+        return this.client.put(url);
+    };
+
+    public deleteImage = (imageId: number): AxiosPromise<IImage> => {
+        const url = "api/v1/images/" + imageId;
         return this.client.get(Api.UsersMe);
     };
 
