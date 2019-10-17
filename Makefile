@@ -3,6 +3,7 @@
 # or in .env
 
 VERSION:=$(shell python update_release.py -v)
+BRANCH?=master
 
 check-env:
 ifeq ($(wildcard .env),)
@@ -42,8 +43,8 @@ version-up:
 	@python update_release.py
 
 check-release: check-env
-	# make sure we are in master
-	@python update_release.py check --branch=master
+	# make sure we are in $(BRANCH)
+	@python update_release.py check --branch=$(BRANCH)
 
 	git pull
 
@@ -68,8 +69,8 @@ create-release: check-release
 	git tag -f stag
 	git push --tags --force
 
-	# git merge master
-	git checkout master
+	# git merge $(BRANCH)
+	git checkout $(BRANCH)
 	git merge release-$(VERSION)
 	git push
 
