@@ -4,7 +4,7 @@ import { Env } from "../common/environment";
 import { ITrackingAction } from "../models/trackingAction";
 import { Api } from "./ApiEnum";
 import { mapTrackingActionToApiBody } from "./ApiMapper";
-import { IRegion } from "../models/applicationState";
+import { IRegion, ISize } from "../models/applicationState";
 
 export interface ILoginRequestPayload {
     username: string;
@@ -47,6 +47,21 @@ interface IUser {
     updated_at: string;
 }
 
+export interface IImage {
+    path: string;
+    size: ISize;
+    predicted: boolean;
+    type: number;
+    state: number;
+    is_deleted: boolean;
+    tagger_id: number;
+    id: number;
+}
+
+export interface IImageWithAction extends IImage {
+    last_action: IActionRequest;
+}
+
 export class ApiService implements IApiService {
     private client: AxiosInstance;
 
@@ -85,6 +100,14 @@ export class ApiService implements IApiService {
 
     public createAction = (action: ITrackingAction): AxiosPromise<IActionResponse> => {
         return this.client.post(Api.Actions, mapTrackingActionToApiBody(action));
+    };
+
+    public getUserImages = (): AxiosPromise<IImage[]> => {
+        return this.client.get(Api.ImagesMe);
+    };
+
+    public getImageWithLastAction = (): AxiosPromise<IImageWithAction[]> => {
+        return this.client.get(Api.ImagesWithLastAction);
     };
 }
 

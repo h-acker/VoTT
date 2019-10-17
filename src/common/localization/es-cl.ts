@@ -13,7 +13,7 @@ export const spanish: IAppStrings = {
         save: "Guardar",
         delete: "Borrar",
         provider: "Proveedor",
-        homePage: "Página de Inicio",
+        homePage: "Página de Inicio"
     },
     titleBar: {
         help: "Ayuda",
@@ -21,30 +21,31 @@ export const spanish: IAppStrings = {
         maximize: "Maximizar",
         restore: "Restaurar",
         close: "Cerrar",
-        signOut: "Desconectar",
+        signOut: "Desconectar"
     },
     homePage: {
         newProject: "Nuevo Proyecto",
         recentProjects: "Proyectos Recientes",
         openLocalProject: {
-            title: "Abrir Proyecto Local",
+            title: "Abrir Proyecto Local"
         },
         openCloudProject: {
             title: "Abrir Proyecto de la Nube",
-            selectConnection: "Select a Connection",
+            selectConnection: "Select a Connection"
         },
         deleteProject: {
             title: "Borrar Proyecto",
-            confirmation: "¿Está seguro que quiere borrar el proyecto",
+            confirmation: "¿Está seguro que quiere borrar el proyecto"
         },
         importProject: {
             title: "Importar Proyecto",
-            confirmation: "¿Está seguro que quiere convertir el proyecto ${project.file.name} " +
-                "a formato v2? Le recomendamos que haga una copia de seguridad de su archivo de proyecto.",
+            confirmation:
+                "¿Está seguro que quiere convertir el proyecto ${project.file.name} " +
+                "a formato v2? Le recomendamos que haga una copia de seguridad de su archivo de proyecto."
         },
         messages: {
-            deleteSuccess: "${project.name} eliminado correctamente",
-        },
+            deleteSuccess: "${project.name} eliminado correctamente"
+        }
     },
     appSettings: {
         title: "Configuración de Aplicación",
@@ -53,57 +54,58 @@ export const spanish: IAppStrings = {
         save: "Guardar configuración",
         securityToken: {
             name: {
-                title: "Nombre",
+                title: "Nombre"
             },
             key: {
-                title: "Clave",
-            },
+                title: "Clave"
+            }
         },
         securityTokens: {
             title: "Tokens de seguridad",
-            description: "Los tokens de seguridad se utilizan para cifrar datos confidenciales \
-                dentro de la configuración del proyecto",
+            description:
+                "Los tokens de seguridad se utilizan para cifrar datos confidenciales \
+                dentro de la configuración del proyecto"
         },
         version: {
-            description: "Versión:",
+            description: "Versión:"
         },
         commit: "Cometer SHA",
         devTools: {
             description: "Abrir herramientas de desarrollo de aplicaciones para ayudar a diagnosticar problemas.",
-            button: "Alternar Herramientas de Desarrollo",
+            button: "Alternar Herramientas de Desarrollo"
         },
         reload: {
             description: "Recargar la aplicación descartando todos los cambios actuales",
-            button: "Recargar la aplicación",
+            button: "Recargar la aplicación"
         },
         messages: {
-            saveSuccess: "Configuración de la aplicación guardada correctamente",
-        },
+            saveSuccess: "Configuración de la aplicación guardada correctamente"
+        }
     },
     projectSettings: {
         title: "Configuración de Proyecto",
         securityToken: {
             title: "Token de seguridad",
-            description: "Se utiliza para cifrar datos confidenciales dentro de archivos de proyecto",
+            description: "Se utiliza para cifrar datos confidenciales dentro de archivos de proyecto"
         },
         save: "Guardar el Proyecto",
         sourceConnection: {
             title: "Conexión de Origen",
-            description: "De donde se gargan sus activos",
+            description: "De donde se gargan sus activos"
         },
         targetConnection: {
             title: "Conexión de Destino",
-            description: "Donde se guarda su proyecto y sus datos exportados",
+            description: "Donde se guarda su proyecto y sus datos exportados"
         },
         videoSettings: {
             title: "Ajustes de video",
             description: "La velocidad a la que se extraen los marcos para el etiquetado.",
-            frameExtractionRate: "Tasa de extracción de cuadros (cuadros por segundo de video)",
+            frameExtractionRate: "Tasa de extracción de cuadros (cuadros por segundo de video)"
         },
         addConnection: "Agregar Conexión",
         messages: {
-            saveSuccess: "Guardado correctamente ${project.name} configuración del proyecto",
-        },
+            saveSuccess: "Guardado correctamente ${project.name} configuración del proyecto"
+        }
     },
     projectMetrics: {
         title: "Métricas del proyecto",
@@ -116,7 +118,7 @@ export const spanish: IAppStrings = {
         tagsSectionTitle: "Etiquetas & etiquetas",
         totalRegionCount: "Total de regiones",
         totalTagCount: "Total de etiquetas",
-        avgTagCountPerAsset: "Recuento promedio de etiquetas por activo",
+        avgTagCountPerAsset: "Recuento promedio de etiquetas por activo"
     },
     tags: {
         title: "Etiquetas",
@@ -124,7 +126,7 @@ export const spanish: IAppStrings = {
         editor: "Editor de Etiquetas",
         modal: {
             name: "Nombre de Etiqueta",
-            color: "Color de Etiqueta",
+            color: "Color de Etiqueta"
         },
         colors: {
             white: "Blanco",
@@ -140,12 +142,12 @@ export const spanish: IAppStrings = {
             blue: "Azul",
             navy: "Azul Marino",
             fuschia: "Fuschia",
-            purple: "Púrpura",
+            purple: "Púrpura"
         },
         warnings: {
             existingName: "Nombre de etiqueta ya existe. Elige otro nombre",
             emptyName: "El nombre de etiqueta no puede ser vacío",
-            unknownTagName: "Desconocido",
+            unknownTagName: "Desconocido"
         },
         toolbar: {
             add: "Agregar nueva etiqueta",
@@ -154,8 +156,8 @@ export const spanish: IAppStrings = {
             lock: "Bloquear etiqueta",
             moveDown: "Mover etiqueta hacia abajo",
             moveUp: "Mover etiqueta hacia arriba",
-            delete: "Borrar etiqueta",
-        },
+            delete: "Borrar etiqueta"
+        }
     },
     connections: {
         title: "Conexiones",
@@ -165,12 +167,14 @@ export const spanish: IAppStrings = {
         instructions: "Por favor seleccione una conexión para editar",
         messages: {
             saveSuccess: "${connection.name} guardado correctamente",
-            deleteSuccess: "${connection.name} eliminado correctamente",
+            deleteSuccess: "${connection.name} eliminado correctamente"
         },
-        imageCorsWarning: "Advertencia: Cuando se usa VoTT en un navegador web, es posible que algunos activos de este \
+        imageCorsWarning:
+            "Advertencia: Cuando se usa VoTT en un navegador web, es posible que algunos activos de este \
                           Búsqueda de Imágenes Bing no se exporten correctamente debido a las restricciones de CORS \
                           (Recursos de Origen Cruzado).",
-        blobCorsWarning: "Advertencia: CORS (Recursos de Origen Cruzado) debe estar habilitado en la \
+        blobCorsWarning:
+            "Advertencia: CORS (Recursos de Origen Cruzado) debe estar habilitado en la \
                           cuenta de Azure Blob Storage para poder usarlo como una conexión de origen o destino. Puede \
                           encontrar más información sobre cómo habilitar CORS en la {0}.",
         azDocLinkText: "documentación de Azure.",
@@ -180,20 +184,20 @@ export const spanish: IAppStrings = {
                 description: "",
                 accountName: {
                     title: "Nombre de cuenta",
-                    description: "",
+                    description: ""
                 },
                 containerName: {
                     title: "Nombre del contenedor",
-                    description: "",
+                    description: ""
                 },
                 sas: {
                     title: "SAS",
-                    description: "Firma de acceso compartido utilizada para autenticarse en la cuenta de BLOB Storage",
+                    description: "Firma de acceso compartido utilizada para autenticarse en la cuenta de BLOB Storage"
                 },
                 createContainer: {
                     title: "Crear contenedor",
-                    description: "Crea el contenedor de blobs si aún no existe",
-                },
+                    description: "Crea el contenedor de blobs si aún no existe"
+                }
             },
             bing: {
                 title: "Búsqueda de Imágenes Bing",
@@ -205,16 +209,19 @@ export const spanish: IAppStrings = {
                     all: "Todos",
                     square: "Cuadrado",
                     wide: "Ancho",
-                    tall: "Alto",
-                },
+                    tall: "Alto"
+                }
             },
             local: {
                 title: "Sistema de Archivos Local",
                 folderPath: "Ruta de la carpeta",
                 selectFolder: "Seleccionar la carpeta",
-                chooseFolder: "Elijir la carpeta",
+                chooseFolder: "Elijir la carpeta"
             },
-        },
+            cortexiaApi: {
+                title: "Cortexia Api"
+            }
+        }
     },
     editorPage: {
         width: "Anchura",
@@ -236,56 +243,59 @@ export const spanish: IAppStrings = {
             saveProject: "Guardar Proyecto",
             exportProject: "Exprtar Proyecto",
             activeLearning: "Aprendizaje Activo",
-            magnifier: "Lupa",
+            magnifier: "Lupa"
         },
         videoPlayer: {
             previousTaggedFrame: {
-                tooltip: "Fotograma etiquetado anterior",
+                tooltip: "Fotograma etiquetado anterior"
             },
             nextTaggedFrame: {
-                tooltip: "Siguiente marco etiquetado",
+                tooltip: "Siguiente marco etiquetado"
             },
             previousExpectedFrame: {
-                tooltip: "Fotograma anterior",
+                tooltip: "Fotograma anterior"
             },
             nextExpectedFrame: {
-                tooltip: "Siguiente marco",
-            },
+                tooltip: "Siguiente marco"
+            }
         },
         help: {
             title: "Abrir/cerrar el menú de ayuda",
-            escape: "Escapar el menú de ayuda",
+            escape: "Escapar el menú de ayuda"
         },
         assetError: "No se puede mostrar el activo",
         tags: {
             hotKey: {
                 apply: "Aplicar etiqueta con tecla de acceso rápido",
-                lock: "Bloquear etiqueta con tecla de acceso rápido",
+                lock: "Bloquear etiqueta con tecla de acceso rápido"
             },
             rename: {
                 title: "Cambiar el nombre de la etiqueta",
-                confirmation: "¿Está seguro que quiere cambiar el nombre de esta etiqueta? \
-                Será cambiada en todos los activos",
+                confirmation:
+                    "¿Está seguro que quiere cambiar el nombre de esta etiqueta? \
+                Será cambiada en todos los activos"
             },
             delete: {
                 title: "Delete Tag",
-                confirmation: "¿Está seguro que quiere borrar esta etiqueta? Será borrada en todos \
-                los activos y en las regiones donde esta etiqueta sea la única, la region también será borrada",
-            },
+                confirmation:
+                    "¿Está seguro que quiere borrar esta etiqueta? Será borrada en todos \
+                los activos y en las regiones donde esta etiqueta sea la única, la region también será borrada"
+            }
         },
         canvas: {
             removeAllRegions: {
                 title: "Borrar Regiones",
-                confirmation: "¿Está seguro que quiere borrar todas las regiones?",
-            },
+                confirmation: "¿Está seguro que quiere borrar todas las regiones?"
+            }
         },
         messages: {
             enforceTaggedRegions: {
                 title: "Las regiones no válidas detectadas",
-                description: "1 o más regiones no se han etiquetado.  \
-                    Por favor, etiquete todas las regiones antes de continuar con el siguiente activo.",
-            },
-        },
+                description:
+                    "1 o más regiones no se han etiquetado.  \
+                    Por favor, etiquete todas las regiones antes de continuar con el siguiente activo."
+            }
+        }
     },
     export: {
         title: "Exportar",
@@ -300,21 +310,21 @@ export const spanish: IAppStrings = {
                         options: {
                             all: "Todos los activos",
                             visited: "Solo activos visitados",
-                            tagged: "Solo activos etiquetados",
-                        },
+                            tagged: "Solo activos etiquetados"
+                        }
                     },
                     testTrainSplit: {
                         title: "La división para entrenar y comprobar",
-                        description: "La división de datos para utilizar entre el entrenamiento y la comprobación",
+                        description: "La división de datos para utilizar entre el entrenamiento y la comprobación"
                     },
                     includeImages: {
                         title: "Incluir imágenes",
-                        description: "Si desea o no incluir activos de imagen binaria en la conexión de destino",
-                    },
-                },
+                        description: "Si desea o no incluir activos de imagen binaria en la conexión de destino"
+                    }
+                }
             },
             vottJson: {
-                displayName: "VoTT JSON",
+                displayName: "VoTT JSON"
             },
             azureCV: {
                 displayName: "Servicio de Visión Personalizada Azure",
@@ -330,71 +340,71 @@ export const spanish: IAppStrings = {
                     southeastAsia: "Sudeste asiático",
                     ukSouth: "UK sur",
                     westUs2: "West US 2",
-                    westEurope: "Europa occidental",
+                    westEurope: "Europa occidental"
                 },
                 properties: {
                     apiKey: {
-                        title: "Clave de API",
+                        title: "Clave de API"
                     },
                     region: {
                         title: "Región",
-                        description: "La región de Azure donde se implementa el servicio",
+                        description: "La región de Azure donde se implementa el servicio"
                     },
                     classificationType: {
                         title: "Tipo de clasificación",
                         options: {
                             multiLabel: "Varias etiquetas por imagen",
-                            multiClass: "Una sola etiqueta por imagen",
-                        },
+                            multiClass: "Una sola etiqueta por imagen"
+                        }
                     },
                     name: {
-                        title: "Nombre del proyecto",
+                        title: "Nombre del proyecto"
                     },
                     description: {
-                        title: "Descripción del proyecto",
+                        title: "Descripción del proyecto"
                     },
                     domainId: {
-                        title: "Dominio",
+                        title: "Dominio"
                     },
                     newOrExisting: {
                         title: "Proyecto nuevo o existente",
                         options: {
                             new: "Nuevo proyecto",
-                            existing: "Proyecto existente",
-                        },
+                            existing: "Proyecto existente"
+                        }
                     },
                     projectId: {
-                        title: "Nombre del proyecto",
+                        title: "Nombre del proyecto"
                     },
                     projectType: {
                         title: "Tipo de proyecto",
                         options: {
                             classification: "Clasificación",
-                            objectDetection: "Detección de objetos",
-                        },
-                    },
-                },
+                            objectDetection: "Detección de objetos"
+                        }
+                    }
+                }
             },
             tfRecords: {
-                displayName: "Registros de Tensorflow",
+                displayName: "Registros de Tensorflow"
             },
             pascalVoc: {
                 displayName: "Pascal VOC",
                 exportUnassigned: {
                     title: "Exportar sin asignar",
-                    description: "Si se incluyen o no etiquetas no asignadas en los datos exportados",
-                },
+                    description: "Si se incluyen o no etiquetas no asignadas en los datos exportados"
+                }
             },
             cntk: {
-                displayName: "Microsoft Cognitive Toolkit (CNTK)",
+                displayName: "Microsoft Cognitive Toolkit (CNTK)"
             },
             csv: {
-                displayName: "Los valores separados por comas (CSV)",
-            },
+                displayName: "Los valores separados por comas (CSV)"
+            }
         },
         messages: {
-            saveSuccess: "Configuración de exportación guardada correctamente",
-        },
+            saveSuccess: "Configuración de exportación guardada correctamente"
+        }
     },
     activeLearning: {
         title: "Aprendizaje Activo",
@@ -406,92 +416,94 @@ export const spanish: IAppStrings = {
                     options: {
                         preTrained: "SSD de coco pre-entrenado",
                         customFilePath: "Personalizado (ruta de archivo)",
-                        customWebUrl: "Personalizado (URL)",
-                    },
+                        customWebUrl: "Personalizado (URL)"
+                    }
                 },
                 autoDetect: {
                     title: "Detección automática",
-                    description: "Si desea o no realizar automáticamente predicciones a \
-                        medida que navega entre activos",
+                    description:
+                        "Si desea o no realizar automáticamente predicciones a \
+                        medida que navega entre activos"
                 },
                 modelPath: {
                     title: "Ruta de modelo",
-                    description: "Seleccione un modelo de su sistema de archivos local",
+                    description: "Seleccione un modelo de su sistema de archivos local"
                 },
                 modelUrl: {
                     title: "URL del modelo",
-                    description: "Cargue el modelo desde una URL web pública",
+                    description: "Cargue el modelo desde una URL web pública"
                 },
                 predictTag: {
                     title: "Predecir etiqueta",
-                    description: "Si se incluirán o no automáticamente las etiquetas en las predicciones",
-                },
-            },
+                    description: "Si se incluirán o no automáticamente las etiquetas en las predicciones"
+                }
+            }
         },
         messages: {
             loadingModel: "Cargando modelo...",
             errorLoadModel: "Error al cargar el modelo",
-            saveSuccess: "La configuración de aprendizaje activa se ha guardada correctamente",
-        },
+            saveSuccess: "La configuración de aprendizaje activa se ha guardada correctamente"
+        }
     },
     profile: {
-        settings: "Configuración de Perfíl",
+        settings: "Configuración de Perfíl"
     },
     errors: {
         unknown: {
             title: "Error desconocido",
-            message: "La aplicación contó un error desconocido.  Por favor inténtalo de nuevo.",
+            message: "La aplicación contó un error desconocido.  Por favor inténtalo de nuevo."
         },
         projectUploadError: {
             title: "Error al cargar el archivo",
             message: `Se ha cargado un error al cargar el archivo.
-                Compruebe que el archivo es del tipo correcto e inténtelo de nuevo.`,
+                Compruebe que el archivo es del tipo correcto e inténtelo de nuevo.`
         },
         genericRenderError: {
             title: "Error desconocido",
-            message: "La aplicación contó un error desconocido.  Por favor inténtalo de nuevo.",
+            message: "La aplicación contó un error desconocido.  Por favor inténtalo de nuevo."
         },
         projectInvalidSecurityToken: {
             title: "Error al cargar el archivo de proyecto",
-            message: "Asegúrese de que el token de seguridad del proyecto existe",
+            message: "Asegúrese de que el token de seguridad del proyecto existe"
         },
         projectInvalidJson: {
             title: "Error al analizar el archivo de proyecto",
-            message: "El archivo de proyecto no es válido JSON",
+            message: "El archivo de proyecto no es válido JSON"
         },
         projectDeleteError: {
             title: "Error al eliminar el proyecto",
             message: `Se ha producido un error al eliminar el proyecto.
-                Validar el archivo de proyecto y el token de seguridad existen e inténtelo de nuevo`,
+                Validar el archivo de proyecto y el token de seguridad existen e inténtelo de nuevo`
         },
         securityTokenNotFound: {
             title: "Error al cargar el archivo del proyecto",
             message: `El token de seguridad al que hace referencia el proyecto no se encuentra en la
                 configuración de la aplicación actual. Compruebe que existe el token de seguridad e intente
-                volver a cargar el proyecto.`,
+                volver a cargar el proyecto.`
         },
         canvasError: {
             title: "Error al cargar el lienzo",
             message: `Se produjo un error al cargar el lienzo, verifique los activos del
-                proyecto y vuelva a intentarlo.`,
+                proyecto y vuelva a intentarlo.`
         },
         importError: {
             title: "Error al importar el proyecto V1",
-            message: "Hubo un error al importar el proyecto V1. Revisa el archivo del proyecto y vuelve a intentarlo",
+            message: "Hubo un error al importar el proyecto V1. Revisa el archivo del proyecto y vuelve a intentarlo"
         },
         pasteRegionTooBigError: {
             title: "Error al pegar region al activo",
-            message: "Hubo un error al pagar el region al activo. Intenta copiar otra region",
+            message: "Hubo un error al pagar el region al activo. Intenta copiar otra region"
         },
         exportFormatNotFound: {
             title: "Error exportando proyecto",
             message: `Proyecto falta el formato de exportación. Seleccione un formato de exportación en la página
-            de configuración de exportación.`,
+            de configuración de exportación.`
         },
         activeLearningPredictionError: {
             title: "Error de aprendizaje",
-            message: "Se ha producido un error al predecir regiones en el activo actual. \
-                Compruebe la configuración de aprendizaje activa y vuelva a intentarlo",
-        },
-    },
+            message:
+                "Se ha producido un error al predecir regiones en el activo actual. \
+                Compruebe la configuración de aprendizaje activa y vuelva a intentarlo"
+        }
+    }
 };

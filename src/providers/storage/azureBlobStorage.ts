@@ -2,8 +2,14 @@ import { IStorageProvider } from "./storageProviderFactory";
 import { IAsset, AssetType, StorageType } from "../../models/applicationState";
 import { AssetService } from "../../services/assetService";
 import {
-    TokenCredential, AnonymousCredential, ContainerURL,
-    StorageURL, ServiceURL, Credential, Aborter, BlockBlobURL,
+    TokenCredential,
+    AnonymousCredential,
+    ContainerURL,
+    StorageURL,
+    ServiceURL,
+    Credential,
+    Aborter,
+    BlockBlobURL
 } from "@azure/storage-blob";
 import { BlobDeleteResponse } from "@azure/storage-blob/typings/lib/generated/lib/models";
 
@@ -27,14 +33,13 @@ export interface IAzureCloudStorageOptions {
  * Storage Provider for Azure Blob Storage
  */
 export class AzureBlobStorage implements IStorageProvider {
-
     /**
      * Storage type
      * @returns - StorageType.Cloud
      */
     public storageType: StorageType = StorageType.Cloud;
 
-    constructor(private options?: IAzureCloudStorageOptions) { }
+    constructor(private options?: IAzureCloudStorageOptions) {}
 
     /**
      * Initialize connection to Blob Storage account & container
@@ -83,11 +88,7 @@ export class AzureBlobStorage implements IStorageProvider {
      */
     public async writeText(blobName: string, content: string | Buffer) {
         const blockBlobURL = this.getBlockBlobURL(blobName);
-        await blockBlobURL.upload(
-            Aborter.none,
-            content,
-            content.length,
-        );
+        await blockBlobURL.upload(Aborter.none, content, content.length);
     }
 
     /**
@@ -120,10 +121,7 @@ export class AzureBlobStorage implements IStorageProvider {
         let marker;
         const containerURL = this.getContainerURL();
         do {
-            const listBlobsResponse = await containerURL.listBlobFlatSegment(
-                Aborter.none,
-                marker,
-            );
+            const listBlobsResponse = await containerURL.listBlobFlatSegment(Aborter.none, marker);
             marker = listBlobsResponse.nextMarker;
             for (const blob of listBlobsResponse.segment.blobItems) {
                 if ((ext && blob.name.endsWith(ext)) || !ext) {
@@ -144,10 +142,7 @@ export class AzureBlobStorage implements IStorageProvider {
         const result: string[] = [];
         let marker;
         do {
-            const listContainersResponse = await this.getServiceURL().listContainersSegment(
-                Aborter.none,
-                marker,
-            );
+            const listContainersResponse = await this.getServiceURL().listContainersSegment(Aborter.none, marker);
             marker = listContainersResponse.nextMarker;
             for (const container of listContainersResponse.containerItems) {
                 result.push(container.name);
@@ -192,7 +187,7 @@ export class AzureBlobStorage implements IStorageProvider {
      * container specified in Azure Cloud Storage options
      */
     public async getAssets(containerName?: string): Promise<IAsset[]> {
-        containerName = (containerName) ? containerName : this.options.containerName;
+        containerName = containerName ? containerName : this.options.containerName;
         const files = await this.listFiles(containerName);
         const result: IAsset[] = [];
         for (const file of files) {
@@ -238,26 +233,20 @@ export class AzureBlobStorage implements IStorageProvider {
         const credential = this.getCredential();
         const pipeline = StorageURL.newPipeline(credential);
         const accountUrl = this.getAccountUrl();
-        const serviceUrl = new ServiceURL(
-            accountUrl,
-            pipeline,
-        );
+        const serviceUrl = new ServiceURL(accountUrl, pipeline);
         return serviceUrl;
     }
 
     private getContainerURL(serviceURL?: ServiceURL, containerName?: string): ContainerURL {
         return ContainerURL.fromServiceURL(
-            (serviceURL) ? serviceURL : this.getServiceURL(),
-            (containerName) ? containerName : this.options.containerName,
+            serviceURL ? serviceURL : this.getServiceURL(),
+            containerName ? containerName : this.options.containerName
         );
     }
 
     private getBlockBlobURL(blobName: string): BlockBlobURL {
         const containerURL = this.getContainerURL();
-        return BlockBlobURL.fromContainerURL(
-            containerURL,
-            blobName,
-        );
+        return BlockBlobURL.fromContainerURL(containerURL, blobName);
     }
 
     private getUrl(blobName: string): string {
@@ -270,7 +259,7 @@ export class AzureBlobStorage implements IStorageProvider {
             blobBody?: Promise<Blob>;
         },
         // tslint:disable-next-line:variable-name
-        _length?: number,
+        _length?: number
     ): Promise<string> {
         const blob = await response.blobBody!;
         return this.blobToString(blob);

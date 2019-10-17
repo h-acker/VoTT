@@ -30,7 +30,7 @@ export const reducer = (state: IProject = null, action: AnyAction): IProject => 
 
             return {
                 ...state,
-                lastVisitedAssetId: action.payload.asset.id,
+                lastVisitedAssetId: action.payload.asset.id
             };
         case ActionTypes.SAVE_ASSET_METADATA_SUCCESS:
             if (!state) {
@@ -41,17 +41,16 @@ export const reducer = (state: IProject = null, action: AnyAction): IProject => 
             updatedAssets[action.payload.asset.id] = { ...action.payload.asset };
 
             const assetTags = new Set();
-            action.payload.regions.forEach((region) => region.tags.forEach((tag) => assetTags.add(tag)));
+            action.payload.regions.forEach(region => region.tags.forEach(tag => assetTags.add(tag)));
 
             const newTags: ITag[] = state.tags ? [...state.tags] : [];
             let updateTags = false;
 
-            assetTags.forEach((tag) => {
-                if (!state.tags || state.tags.length === 0 ||
-                    !state.tags.find((projectTag) => tag === projectTag.name)) {
+            assetTags.forEach(tag => {
+                if (!state.tags || state.tags.length === 0 || !state.tags.find(projectTag => tag === projectTag.name)) {
                     newTags.push({
                         name: tag,
-                        color: tagColors[newTags.length % tagColors.length],
+                        color: tagColors[newTags.length % tagColors.length]
                     });
                     updateTags = true;
                 }
@@ -61,13 +60,13 @@ export const reducer = (state: IProject = null, action: AnyAction): IProject => 
                 return {
                     ...state,
                     tags: newTags,
-                    assets: updatedAssets,
+                    assets: updatedAssets
                 };
             }
 
             return {
                 ...state,
-                assets: updatedAssets,
+                assets: updatedAssets
             };
         case ActionTypes.SAVE_CONNECTION_SUCCESS:
             if (!state) {
@@ -76,12 +75,10 @@ export const reducer = (state: IProject = null, action: AnyAction): IProject => 
 
             return {
                 ...state,
-                sourceConnection: state.sourceConnection.id === action.payload.id
-                    ? { ...action.payload }
-                    : state.sourceConnection,
-                targetConnection: state.targetConnection.id === action.payload.id
-                    ? { ...action.payload }
-                    : state.targetConnection,
+                sourceConnection:
+                    state.sourceConnection.id === action.payload.id ? { ...action.payload } : state.sourceConnection,
+                targetConnection:
+                    state.targetConnection.id === action.payload.id ? { ...action.payload } : state.targetConnection
             };
         default:
             return state;
