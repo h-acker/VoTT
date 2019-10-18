@@ -185,9 +185,9 @@ check everything with `make version-up`
 
 ### Version format, suggested meanings for major.minor.patch
 
-major could be incremented as usual, no specifity
-minor could be the number of the sprint
-patch coule be incremented for each PR that is merged into the sprint branch
+- major could be incremented as usual, no specifity
+- minor could be the number of the sprint
+- patch coule be incremented for each PR that is merged into the sprint branch
 
 ## Using VoTT
 
