@@ -159,6 +159,36 @@ All `V2` efforts are on the [master](https://github.com/Microsoft/VoTT/tree/mast
 
 There is support for converting a V1 project into V2 format. Upon opening the JSON file, a window will pop up to confirm that the app should convert the project before redirecting to the editor screen. In this process, a `.vott` file will be generated in the same project directory, which may be used as the main project file going forward. We recommend backing up the V1 project file before converting the project.
 
+## Version management
+
+### It makes use of
+
+a python script (which should work for both python2 and python3)
+
+a python versions.py file which keeps track of 3 number:
+- _build: from git and should not be modified, the commit hash that will provide an link to the code in case of need
+- _release: from git and should not be modified, simpler than the commit before which could also help in debugging
+- _version: cortexia version, that can be set manually, but will be increase automatically if needed
+In order to install:
+
+make sure python is available in your system
+run `make init-githook`
+check everything with `make version-up`
+
+### Commands provided
+
+`make version` now displays VOTTversion-Cortexiaversion
+
+`make version-up` displays all release numbers, and increments the version number if necessary
+
+`make create-release` will tag and push the cortexia version. By default, it requires that you are in the master branch, but you can change this behaviour with the BRANCH env var. For instance, you can run `BRANCH=sprint-3 make create-release`
+
+### Version format, suggested meanings for major.minor.patch
+
+- major could be incremented as usual, no specifity
+- minor could be the number of the sprint
+- patch coule be incremented for each PR that is merged into the sprint branch
+
 ## Using VoTT
 
 ### Creating Connections

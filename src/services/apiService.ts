@@ -1,6 +1,10 @@
 import axios, { AxiosInstance, AxiosPromise } from "axios";
 import qs from "qs";
 import { Env } from "../common/environment";
+import { ITrackingAction } from "../models/trackingAction";
+import { mapTrackingActionToApiBody } from "./ApiMapper";
+import { Api } from "./ApiEnum";
+import { IRegion, ISize } from "../models/applicationState";
 
 export interface ILoginRequestPayload {
     username: string;
@@ -11,11 +15,25 @@ export interface IApiService {
     loginWithCredentials(data: ILoginRequestPayload): AxiosPromise<IUserCredentials>;
     testToken(): AxiosPromise<IUser>;
     getCurrentUser(): AxiosPromise<IUser>;
+    createAction(action: ITrackingAction): AxiosPromise<IActionResponse>;
 }
 
 interface IUserCredentials {
     access_token: string;
     token_type: string;
+}
+
+export interface IActionRequest {
+    type: string;
+    timestamp: string;
+    regions: IRegion[];
+    is_modified: boolean;
+    user_id: number;
+    image_id: number;
+}
+
+interface IActionResponse extends IActionRequest {
+    id: number;
 }
 
 interface IUser {
@@ -27,47 +45,81 @@ interface IUser {
     id: number;
     created_at: string;
     updated_at: string;
-  }
+}
+
+export interface IImage {
+    path: string;
+    size: ISize;
+    predicted: boolean;
+    type: number;
+    state: number;
+    is_deleted: boolean;
+    tagger_id: number;
+    id: number;
+}
+
+export interface IImageWithAction extends IImage {
+    last_action: IActionRequest;
+}
 
 export class ApiService implements IApiService {
     private client: AxiosInstance;
-
     constructor() {
         this.client = axios.create({
             baseURL: Env.getApiUrl(),
             timeout: 10 * 1000,
             headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
         });
-
         this.client.interceptors.request.use(
-            (config) => {
-                const token = JSON.parse(localStorage.getItem("auth")).accessToken;
-                if (token) {
-                    config.headers.Authorization = `Bearer ${token}`;
+            config => {
+                if (localStorage.getItem("auth")) {
+                    const token = JSON.parse(localStorage.getItem("auth")).accessToken;
+                    if (token) {
+                        config.headers.Authorization = `Bearer ${token}`;
+                    }
                 }
                 return config;
             },
-            (error) => Promise.reject(error),
+            error => Promise.reject(error)
         );
-
     }
 
     public loginWithCredentials = (data: ILoginRequestPayload): AxiosPromise<IUserCredentials> => {
-        const url = "api/v1/login/access-token";
-        return this.client.post(url, qs.stringify(data));
-    }
+        return this.client.post(Api.LoginAccessToken, qs.stringify(data));
+    };
 
     public testToken = (): AxiosPromise<IUser> => {
-        const url = "api/v1/login/test-token";
-        return this.client.post(url);
-    }
+        return this.client.post(Api.LoginTestToken);
+    };
 
     public getCurrentUser = (): AxiosPromise<IUser> => {
         const url = "api/v1/users/me";
         return this.client.get(url);
-    }
+    };
+
+    public flagDeleteImage = (imageId: number): AxiosPromise<number> => {
+        const url = "api/v1/images/flag_delete/" + imageId;
+        return this.client.put(url);
+    };
+
+    public deleteImage = (imageId: number): AxiosPromise<IImage> => {
+        const url = "api/v1/images/" + imageId;
+        return this.client.get(Api.UsersMe);
+    };
+
+    public createAction = (action: ITrackingAction): AxiosPromise<IActionResponse> => {
+        return this.client.post(Api.Actions, mapTrackingActionToApiBody(action));
+    };
+
+    public getUserImages = (): AxiosPromise<IImage[]> => {
+        return this.client.get(Api.ImagesMe);
+    };
+
+    public getImageWithLastAction = (): AxiosPromise<IImageWithAction[]> => {
+        return this.client.get(Api.ImagesWithLastAction);
+    };
 }
 
 const apiService = new ApiService();

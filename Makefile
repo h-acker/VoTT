@@ -2,6 +2,9 @@
 # Default values, can be overridden either on the command line of make
 # or in .env
 
+VERSION:=$(shell python update_release.py -v)
+BRANCH?=master
+
 check-env:
 ifeq ($(wildcard .env),)
 	@echo ".env file is missing. Create it first"
@@ -11,11 +14,12 @@ include .env
 export
 endif
 
-version: check-env
-	@echo $(shell node -pe "require('./package.json').version")
-
 init:
 	cp .env.sample .env
+
+init-githook:
+	cp update_release.py .git/hooks/pre-commit
+	cd .git/hooks/ && ln -s ../../versions.py
 
 vars: check-env
 	@echo 'Sensible defaults values (for local dev)'
@@ -30,13 +34,60 @@ vars: check-env
 	@echo '  TRAEFIK_PUBLIC_NETWORK=${TRAEFIK_PUBLIC_NETWORK}'
 	@echo '  TRAEFIK_PUBLIC_TAG=${TRAEFIK_PUBLIC_TAG}'
 
+
+# version management
+
+version: check-env
+	@echo $(shell node -pe "require('./package.json').version")-$(VERSION)
+
+version-up:
+	@python update_release.py
+
+check-release: check-env
+	# make sure we are in $(BRANCH)
+	@python update_release.py check --branch=$(BRANCH)
+
+	git pull
+
+	# update versions and ask for confirmation
+	@python update_release.py
+
+	VERSION=$(shell python update_release.py -v)
+
+	@echo Version used will be $(VERSION)
+
+	@python update_release.py confirm
+
+create-release: check-release
+	# create branch and tag
+	git checkout -b release-$(VERSION)
+	git add .
+	git commit -m "Prepared release $(VERSION)"
+	git push --set-upstream origin release-$(VERSION)
+
+	git tag $(VERSION)
+	git tag -f qa
+	git push --tags --force
+
+	# git merge $(BRANCH)
+	git checkout $(BRANCH)
+	git merge release-$(VERSION)
+	git push
+
+
+# deployment
+
 push-prod: login
+	@# confirm push to production
+	@python update_release.py confirm --prod
+
 	# update tags
 	git tag -f prod
 	git push --tags --force
 
 	# build and push docker image
-	DOCKER_TAG=prod PUBLIC_URL=vott.${DOMAIN} docker-compose -f docker-compose.deploy.yml build
+	DOCKER_TAG=prod PUBLIC_URL=vott.${DOMAIN} \
+		docker-compose -f docker-compose.deploy.yml build --build-arg BUILDTIME_CORTEXIA_VERSION=$(VERSION)
 	DOCKER_TAG=prod docker-compose -f docker-compose.deploy.yml push
 
 deploy-prod:
@@ -59,7 +110,8 @@ push-qa: login
 	git push --tags --force
 
 	# build docker image
-	DOCKER_TAG=qa PUBLIC_URL=vott-qa.${DOMAIN} docker-compose -f docker-compose.deploy.yml build
+	DOCKER_TAG=qa PUBLIC_URL=vott-qa.${DOMAIN} \
+		docker-compose -f docker-compose.deploy.yml build --build-arg BUILDTIME_CORTEXIA_VERSION=$(VERSION)
 	DOCKER_TAG=qa docker-compose -f docker-compose.deploy.yml push
 
 deploy-qa:
@@ -82,7 +134,8 @@ push-dev: login
 	git push --tags --force
 
 	# build docker image
-	DOCKER_TAG=latest PUBLIC_URL=vott-dev.${DOMAIN} docker-compose -f docker-compose.deploy.yml build
+	DOCKER_TAG=latest PUBLIC_URL=vott-dev.${DOMAIN} \
+		docker-compose -f docker-compose.deploy.yml build --build-arg BUILDTIME_CORTEXIA_VERSION=$(VERSION)
 	DOCKER_TAG=latest docker-compose -f docker-compose.deploy.yml push
 
 deploy-dev:
@@ -110,6 +163,13 @@ ps:
 
 # docker shortcuts for development purpose
 
+pull: check-env
+	rm -rf build node_modules
+	docker-compose -f docker-compose.dev.yml build --build-arg BUILDTIME_CORTEXIA_VERSION=$(VERSION) --pull
+
+build: check-env
+	docker-compose -f docker-compose.dev.yml build --build-arg BUILDTIME_CORTEXIA_VERSION=$(VERSION)
+
 up: check-env
 	docker-compose -f docker-compose.dev.yml up -d
 
@@ -121,8 +181,4 @@ stop:
 
 logs:
 	docker-compose -f docker-compose.dev.yml logs --tail 20 -f
-
-build: check-env
-	rm -rf build node_modules
-	docker-compose -f docker-compose.dev.yml build --pull
 
