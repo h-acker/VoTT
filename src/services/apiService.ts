@@ -95,17 +95,6 @@ export class ApiService implements IApiService {
     };
 
     public getCurrentUser = (): AxiosPromise<IUser> => {
-        const url = "api/v1/users/me";
-        return this.client.get(url);
-    };
-
-    public flagDeleteImage = (imageId: number): AxiosPromise<number> => {
-        const url = "api/v1/images/flag_delete/" + imageId;
-        return this.client.put(url);
-    };
-
-    public deleteImage = (imageId: number): AxiosPromise<IImage> => {
-        const url = "api/v1/images/" + imageId;
         return this.client.get(Api.UsersMe);
     };
 

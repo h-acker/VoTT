@@ -163,8 +163,16 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             const project = this.props.recentProjects.find(project => project.id === projectId);
             await this.props.actions.loadProject(project);
         }
-
         this.activeLearningService = new ActiveLearningService(this.props.project.activeLearningSettings);
+        window.onbeforeunload = () => {
+            const { selectedAsset } = this.state;
+            this.props.trackingActions.trackingImgOut(
+                this.props.auth.userId,
+                selectedAsset.asset.id,
+                selectedAsset.regions,
+                this.isAssetModified()
+            );
+        };
     }
 
     public async componentDidUpdate(prevProps: Readonly<IEditorPageProps>) {
@@ -723,12 +731,11 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
          * Track user leaves the image
          */
         if (selectedAsset && selectedAsset.asset) {
-            const isModified = JSON.stringify(selectedAssetBase.regions) !== JSON.stringify(selectedAsset.regions);
             await trackingActions.trackingImgOut(
                 auth.userId,
                 selectedAsset.asset.id,
                 selectedAsset.regions,
-                isModified
+                this.isAssetModified()
             );
         }
 
@@ -758,6 +765,29 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
          * Track user enters on the image
          */
         await trackingActions.trackingImgIn(auth.userId, newAssetMetadata.asset.id, newAssetMetadata.regions);
+    };
+
+    private isAssetModified = (): boolean => {
+        const { selectedAssetBase, selectedAsset } = this.state;
+        const modifiedAssets = selectedAsset.regions.filter((region: IRegion, index: number) => {
+            const oldAssetRegion = selectedAssetBase.regions[index];
+            if (!oldAssetRegion) {
+                return true;
+            }
+            const oldBoundingBox = oldAssetRegion.boundingBox;
+            const newBoundingBox = region.boundingBox;
+            return (
+                region.id !== oldAssetRegion.id ||
+                JSON.stringify(region.points) !== JSON.stringify(oldAssetRegion.points) ||
+                JSON.stringify(region.tags) !== JSON.stringify(oldAssetRegion.tags) ||
+                region.type !== oldAssetRegion.type ||
+                newBoundingBox.height !== oldBoundingBox.height ||
+                newBoundingBox.left !== oldBoundingBox.left ||
+                newBoundingBox.top !== oldBoundingBox.top ||
+                newBoundingBox.width !== oldBoundingBox.width
+            );
+        });
+        return selectedAssetBase.regions.length !== selectedAsset.regions.length || !!modifiedAssets.length;
     };
 
     private loadProjectAssets = async (): Promise<void> => {
@@ -811,8 +841,24 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
 
     private async handleDeletePictureClick() {
         try {
-            await apiService.flagDeleteImage(3 /* this.state.selectedAsset.asset.id */);
-            await apiService.deleteImage(3 /* this.state.selectedAsset.asset.id */);
+            const { auth, trackingActions } = this.props;
+            const { selectedAsset, assets } = this.state;
+            const newAssets = [...assets];
+            const indexAssetToRemove = newAssets.findIndex((asset: IAsset) => {
+                return asset.id === selectedAsset.asset.id;
+            });
+
+            await trackingActions.trackingImgDelete(auth.userId, selectedAsset.asset.id);
+            newAssets.splice(indexAssetToRemove, 1);
+            if (newAssets.length) {
+                const previousIndex = indexAssetToRemove - 1;
+                const assetToSelect =
+                    newAssets[previousIndex] !== undefined ? newAssets[previousIndex] : newAssets[indexAssetToRemove];
+                this.selectAsset(assetToSelect);
+            }
+            this.setState({
+                assets: newAssets
+            });
         } catch (error) {
             toast.error(strings.editorPage.deletePictureError);
         } finally {

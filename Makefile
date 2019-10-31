@@ -2,48 +2,36 @@
 # Default values, can be overridden either on the command line of make
 # or in .env
 
+.PHONY: config
+
 VERSION:=$(shell python update_release.py -v)
 BRANCH?=master
 
 check-env:
 ifeq ($(wildcard .env),)
-	@echo ".env file is missing. Create it first"
+	cp .sample.env .env
+	@echo "Generated \033[32m.env\033[0m"
+	@echo "  \033[31m>> Check its default values\033[0m"
 	@exit 1
 else
 include .env
 export
 endif
 
-init:
-	cp .env.sample .env
-
 init-githook:
 	cp update_release.py .git/hooks/pre-commit
 	cd .git/hooks/ && ln -s ../../versions.py
 
-vars: check-env
-	@echo 'Sensible defaults values (for local dev)'
-	@echo '  DEV_VOTT_PORT=${DEV_VOTT_PORT}'
-	@echo '  DOCKER_TAG=${DOCKER_TAG}'
-	@echo '  PUBLIC_URL=${PUBLIC_URL}'
-	@echo ''
-	@echo 'For deployment purpose'
-	@echo '  SUBDOMAIN=${SUBDOMAIN}'
-	@echo '  DOMAIN=${DOMAIN}'
-	@echo '  STACK_NAME=${STACK_NAME}'
-	@echo '  TRAEFIK_PUBLIC_NETWORK=${TRAEFIK_PUBLIC_NETWORK}'
-	@echo '  TRAEFIK_PUBLIC_TAG=${TRAEFIK_PUBLIC_TAG}'
-
 
 # version management
 
-version: check-env
+version:
 	@echo $(shell node -pe "require('./package.json').version")-$(VERSION)
 
 version-up:
 	@python update_release.py
 
-check-release: check-env
+check-release:
 	# make sure we are in $(BRANCH)
 	@python update_release.py check --branch=$(BRANCH)
 
@@ -75,83 +63,6 @@ create-release: check-release
 	git push
 
 
-# deployment
-
-push-prod: login
-	@# confirm push to production
-	@python update_release.py confirm --prod
-
-	# update tags
-	git tag -f prod
-	git push --tags --force
-
-	# build and push docker image
-	DOCKER_TAG=prod PUBLIC_URL=vott.${DOMAIN} \
-		docker-compose -f docker-compose.deploy.yml build --build-arg BUILDTIME_CORTEXIA_VERSION=$(VERSION)
-	DOCKER_TAG=prod docker-compose -f docker-compose.deploy.yml push
-
-deploy-prod:
-	DOCKER_TAG=prod  \
-		SUBDOMAIN=vott \
-		STACK_NAME=vott \
-		DOMAIN=${DOMAIN} \
-		TRAEFIK_PUBLIC_TAG=${TRAEFIK_PUBLIC_TAG} \
-		docker-compose \
-			-f docker-compose.deploy.yml \
-			-f docker-compose.deploy.networks.yml \
-		config > docker-stack.yml
-
-	docker-auto-labels docker-stack.yml
-	docker stack deploy -c docker-stack.yml --with-registry-auth vott
-
-push-qa: login
-	# update tags
-	git tag -f qa
-	git push --tags --force
-
-	# build docker image
-	DOCKER_TAG=qa PUBLIC_URL=vott-qa.${DOMAIN} \
-		docker-compose -f docker-compose.deploy.yml build --build-arg BUILDTIME_CORTEXIA_VERSION=$(VERSION)
-	DOCKER_TAG=qa docker-compose -f docker-compose.deploy.yml push
-
-deploy-qa:
-	DOCKER_TAG=qa \
-		SUBDOMAIN=vott-qa \
-		STACK_NAME=vott-qa \
-		DOMAIN=${DOMAIN} \
-		TRAEFIK_PUBLIC_TAG=${TRAEFIK_PUBLIC_TAG} \
-		docker-compose \
-			-f docker-compose.deploy.yml \
-			-f docker-compose.deploy.networks.yml \
-		config > docker-stack.yml
-
-	docker-auto-labels docker-stack.yml
-	docker stack deploy -c docker-stack.yml --with-registry-auth vott-qa
-
-push-dev: login
-	# update tags
-	git tag -f latest
-	git push --tags --force
-
-	# build docker image
-	DOCKER_TAG=latest PUBLIC_URL=vott-dev.${DOMAIN} \
-		docker-compose -f docker-compose.deploy.yml build --build-arg BUILDTIME_CORTEXIA_VERSION=$(VERSION)
-	DOCKER_TAG=latest docker-compose -f docker-compose.deploy.yml push
-
-deploy-dev:
-	DOCKER_TAG=latest \
-		SUBDOMAIN=vott-dev \
-		STACK_NAME=vott-dev \
-		DOMAIN=${DOMAIN} \
-		TRAEFIK_PUBLIC_TAG=${TRAEFIK_PUBLIC_TAG} \
-		docker-compose \
-			-f docker-compose.deploy.yml \
-			-f docker-compose.deploy.networks.yml \
-		config > docker-stack.yml
-
-	docker-auto-labels docker-stack.yml
-	docker stack deploy -c docker-stack.yml --with-registry-auth vott-dev
-
 # docker shortcuts for maintenance purpose
 
 login:
@@ -160,23 +71,141 @@ login:
 ps:
 	docker ps --format 'table {{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}'
 
+config:
+	CORTEXIA_VERSION=$(VERSION) \
+		REACT_APP_INSTRUMENTATION_KEY=$(REACT_APP_INSTRUMENTATION_KEY) \
+		docker-compose \
+			-f docker-compose.deploy.yml \
+			-f docker-compose.networks.yml \
+		config > docker-stack.yml
+
+push:
+	# build and push docker image
+	docker-compose -f docker-stack.yml build
+	docker-compose -f docker-stack.yml push
+
+# deployment to prod
+
+check-prod: check-env
+ifeq ($(wildcard .env.production),)
+	@echo ".env.production file is missing. Create it first"
+	@exit 1
+else
+include .env.production
+export
+endif
+
+config-prod: check-prod config
+
+push-prod: login config-prod
+	# confirm push to production
+	@python update_release.py confirm --prod
+	# update tags
+	git tag -f prod
+	git push --tags --force
+	# push to dockerhub
+	make push
+
+deploy-prod: config-prod
+	docker-auto-labels docker-stack.yml
+	docker stack deploy -c docker-stack.yml --with-registry-auth vott
+
+
+# deployment to qa
+
+check-qa: check-env
+ifeq ($(wildcard .env.qa),)
+	@echo ".env.qa file is missing. Create it first"
+	@exit 1
+else
+include .env.qa
+export
+endif
+
+config-qa: check-qa config
+
+push-qa: login config-qa
+	# update tags
+	git tag -f qa
+	git push --tags --force
+	# push to dockerhub
+	make push
+
+deploy-qa: config-qa
+	docker-auto-labels docker-stack.yml
+	docker stack deploy -c docker-stack.yml --with-registry-auth vott-qa
+
+
+# deployment to dev
+
+check-dev: check-env
+ifeq ($(wildcard .env.development),)
+	@echo ".env.development file is missing. Create it first"
+	@exit 1
+else
+include .env.development
+export
+endif
+
+config-dev: check-dev config
+
+push-dev: login config-dev
+	# update tags
+	git tag -f latest
+	git push --tags --force
+	# push to dockerhub
+	make push
+
+deploy-dev: config-dev
+	docker-auto-labels docker-stack.yml
+	docker stack deploy -c docker-stack.yml --with-registry-auth vott-dev
+
+
+# 'localhost' deployment
+
+VOTT_DOMAIN?=vott.localhost
+
+check-local: check-env
+ifeq ($(wildcard .env.local),)
+	@echo ".env.local file is missing. Create it first"
+	@exit 1
+else
+include .env.local
+export
+endif
+
+config-local: check-local config
+
+kill-local:
+	docker kill vott-local || true
+
+deploy-local: config-local kill-local
+	docker run -d --name vott-local --rm \
+		--network=$(TRAEFIK_PUBLIC_NETWORK) \
+		--label "traefik.enable=true" \
+		--label "traefik.docker.network=$(TRAEFIK_PUBLIC_NETWORK)" \
+		--label "traefik.http.routers.vott.entrypoints=websecure" \
+		--label "traefik.http.routers.vott.tls.certresolver=cloudflare" \
+		--label "traefik.http.routers.vott.rule=Host(\`$(SUBDOMAIN).$(DOMAIN)\`)" \
+	cortexia/vott:latest
+
 
 # docker shortcuts for development purpose
 
-pull: check-env
+pull:
 	rm -rf build node_modules
-	docker-compose -f docker-compose.dev.yml build --build-arg BUILDTIME_CORTEXIA_VERSION=$(VERSION) --pull
+	docker-compose -f docker-compose.dev.yml build --build-arg CORTEXIA_VERSION=$(VERSION) --pull
 
-build: check-env
-	docker-compose -f docker-compose.dev.yml build --build-arg BUILDTIME_CORTEXIA_VERSION=$(VERSION)
+build:
+	docker-compose -f docker-compose.dev.yml build --build-arg CORTEXIA_VERSION=$(VERSION)
 
-up: check-env
+up:
 	docker-compose -f docker-compose.dev.yml up -d
 
-down:
+down: kill-local
 	docker-compose -f docker-compose.dev.yml down
 
-stop:
+stop: kill-local
 	docker-compose -f docker-compose.dev.yml stop
 
 logs:

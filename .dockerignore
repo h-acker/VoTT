@@ -1,0 +1,9 @@
+.git*
+.env*
+
+Makefile
+Dockerfile*
+docker*
+
+update_release.py
+versions.py

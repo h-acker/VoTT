@@ -1,4 +1,5 @@
-version: "3.3"
+version: '3.7'
+
 services:
   vott-dev:
     build: 
@@ -9,4 +10,4 @@ services:
     volumes:
       - ./src:/app/src
     ports:
-      - "$DEV_VOTT_PORT:3000"
+      - "3000:3000"

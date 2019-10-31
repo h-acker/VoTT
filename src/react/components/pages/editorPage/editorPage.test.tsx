@@ -443,6 +443,55 @@ describe("Editor Page Component", () => {
         expect(editorPage.state().showInvalidRegionWarning).toBe(false);
     });
 
+    it("deletes the asset and changes it to next one when user clicks on delete icon in toolbar", async () => {
+        // create test project and asset
+        const testProject = MockFactory.createTestProject("TestProject");
+
+        // mock store and props
+        const store = createStore(testProject, true);
+        const props = MockFactory.editorPageProps(testProject.id);
+
+        // create mock editor page
+        const wrapper = createComponent(store, props);
+        const editorPage = wrapper.find(EditorPage).childAt(0) as ReactWrapper<IEditorPageProps, IEditorPageState>;
+        await waitForSelectedAsset(wrapper);
+
+        // asset-1 is selected on start
+        expect(editorPage.state().selectedAsset.asset.id).toBe("asset-1");
+
+        // attempt to click on delete image from toolbar
+        wrapper.find(`.${ToolbarItemName.DeletePicture}`).simulate("click");
+        await waitForSelectedAsset(wrapper);
+
+        // asset-2 is selected, because previous asset wasn't existing
+        expect(editorPage.state().selectedAsset.asset.id).toBe("asset-2");
+    });
+
+    it("deletes the asset and changes it to previous one when user clicks on delete icon in toolbar", async () => {
+        // create test project and asset
+        const testProject = MockFactory.createTestProject("TestProject");
+
+        // mock store and props
+        const store = createStore(testProject, true);
+        const props = MockFactory.editorPageProps(testProject.id);
+
+        // create mock editor page
+        const wrapper = createComponent(store, props);
+        const editorPage = wrapper.find(EditorPage).childAt(0) as ReactWrapper<IEditorPageProps, IEditorPageState>;
+        await waitForSelectedAsset(wrapper);
+
+        // Move to Asset 2
+        await MockFactory.flushUi(() => wrapper.find(`.${ToolbarItemName.NextAsset}`).simulate("click"));
+        expect(editorPage.state().selectedAsset.asset.id).toBe("asset-2");
+
+        // attempt to click on delete image from toolbar
+        wrapper.find(`.${ToolbarItemName.DeletePicture}`).simulate("click");
+        await waitForSelectedAsset(wrapper);
+
+        // asset-1 is selected, because previous asset was existing
+        expect(editorPage.state().selectedAsset.asset.id).toBe("asset-1");
+    });
+
     describe("Editing Video Assets", () => {
         let wrapper: ReactWrapper;
         let videoAsset: IAsset;
