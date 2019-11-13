@@ -7,7 +7,7 @@ import { KeyboardRegistrationManager } from "./keyboardRegistrationManager";
 export enum KeyEventType {
     KeyDown = "keydown",
     KeyUp = "keyup",
-    KeyPress = "keypress",
+    KeyPress = "keypress"
 }
 
 export const KeyboardContext = React.createContext<IKeyboardContext>(null);
@@ -20,7 +20,7 @@ export class KeyboardManager extends React.Component<any, IKeyboardContext> {
     public static contextType = KeyboardContext;
 
     public state: IKeyboardContext = {
-        keyboard: new KeyboardRegistrationManager(),
+        keyboard: new KeyboardRegistrationManager()
     };
 
     private nonSupportedKeys = new Set(["Meta", "Ctrl", " Control", "Alt"]);
@@ -39,11 +39,7 @@ export class KeyboardManager extends React.Component<any, IKeyboardContext> {
     }
 
     public render() {
-        return (
-            <KeyboardContext.Provider value={this.state}>
-                {this.props.children}
-            </KeyboardContext.Provider>
-        );
+        return <KeyboardContext.Provider value={this.state}>{this.props.children}</KeyboardContext.Provider>;
     }
 
     private getKeyParts(evt: KeyboardEvent) {
@@ -68,7 +64,7 @@ export class KeyboardManager extends React.Component<any, IKeyboardContext> {
          * Keys binding working as before, but error is not appearing anymore
          */
         // this.state.keyboard.invokeHandler(evt.type as KeyEventType, this.getKeyParts(evt), evt);
-    }
+    };
 
     private isDisabled(): boolean {
         return document.activeElement && this.inputElementTypes.has(document.activeElement.tagName.toLowerCase());

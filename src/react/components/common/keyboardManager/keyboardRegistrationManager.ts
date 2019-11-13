@@ -8,7 +8,7 @@ import { AppError, ErrorCode } from "../../../../models/applicationState";
  */
 export interface IKeyboardRegistrations {
     [keyEventType: string]: {
-        [key: string]: IKeyboardBindingProps,
+        [key: string]: IKeyboardBindingProps;
     };
 }
 
@@ -29,9 +29,9 @@ export class KeyboardRegistrationManager {
      * @returns a function for deregistering the keyboard binding
      */
     public registerBinding = (binding: IKeyboardBindingProps) => {
-        const {keyEventType, accelerators, handler, displayName} = binding;
+        const { keyEventType, accelerators, handler, displayName } = binding;
         Guard.null(keyEventType);
-        Guard.expression(accelerators, (keyCodes) => keyCodes.length > 0);
+        Guard.expression(accelerators, keyCodes => keyCodes.length > 0);
         Guard.null(handler);
 
         let eventTypeRegistrations = this.registrations[keyEventType];
@@ -40,7 +40,7 @@ export class KeyboardRegistrationManager {
             this.registrations[keyEventType] = eventTypeRegistrations;
         }
 
-        accelerators.forEach((keyCode) => {
+        accelerators.forEach(keyCode => {
             const currentBinding = this.registrations[keyEventType][keyCode];
             if (currentBinding) {
                 let error = `Key code ${keyCode} on key event "${keyEventType}" `;
@@ -52,11 +52,11 @@ export class KeyboardRegistrationManager {
         });
 
         return () => {
-            binding.accelerators.forEach((keyCode) => {
+            binding.accelerators.forEach(keyCode => {
                 delete this.registrations[binding.keyEventType][keyCode];
             });
         };
-    }
+    };
 
     /**
      * Gets a list of registered event handlers for the specified key code
@@ -68,11 +68,7 @@ export class KeyboardRegistrationManager {
         Guard.null(keyCode);
 
         const keyEventTypeRegs = this.registrations[keyEventType];
-        return (keyEventTypeRegs && keyEventTypeRegs[keyCode])
-            ?
-            keyEventTypeRegs[keyCode].handler
-            :
-            null;
+        return keyEventTypeRegs && keyEventTypeRegs[keyCode] ? keyEventTypeRegs[keyCode].handler : null;
     }
 
     /**
@@ -93,5 +89,5 @@ export class KeyboardRegistrationManager {
 
     public getRegistrations = () => {
         return this.registrations;
-    }
+    };
 }
