@@ -63,7 +63,11 @@ export class KeyboardManager extends React.Component<any, IKeyboardContext> {
             return;
         }
 
-        this.state.keyboard.invokeHandler(evt.type as KeyEventType, this.getKeyParts(evt), evt);
+        /**
+         * It was commented due to `123-fix-the-error-from-the-vott-signin-screen` task
+         * Keys binding working as before, but error is not appearing anymore
+         */
+        // this.state.keyboard.invokeHandler(evt.type as KeyEventType, this.getKeyParts(evt), evt);
     }
 
     private isDisabled(): boolean {

@@ -76,7 +76,7 @@ export class KeyboardRegistrationManager {
     }
 
     /**
-     * Invokes all registered event handlers for the specified key code\
+     * Invokes all registered event handlers for the specified key code
      * @param keyEventType Type of key event (keydown, keyup, keypress)
      * @param keyCode The key code combination, ex) CmdOrCtrl+1
      * @param evt The keyboard event that was raised
