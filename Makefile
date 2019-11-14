@@ -2,7 +2,7 @@
 # Default values, can be overridden either on the command line of make
 # or in .env
 
-.PHONY: config
+.PHONY: config build
 
 VERSION:=$(shell python update_release.py -v)
 BRANCH?=master
@@ -194,10 +194,10 @@ deploy-local: config-local kill-local
 
 pull:
 	rm -rf build node_modules
-	docker-compose -f docker-compose.dev.yml build --build-arg CORTEXIA_VERSION=$(VERSION) --pull
+	docker-compose -f docker-compose.dev.yml build --build-arg BUILDTIME_CORTEXIA_VERSION=$(VERSION) --pull
 
 build:
-	docker-compose -f docker-compose.dev.yml build --build-arg CORTEXIA_VERSION=$(VERSION)
+	docker-compose -f docker-compose.dev.yml build --build-arg BUILDTIME_CORTEXIA_VERSION=$(VERSION)
 
 up:
 	docker-compose -f docker-compose.dev.yml up -d
