@@ -11,7 +11,9 @@ export class StatusBar extends React.Component {
                     <ul>
                         <li>
                             <i className="fas fa-code-branch"></i>
-                            <span>{appInfo.version}</span>
+                            <span>
+                                {appInfo.version}-{process.env.REACT_APP_CORTEXIA_VERSION}
+                            </span>
                         </li>
                     </ul>
                 </div>
