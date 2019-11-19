@@ -21,6 +21,7 @@ config-dev: check-env
 		TRAEFIK_PUBLIC_NETWORK=$(TRAEFIK_PUBLIC_NETWORK) \
 		DOMAIN=$(DOMAIN) \
 		SUBDOMAIN=vott-dev \
+		STACK_NAME=vott-dev \
 		ENVIRONMENT=dev \
 		NODE_ENV=development \
 		DOCKER_TAG=latest \
@@ -36,6 +37,7 @@ config-qa: check-env
 		TRAEFIK_PUBLIC_NETWORK=$(TRAEFIK_PUBLIC_NETWORK) \
 		DOMAIN=$(DOMAIN) \
 		SUBDOMAIN=vott-qa \
+		STACK_NAME=vott-qa \
 		ENVIRONMENT=dev \
 		NODE_ENV=development \
 		DOCKER_TAG=qa \
@@ -51,10 +53,11 @@ config-prod: check-env
 		TRAEFIK_PUBLIC_NETWORK=$(TRAEFIK_PUBLIC_NETWORK) \
 		DOMAIN=$(DOMAIN) \
 		SUBDOMAIN=vott \
+		STACK_NAME=vott \
 		ENVIRONMENT=prod \
 		NODE_ENV=production \
 		DOCKER_TAG=prod \
-		REACT_APP_API_URL=https://backendcortexia.io \
+		REACT_APP_API_URL=https://backend.cortexia.io \
 		docker-compose \
 			-f docker-compose.deploy.yml \
 			-f docker-compose.networks.yml \

@@ -6,7 +6,9 @@ services:
       context: ./
       dockerfile: Dockerfile-dev
     env_file:
-     - ./.env
+      - ./.env
+    environment:
+      - STACK_NAME=vott
     volumes:
       - ./src:/app/src
     ports:
