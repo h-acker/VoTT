@@ -3,7 +3,7 @@
 
 # the release comes from git and should not be modified
 # => read-only
-_release = '0.5.0-2-g69667d2'
+_release = '0.5.0-3-ge1aa84d'
 
 # you can set the next version number manually
 # if you do not, the system will make sure that version > release
@@ -13,4 +13,4 @@ _version = '0.5.1-rc'
 # the build number will generate conflicts on each PR merge
 # just keep yours every time
 # => read-only
-_build = '69667d21401b90de524d05584da5f3cce8ecf941'
+_build = 'e1aa84dc9844f555c80f38ba4fb89218cdfdfbb3'

@@ -18,5 +18,5 @@ services:
         - "traefik.http.routers.vott.entrypoints=websecure"
         - "traefik.http.routers.vott.tls.certresolver=cloudflare"
         - "traefik.http.routers.vott.rule=Host(`${SUBDOMAIN}.${DOMAIN}`)"
-        - "traefik.http.services.vott.loadbalancer.server.port=3000"
+        - "traefik.http.services.vott.loadbalancer.server.port=5000"
 
