@@ -15,21 +15,6 @@ version:
 ps:
 	docker ps --format 'table {{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}'
 
-config-local: check-env
-	CORTEXIA_VERSION=$(VERSION) \
-		REACT_APP_INSTRUMENTATION_KEY=$(REACT_APP_INSTRUMENTATION_KEY) \
-		TRAEFIK_PUBLIC_NETWORK=$(TRAEFIK_PUBLIC_NETWORK) \
-		DOMAIN=local \
-		SUBDOMAIN=vott \
-		ENVIRONMENT=dev \
-		NODE_ENV=development \
-		DOCKER_TAG=latest \
-		REACT_APP_API_URL=http://backend.local \
-		docker-compose \
-			-f docker-compose.deploy.yml \
-			-f docker-compose.networks.yml \
-		config > docker-stack.yml
-
 config-dev: check-env
 	CORTEXIA_VERSION=$(VERSION) \
 		REACT_APP_INSTRUMENTATION_KEY=$(REACT_APP_INSTRUMENTATION_KEY) \
@@ -115,45 +100,24 @@ create-release: check-release
 	git merge release-$(VERSION)
 	git push
 
-
 push-common:
-	# build and push docker image
+	git push --tags --force
 	docker-compose -f docker-stack.yml build
 	docker-compose -f docker-stack.yml push
 
 push-dev: login config-dev
-	# update tags
 	git tag -f latest
-	git push --tags --force
-	# push to dockerhub
 	make push-common
 
 push-qa: login config-qa
-	# update tags
 	git tag -f qa
-	git push --tags --force
-	# push to dockerhub
 	make push-common
 
 push-prod: login config-prod
 	# confirm push to production
 	@python update_release.py confirm --prod
-	# update tags
 	git tag -f prod
-	git push --tags --force
-	# push to dockerhub
 	make push-common
-
-
-deploy-local: config-local kill-local
-	docker run -d --name vott-local --rm \
-		--network=$(TRAEFIK_PUBLIC_NETWORK) \
-		--label "traefik.enable=true" \
-		--label "traefik.docker.network=$(TRAEFIK_PUBLIC_NETWORK)" \
-		--label "traefik.http.routers.vott.entrypoints=websecure" \
-		--label "traefik.http.routers.vott.tls.certresolver=cloudflare" \
-		--label "traefik.http.routers.vott.rule=Host(\`$(SUBDOMAIN).$(DOMAIN)\`)" \
-	cortexia/vott:latest
 
 deploy-dev: config-dev
 	docker-auto-labels docker-stack.yml
@@ -201,7 +165,6 @@ include .env
 export
 endif
 
-
 # more shortcuts
 
 login:
@@ -209,3 +172,28 @@ login:
 
 kill-local:
 	docker kill vott-local || true
+
+config-local: check-env
+	CORTEXIA_VERSION=$(VERSION) \
+		REACT_APP_INSTRUMENTATION_KEY=$(REACT_APP_INSTRUMENTATION_KEY) \
+		TRAEFIK_PUBLIC_NETWORK=$(TRAEFIK_PUBLIC_NETWORK) \
+		DOMAIN=local \
+		SUBDOMAIN=vott \
+		ENVIRONMENT=dev \
+		NODE_ENV=development \
+		DOCKER_TAG=latest \
+		REACT_APP_API_URL=http://backend.local \
+		docker-compose \
+			-f docker-compose.deploy.yml \
+			-f docker-compose.networks.yml \
+		config > docker-stack.yml
+
+deploy-local: config-local kill-local
+	docker run -d --name vott-local --rm \
+		--network=$(TRAEFIK_PUBLIC_NETWORK) \
+		--label "traefik.enable=true" \
+		--label "traefik.docker.network=$(TRAEFIK_PUBLIC_NETWORK)" \
+		--label "traefik.http.routers.vott.entrypoints=websecure" \
+		--label "traefik.http.routers.vott.tls.certresolver=cloudflare" \
+		--label "traefik.http.routers.vott.rule=Host(\`$(SUBDOMAIN).$(DOMAIN)\`)" \
+	cortexia/vott:latest

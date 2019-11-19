@@ -6,7 +6,7 @@ WORKDIR /tmp
 RUN npm install -g serve
 RUN npm ci
 
-ARG REACT_APP_INSTRUMENTATION_KEY=app-key
+ARG REACT_APP_INSTRUMENTATION_KEY=instrumentation_key
 ARG REACT_APP_API_URL=https://backend.cortexia.io
 ARG NODE_ENV=production
 RUN echo "REACT_APP_INSTRUMENTATION_KEY=$REACT_APP_INSTRUMENTATION_KEY" > .env \
