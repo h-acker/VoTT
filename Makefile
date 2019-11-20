@@ -66,11 +66,11 @@ config-prod: check-env
 init: check-env
 
 build:
-	docker-compose -f docker-compose.dev.yml build --build-arg BUILDTIME_CORTEXIA_VERSION=$(VERSION)
+	CORTEXIA_VERSION=$(VERSION) docker-compose -f docker-compose.dev.yml build
 
 pull:
 	rm -rf build node_modules
-	docker-compose -f docker-compose.dev.yml build --build-arg BUILDTIME_CORTEXIA_VERSION=$(VERSION) --pull
+	CORTEXIA_VERSION=$(VERSION) docker-compose -f docker-compose.dev.yml build --pull
 
 up:
 	docker-compose -f docker-compose.dev.yml up -d
