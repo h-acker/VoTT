@@ -6,7 +6,7 @@ services:
       context: ./
       dockerfile: Dockerfile-dev
       args:
-        - BUILDTIME_CORTEXIA_VERSION=${VERSION}
+        - BUILDTIME_CORTEXIA_VERSION=${CORTEXIA_VERSION}
     env_file:
       - ./.env
     environment:

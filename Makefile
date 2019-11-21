@@ -185,6 +185,7 @@ config-local: check-env
 		ENVIRONMENT=dev \
 		NODE_ENV=development \
 		DOCKER_TAG=latest \
+		STACK_NAME=vott-local \
 		REACT_APP_API_URL=http://backend.local \
 		docker-compose \
 			-f docker-compose.deploy.yml \
@@ -198,5 +199,5 @@ deploy-local: config-local kill-local
 		--label "traefik.docker.network=$(TRAEFIK_PUBLIC_NETWORK)" \
 		--label "traefik.http.routers.vott.entrypoints=websecure" \
 		--label "traefik.http.routers.vott.tls.certresolver=cloudflare" \
-		--label "traefik.http.routers.vott.rule=Host(\`$(SUBDOMAIN).$(DOMAIN)\`)" \
+		--label "traefik.http.routers.vott.rule=Host(\`vott-local.cortexia.io\`)" \
 	cortexia/vott:latest
