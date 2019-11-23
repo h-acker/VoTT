@@ -15,6 +15,8 @@ version:
 ps:
 	docker ps --format 'table {{.Image}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}'
 
+init: check-env
+
 config-dev: check-env
 	CORTEXIA_VERSION=$(VERSION) \
 	REACT_APP_INSTRUMENTATION_KEY=$(REACT_APP_INSTRUMENTATION_KEY) \
@@ -62,8 +64,6 @@ config-prod: check-env
 		-f docker-compose.deploy.yml \
 		-f docker-compose.networks.yml \
 	config > docker-stack.yml
-
-init: check-env
 
 build:
 	CORTEXIA_VERSION=$(VERSION) docker-compose -f docker-compose.dev.yml build
