@@ -17,51 +17,51 @@ ps:
 
 config-dev: check-env
 	CORTEXIA_VERSION=$(VERSION) \
-		REACT_APP_INSTRUMENTATION_KEY=$(REACT_APP_INSTRUMENTATION_KEY) \
-		TRAEFIK_PUBLIC_NETWORK=$(TRAEFIK_PUBLIC_NETWORK) \
-		DOMAIN=$(DOMAIN) \
-		SUBDOMAIN=vott-dev \
-		STACK_NAME=vott-dev \
-		ENVIRONMENT=dev \
-		NODE_ENV=development \
-		DOCKER_TAG=latest \
-		REACT_APP_API_URL=https://mocks.cortexia.io \
-		docker-compose \
-			-f docker-compose.deploy.yml \
-			-f docker-compose.networks.yml \
-		config > docker-stack.yml
+	REACT_APP_INSTRUMENTATION_KEY=$(REACT_APP_INSTRUMENTATION_KEY) \
+	TRAEFIK_PUBLIC_NETWORK=$(TRAEFIK_PUBLIC_NETWORK) \
+	DOMAIN=$(DOMAIN) \
+	SUBDOMAIN=vott-dev \
+	STACK_NAME=vott-dev \
+	ENVIRONMENT=dev \
+	NODE_ENV=development \
+	DOCKER_TAG=latest \
+	REACT_APP_API_URL=https://mocks.cortexia.io \
+	docker-compose \
+		-f docker-compose.deploy.yml \
+		-f docker-compose.networks.yml \
+	config > docker-stack.yml
 
 config-qa: check-env
 	CORTEXIA_VERSION=$(VERSION) \
-		REACT_APP_INSTRUMENTATION_KEY=$(REACT_APP_INSTRUMENTATION_KEY) \
-		TRAEFIK_PUBLIC_NETWORK=$(TRAEFIK_PUBLIC_NETWORK) \
-		DOMAIN=$(DOMAIN) \
-		SUBDOMAIN=vott-qa \
-		STACK_NAME=vott-qa \
-		ENVIRONMENT=dev \
-		NODE_ENV=development \
-		DOCKER_TAG=qa \
-		REACT_APP_API_URL=https://backend-qa.cortexia.io \
-		docker-compose \
-			-f docker-compose.deploy.yml \
-			-f docker-compose.networks.yml \
-		config > docker-stack.yml
+	REACT_APP_INSTRUMENTATION_KEY=$(REACT_APP_INSTRUMENTATION_KEY) \
+	TRAEFIK_PUBLIC_NETWORK=$(TRAEFIK_PUBLIC_NETWORK) \
+	DOMAIN=$(DOMAIN) \
+	SUBDOMAIN=vott-qa \
+	STACK_NAME=vott-qa \
+	ENVIRONMENT=dev \
+	NODE_ENV=development \
+	DOCKER_TAG=qa \
+	REACT_APP_API_URL=https://backend-qa.cortexia.io \
+	docker-compose \
+		-f docker-compose.deploy.yml \
+		-f docker-compose.networks.yml \
+	config > docker-stack.yml
 
 config-prod: check-env
 	CORTEXIA_VERSION=$(VERSION) \
-		REACT_APP_INSTRUMENTATION_KEY=$(REACT_APP_INSTRUMENTATION_KEY) \
-		TRAEFIK_PUBLIC_NETWORK=$(TRAEFIK_PUBLIC_NETWORK) \
-		DOMAIN=$(DOMAIN) \
-		SUBDOMAIN=vott \
-		STACK_NAME=vott \
-		ENVIRONMENT=prod \
-		NODE_ENV=production \
-		DOCKER_TAG=prod \
-		REACT_APP_API_URL=https://backend.cortexia.io \
-		docker-compose \
-			-f docker-compose.deploy.yml \
-			-f docker-compose.networks.yml \
-		config > docker-stack.yml
+	REACT_APP_INSTRUMENTATION_KEY=$(REACT_APP_INSTRUMENTATION_KEY) \
+	TRAEFIK_PUBLIC_NETWORK=$(TRAEFIK_PUBLIC_NETWORK) \
+	DOMAIN=$(DOMAIN) \
+	SUBDOMAIN=vott \
+	STACK_NAME=vott \
+	ENVIRONMENT=prod \
+	NODE_ENV=production \
+	DOCKER_TAG=prod \
+	REACT_APP_API_URL=https://backend.cortexia.io \
+	docker-compose \
+		-f docker-compose.deploy.yml \
+		-f docker-compose.networks.yml \
+	config > docker-stack.yml
 
 init: check-env
 
@@ -178,29 +178,31 @@ kill-local:
 
 config-local: check-env
 	CORTEXIA_VERSION=$(VERSION) \
-		REACT_APP_INSTRUMENTATION_KEY=$(REACT_APP_INSTRUMENTATION_KEY) \
-		TRAEFIK_PUBLIC_NETWORK=$(TRAEFIK_PUBLIC_NETWORK) \
-		DOMAIN=local \
-		SUBDOMAIN=vott \
-		ENVIRONMENT=dev \
-		NODE_ENV=development \
-		DOCKER_TAG=latest \
-		STACK_NAME=vott-local \
-		REACT_APP_API_URL=http://backend.local \
-		docker-compose \
-			-f docker-compose.deploy.yml \
-			-f docker-compose.networks.yml \
-		config > docker-stack.yml
+	REACT_APP_INSTRUMENTATION_KEY=$(REACT_APP_INSTRUMENTATION_KEY) \
+	TRAEFIK_PUBLIC_NETWORK=$(TRAEFIK_PUBLIC_NETWORK) \
+	DOMAIN=local \
+	SUBDOMAIN=vott \
+	ENVIRONMENT=dev \
+	NODE_ENV=development \
+	DOCKER_TAG=latest \
+	STACK_NAME=vott-local \
+	REACT_APP_API_URL=http://backend.local \
+	docker-compose \
+		-f docker-compose.deploy.yml \
+		-f docker-compose.networks.yml \
+	config > docker-stack.yml
 
 build-local: config-local
 	docker-compose -f docker-stack.yml build
 
-deploy-local: config-local kill-local
+deploy-local: build-local kill-local
+	DOMAIN=$(DOMAIN) \
+	SUBDOMAIN=$(SUBDOMAIN) \
 	docker run -d --name vott-local --rm \
 		--network=$(TRAEFIK_PUBLIC_NETWORK) \
 		--label "traefik.enable=true" \
 		--label "traefik.docker.network=$(TRAEFIK_PUBLIC_NETWORK)" \
 		--label "traefik.http.routers.vott-local.entrypoints=websecure" \
 		--label "traefik.http.routers.vott-local.tls.certresolver=cloudflare" \
-		--label "traefik.http.routers.vott-local.rule=Host(\`vott.local\`)" \
+		--label "traefik.http.routers.vott-local.rule=Host(\`$(SUBDOMAIN).$(DOMAIN)\`)" \
 	cortexia/vott:latest
