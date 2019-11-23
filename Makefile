@@ -192,12 +192,15 @@ config-local: check-env
 			-f docker-compose.networks.yml \
 		config > docker-stack.yml
 
+build-local: config-local
+	docker-compose -f docker-stack.yml build
+
 deploy-local: config-local kill-local
 	docker run -d --name vott-local --rm \
 		--network=$(TRAEFIK_PUBLIC_NETWORK) \
 		--label "traefik.enable=true" \
 		--label "traefik.docker.network=$(TRAEFIK_PUBLIC_NETWORK)" \
-		--label "traefik.http.routers.vott.entrypoints=websecure" \
-		--label "traefik.http.routers.vott.tls.certresolver=cloudflare" \
-		--label "traefik.http.routers.vott.rule=Host(\`vott-local.cortexia.io\`)" \
+		--label "traefik.http.routers.vott-local.entrypoints=websecure" \
+		--label "traefik.http.routers.vott-local.tls.certresolver=cloudflare" \
+		--label "traefik.http.routers.vott-local.rule=Host(\`vott.local\`)" \
 	cortexia/vott:latest
