@@ -27,7 +27,7 @@ config-dev: check-env
 	ENVIRONMENT=dev \
 	NODE_ENV=development \
 	DOCKER_TAG=latest \
-	REACT_APP_API_URL=https://mocks.cortexia.io \
+	REACT_APP_API_URL=https://backend-dev.cortexia.io \
 	docker-compose \
 		-f docker-compose.deploy.yml \
 		-f docker-compose.networks.yml \
