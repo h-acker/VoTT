@@ -39,6 +39,10 @@ VoTT helps facilitate an end-to-end machine learning pipeline:
     - [Where is V1](#where-is-v1)
       - [V1 releases](#v1-releases)
     - [V1 projects in V2](#v1-projects-in-v2)
+  - [Version management](#version-management)
+    - [It makes use of](#it-makes-use-of)
+    - [Commands provided](#commands-provided)
+    - [Version format, suggested meanings for major.minor.patch](#version-format-suggested-meanings-for-majorminorpatch)
   - [Using VoTT](#using-vott)
     - [Creating Connections](#creating-connections)
     - [Creating a New Project](#creating-a-new-project)
@@ -88,7 +92,7 @@ Check the Makefile for more commands like `make down`, `make ps` or `make versio
 When it comes to production, three commands are available to create prodcution-ready images, and push them to docker hub:
 
 - `make push-prod` will push to cortexia/vott:prod
-- `make push-qa` will push to cortexia/vott:stag
+- `make push-qa` will push to cortexia/vott:qa
 - `make push-dev` will push to cortexia/vott:latest
 
 ### Build and run from source
