@@ -5,7 +5,7 @@ services:
     build:
       context: .
       args:
-        - CORTEXIA_VERSION=${CORTEXIA_VERSION}
+        - BUILDTIME_CORTEXIA_VERSION=${CORTEXIA_VERSION}
         - ENVIRONMENT=${ENVIRONMENT}
         - REACT_APP_API_URL=${REACT_APP_API_URL}
         - REACT_APP_INSTRUMENTATION_KEY=${REACT_APP_INSTRUMENTATION_KEY}
@@ -14,9 +14,9 @@ services:
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.docker.network=$(TRAEFIK_PUBLIC_NETWORK)"
-        - "traefik.http.routers.vott.entrypoints=websecure"
-        - "traefik.http.routers.vott.tls.certresolver=cloudflare"
-        - "traefik.http.routers.vott.rule=Host(\`$(SUBDOMAIN).$(DOMAIN)\`)"
-        - "traefik.http.services.vott.loadbalancer.server.port=3000"
+        - "traefik.docker.network=${TRAEFIK_PUBLIC_NETWORK}"
+        - "traefik.http.routers.${STACK_NAME}.entrypoints=websecure"
+        - "traefik.http.routers.${STACK_NAME}.tls.certresolver=cloudflare"
+        - "traefik.http.routers.${STACK_NAME}.rule=Host(`${SUBDOMAIN}.${DOMAIN}`)"
+        - "traefik.http.services.${STACK_NAME}.loadbalancer.server.port=5000"
 
