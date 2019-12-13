@@ -531,7 +531,6 @@ describe("Editor Page Component", () => {
                     regions: []
                 })
             );
-
             const editedVideoFrame: IAssetMetadata = {
                 asset: videoFrames[0],
                 regions: [MockFactory.createTestRegion("region1", ["test"])],
