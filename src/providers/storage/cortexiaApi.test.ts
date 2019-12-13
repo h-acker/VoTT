@@ -55,7 +55,7 @@ describe("Cortexia Api", () => {
                 path: url,
                 name: fileName
             }));
-            jest.spyOn(ApiService, "getUserImages").mockImplementationOnce(() =>
+            jest.spyOn(ApiService, "getImagesFromDispatcher").mockImplementationOnce(() =>
                 Promise.resolve({
                     data: assetsMock
                 })

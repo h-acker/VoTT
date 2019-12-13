@@ -241,7 +241,8 @@ export const english: IAppStrings = {
             exportProject: "Export Project",
             activeLearning: "Active Learning",
             magnifier: "Magnifier",
-            deletePicture: "Delete Picture"
+            deletePicture: "Delete Picture",
+            reloadImages: "Reload Images"
         },
         videoPlayer: {
             previousTaggedFrame: {
@@ -290,6 +291,12 @@ export const english: IAppStrings = {
                 description:
                     "1 or more regions have not been tagged.  Ensure all regions are tagged before \
                     continuing to next asset."
+            }
+        },
+        images: {
+            reload: {
+                title: "Starting new session",
+                confirmation: "Please confirm that you want to start a new session"
             }
         },
         deletePictureError:

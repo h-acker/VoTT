@@ -158,36 +158,6 @@ describe("Editor Page Component", () => {
         expect(editorPage.props().project).toEqual(testProject);
     });
 
-    it("Loads and merges project assets with asset provider assets when state changes", async () => {
-        const projectAssets = MockFactory.createTestAssets(10, 10);
-        const testProject = MockFactory.createTestProject("TestProject");
-        testProject.assets = _.keyBy(projectAssets, asset => asset.id);
-
-        const store = createStore(testProject, true);
-        const props = MockFactory.editorPageProps(testProject.id);
-
-        const wrapper = createComponent(store, props);
-        const editorPage = wrapper.find(EditorPage).childAt(0) as ReactWrapper<IEditorPageProps, IEditorPageState>;
-
-        const partialProject = {
-            id: testProject.id,
-            name: testProject.name
-        };
-
-        await MockFactory.flushUi();
-
-        const expectedAsset = editorPage.state().assets[0];
-
-        expect(editorPage.props().project).toEqual(expect.objectContaining(partialProject));
-        expect(editorPage.state().assets.length).toEqual(projectAssets.length + testAssets.length);
-        expect(editorPage.state().selectedAsset).toMatchObject({
-            asset: {
-                ...expectedAsset,
-                state: AssetState.Visited
-            }
-        });
-    });
-
     it("Default asset is loaded and saved during initial page rendering", async () => {
         // create test project and asset
         const testProject = MockFactory.createTestProject("TestProject");
@@ -513,16 +483,6 @@ describe("Editor Page Component", () => {
             wrapper.update();
         });
 
-        it("Child assets are not included within editor page state", () => {
-            const editorPage = wrapper.find(EditorPage).childAt(0) as ReactWrapper<IEditorPageProps, IEditorPageState>;
-
-            expect(editorPage.state().assets.length).toEqual(testAssets.length + 1);
-            expect(editorPage.state().selectedAsset.asset).toEqual({
-                ...videoAsset,
-                state: AssetState.Visited
-            });
-        });
-
         it("When a VideoFrame is updated the root asset is also updated", async () => {
             const getAssetMetadataMock = assetServiceMock.prototype.getAssetMetadata as jest.Mock;
             getAssetMetadataMock.mockImplementationOnce(() =>
@@ -565,9 +525,6 @@ describe("Editor Page Component", () => {
 
             // Child asset is updated
             expect(saveMock.mock.calls[1][0]).toEqual(editedVideoFrame);
-
-            const matchingRootAsset = editorPage.state().assets.find(asset => asset.id === videoAsset.id);
-            expect(matchingRootAsset.state).toEqual(AssetState.Tagged);
         });
     });
 

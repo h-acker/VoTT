@@ -45,8 +45,6 @@ import { ActiveLearningService } from "../../../../services/activeLearningServic
 import { toast } from "react-toastify";
 import ITrackingActions, * as trackingActions from "../../../../redux/actions/trackingActions";
 import { MagnifierModalMessage } from "./MagnifierModalMessage";
-import apiService from "../../../../services/apiService";
-import { sizeToSquarishShape } from "@tensorflow/tfjs-core/dist/util";
 
 /**
  * Properties for Editor Page
@@ -154,6 +152,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
     private canvas: RefObject<Canvas> = React.createRef();
     private renameTagConfirm: React.RefObject<Confirm> = React.createRef();
     private deleteTagConfirm: React.RefObject<Confirm> = React.createRef();
+    private reloadImagesConfirm: React.RefObject<Confirm> = React.createRef();
 
     public async componentDidMount() {
         const projectId = this.props.match.params["projectId"];
@@ -313,6 +312,13 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                             confirmButtonColor="danger"
                             onConfirm={this.onTagDeleted}
                         />
+                        <Confirm
+                            title={strings.editorPage.images.reload.title}
+                            ref={this.reloadImagesConfirm}
+                            message={strings.editorPage.images.reload.confirmation}
+                            confirmButtonColor="danger"
+                            onConfirm={this.onReloadedImages}
+                        />
                     </div>
                 </SplitPane>
 
@@ -425,6 +431,12 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
      */
     private confirmTagDeleted = (tagName: string): void => {
         this.deleteTagConfirm.current.open(tagName);
+    };
+
+    private onReloadedImages = async () => {
+        await this.loadProjectAssets(true).then(() => {
+            this.forceUpdate();
+        });
     };
 
     /**
@@ -541,7 +553,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             rootAsset.state = assetMetadata.asset.state;
         } else {
             const rootAssetMetadata = await this.props.actions.loadAssetMetadata(this.props.project, rootAsset);
-
             if (rootAssetMetadata.asset.state !== AssetState.Tagged) {
                 rootAssetMetadata.asset.state = assetMetadata.asset.state;
                 await this.props.actions.saveAssetMetadata(this.props.project, rootAssetMetadata);
@@ -654,6 +665,10 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                 break;
             case ToolbarItemName.DeletePicture:
                 this.handleDeletePictureClick();
+                break;
+            case ToolbarItemName.ReloadImages:
+                this.handleReloadImagesClick();
+                break;
         }
     };
 
@@ -740,6 +755,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         }
 
         const assetMetadata = await actions.loadAssetMetadata(project, asset);
+
         try {
             if (!assetMetadata.asset.size) {
                 const assetProps = await HtmlFileReader.readAssetAttributes(asset);
@@ -790,34 +806,25 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         return selectedAssetBase.regions.length !== selectedAsset.regions.length || !!modifiedAssets.length;
     };
 
-    private loadProjectAssets = async (): Promise<void> => {
-        if (this.loadingProjectAssets || this.state.assets.length > 0) {
+    private loadProjectAssets = async (forceLoad: boolean = false): Promise<void> => {
+        if (this.loadingProjectAssets || (!forceLoad && this.state.assets.length > 0)) {
             return;
         }
 
         this.loadingProjectAssets = true;
 
-        // Get all root project assets
-        const rootProjectAssets = _.values(this.props.project.assets).filter(asset => !asset.parent);
-
         // Get all root assets from source asset provider
         const sourceAssets = await this.props.actions.loadAssets(this.props.project);
 
-        // Merge and uniquify
-        const rootAssets = _(rootProjectAssets)
-            .concat(sourceAssets)
-            .uniqBy(asset => asset.id)
-            .value();
-
-        const lastVisited = rootAssets.find(asset => asset.id === this.props.project.lastVisitedAssetId);
+        const lastVisited = sourceAssets.find(asset => asset.id === this.props.project.lastVisitedAssetId);
 
         this.setState(
             {
-                assets: rootAssets
+                assets: sourceAssets
             },
             async () => {
-                if (rootAssets.length > 0) {
-                    await this.selectAsset(lastVisited ? lastVisited : rootAssets[0]);
+                if (sourceAssets.length > 0) {
+                    await this.selectAsset(lastVisited && !forceLoad ? lastVisited : sourceAssets[0]);
                 }
                 this.loadingProjectAssets = false;
             }
@@ -838,6 +845,10 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
 
         this.setState({ assets: updatedAssets });
     };
+
+    private handleReloadImagesClick() {
+        this.reloadImagesConfirm.current.open();
+    }
 
     private async handleDeletePictureClick() {
         try {
