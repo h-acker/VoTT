@@ -115,7 +115,7 @@ export class CortexiaApi implements IStorageProvider {
      * @param containerName - It's not required as our provider doesn't use containers.
      */
     public async getAssets(containerName?: string): Promise<IAsset[]> {
-        const images = await apiService.getUserImages();
+        const images = await apiService.getImagesFromDispatcher();
         const result: IAsset[] = [];
         images.data.map((image: IImage) => {
             const url = image.path;

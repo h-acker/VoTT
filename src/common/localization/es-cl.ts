@@ -244,7 +244,8 @@ export const spanish: IAppStrings = {
             exportProject: "Exprtar Proyecto",
             activeLearning: "Aprendizaje Activo",
             magnifier: "Lupa",
-            deletePicture: "Eliminar"
+            deletePicture: "Eliminar",
+            reloadImages: "Recargar imágenes"
         },
         videoPlayer: {
             previousTaggedFrame: {
@@ -295,6 +296,12 @@ export const spanish: IAppStrings = {
                 description:
                     "1 o más regiones no se han etiquetado.  \
                     Por favor, etiquete todas las regiones antes de continuar con el siguiente activo."
+            }
+        },
+        images: {
+            reload: {
+                title: "Comenzando nueva sesión",
+                confirmation: "Confirma que desea iniciar una nueva sesión"
             }
         },
         deletePictureError:

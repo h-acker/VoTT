@@ -19,7 +19,8 @@ export enum ToolbarItemName {
     ExportProject = "exportProject",
     ActiveLearning = "activeLearning",
     Magnifier = "magnifier",
-    DeletePicture = "deletePicture"
+    DeletePicture = "deletePicture",
+    ReloadImages = "reloadImages"
 }
 
 export enum ToolbarItemGroup {
@@ -170,6 +171,14 @@ export default function registerToolbar() {
         name: ToolbarItemName.DeletePicture,
         tooltip: strings.editorPage.toolbar.deletePicture,
         icon: "fas fa-trash-alt",
+        group: ToolbarItemGroup.Action,
+        type: ToolbarItemType.Action
+    });
+
+    ToolbarItemFactory.register({
+        name: ToolbarItemName.ReloadImages,
+        tooltip: strings.editorPage.toolbar.reloadImages,
+        icon: "fas fa-sync-alt",
         group: ToolbarItemGroup.Action,
         type: ToolbarItemType.Action
     });
