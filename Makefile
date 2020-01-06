@@ -18,52 +18,70 @@ ps:
 init: check-env
 
 config-dev: check-env
-	CORTEXIA_VERSION=$(VERSION) \
-	REACT_APP_INSTRUMENTATION_KEY=$(REACT_APP_INSTRUMENTATION_KEY) \
-	TRAEFIK_PUBLIC_NETWORK=$(TRAEFIK_PUBLIC_NETWORK) \
-	DOMAIN=$(DOMAIN) \
-	SUBDOMAIN=vott-dev \
-	STACK_NAME=vott-dev \
-	ENVIRONMENT=dev \
-	NODE_ENV=development \
-	DOCKER_TAG=latest \
-	REACT_APP_API_URL=https://backend-dev.cortexia.io \
-	docker-compose \
-		-f docker-compose.deploy.yml \
-		-f docker-compose.networks.yml \
-	config > docker-stack.yml
+ifeq ($(wildcard .env-dev),)
+	@echo "\033[31m>> Create .env-dev first\033[0m"
+	@exit 1
+endif
+	cp .env .env-backup && rm .env && ln -s .env-dev .env
+	source .env && \
+		CORTEXIA_VERSION=$(VERSION) \
+		REACT_APP_INSTRUMENTATION_KEY=$(REACT_APP_INSTRUMENTATION_KEY) \
+		TRAEFIK_PUBLIC_NETWORK=$(TRAEFIK_PUBLIC_NETWORK) \
+		DOMAIN=$(DOMAIN) \
+		SUBDOMAIN=vott-dev \
+		STACK_NAME=vott-dev \
+		ENVIRONMENT=dev \
+		NODE_ENV=development \
+		DOCKER_TAG=latest \
+		REACT_APP_API_URL=https://backend-dev.cortexia.io \
+		docker-compose \
+			-f docker-compose.deploy.yml \
+			-f docker-compose.networks.yml \
+		config > docker-stack.yml
 
 config-qa: check-env
-	CORTEXIA_VERSION=$(VERSION) \
-	REACT_APP_INSTRUMENTATION_KEY=$(REACT_APP_INSTRUMENTATION_KEY) \
-	TRAEFIK_PUBLIC_NETWORK=$(TRAEFIK_PUBLIC_NETWORK) \
-	DOMAIN=$(DOMAIN) \
-	SUBDOMAIN=vott-qa \
-	STACK_NAME=vott-qa \
-	ENVIRONMENT=dev \
-	NODE_ENV=development \
-	DOCKER_TAG=qa \
-	REACT_APP_API_URL=https://backend-qa.cortexia.io \
-	docker-compose \
-		-f docker-compose.deploy.yml \
-		-f docker-compose.networks.yml \
-	config > docker-stack.yml
+ifeq ($(wildcard .env-qa),)
+	@echo "\033[31m>> Create .env-qa first\033[0m"
+	@exit 1
+endif
+	cp .env .env-backup && rm .env && ln -s .env-qa .env
+	source .env && \
+		CORTEXIA_VERSION=$(VERSION) \
+		REACT_APP_INSTRUMENTATION_KEY=$(REACT_APP_INSTRUMENTATION_KEY) \
+		TRAEFIK_PUBLIC_NETWORK=$(TRAEFIK_PUBLIC_NETWORK) \
+		DOMAIN=$(DOMAIN) \
+		SUBDOMAIN=vott-qa \
+		STACK_NAME=vott-qa \
+		ENVIRONMENT=dev \
+		NODE_ENV=development \
+		DOCKER_TAG=qa \
+		REACT_APP_API_URL=https://backend-qa.cortexia.io \
+		docker-compose \
+			-f docker-compose.deploy.yml \
+			-f docker-compose.networks.yml \
+		config > docker-stack.yml
 
 config-prod: check-env
-	CORTEXIA_VERSION=$(VERSION) \
-	REACT_APP_INSTRUMENTATION_KEY=$(REACT_APP_INSTRUMENTATION_KEY) \
-	TRAEFIK_PUBLIC_NETWORK=$(TRAEFIK_PUBLIC_NETWORK) \
-	DOMAIN=$(DOMAIN) \
-	SUBDOMAIN=vott \
-	STACK_NAME=vott \
-	ENVIRONMENT=prod \
-	NODE_ENV=production \
-	DOCKER_TAG=prod \
-	REACT_APP_API_URL=https://backend.cortexia.io \
-	docker-compose \
-		-f docker-compose.deploy.yml \
-		-f docker-compose.networks.yml \
-	config > docker-stack.yml
+ifeq ($(wildcard .env-prod),)
+	@echo "\033[31m>> Create .env-prod first\033[0m"
+	@exit 1
+endif
+	cp .env .env-backup && rm .env && ln -s .env-prod .env
+	source .env && \
+		CORTEXIA_VERSION=$(VERSION) \
+		REACT_APP_INSTRUMENTATION_KEY=$(REACT_APP_INSTRUMENTATION_KEY) \
+		TRAEFIK_PUBLIC_NETWORK=$(TRAEFIK_PUBLIC_NETWORK) \
+		DOMAIN=$(DOMAIN) \
+		SUBDOMAIN=vott \
+		STACK_NAME=vott \
+		ENVIRONMENT=prod \
+		NODE_ENV=production \
+		DOCKER_TAG=prod \
+		REACT_APP_API_URL=https://backend.cortexia.io \
+		docker-compose \
+			-f docker-compose.deploy.yml \
+			-f docker-compose.networks.yml \
+		config > docker-stack.yml
 
 build:
 	CORTEXIA_VERSION=$(VERSION) docker-compose -f docker-compose.dev.yml build
@@ -177,20 +195,26 @@ kill-local:
 	docker kill vott-local || true
 
 config-local: check-env
-	CORTEXIA_VERSION=$(VERSION) \
-	REACT_APP_INSTRUMENTATION_KEY=$(REACT_APP_INSTRUMENTATION_KEY) \
-	TRAEFIK_PUBLIC_NETWORK=$(TRAEFIK_PUBLIC_NETWORK) \
-	DOMAIN=local \
-	SUBDOMAIN=vott \
-	ENVIRONMENT=dev \
-	NODE_ENV=development \
-	DOCKER_TAG=latest \
-	STACK_NAME=vott-local \
-	REACT_APP_API_URL=http://backend.local \
-	docker-compose \
-		-f docker-compose.deploy.yml \
-		-f docker-compose.networks.yml \
-	config > docker-stack.yml
+ifeq ($(wildcard .env-local),)
+	@echo "\033[31m>> Create .env-local first\033[0m"
+	@exit 1
+endif
+	cp .env .env-backup && rm .env && ln -s .env-local .env
+	source .env && \
+		CORTEXIA_VERSION=$(VERSION) \
+		REACT_APP_INSTRUMENTATION_KEY=$(REACT_APP_INSTRUMENTATION_KEY) \
+		TRAEFIK_PUBLIC_NETWORK=$(TRAEFIK_PUBLIC_NETWORK) \
+		DOMAIN=local \
+		SUBDOMAIN=vott \
+		ENVIRONMENT=dev \
+		NODE_ENV=development \
+		DOCKER_TAG=latest \
+		STACK_NAME=vott-local \
+		REACT_APP_API_URL=http://backend.local \
+		docker-compose \
+			-f docker-compose.deploy.yml \
+			-f docker-compose.networks.yml \
+		config > docker-stack.yml
 
 build-local: config-local
 	docker-compose -f docker-stack.yml build
