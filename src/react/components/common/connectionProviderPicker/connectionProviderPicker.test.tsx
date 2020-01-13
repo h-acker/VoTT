@@ -41,24 +41,14 @@ describe("Connection Provider Picker", () => {
             wrapper = createComponent(defaultProps);
         });
 
-        it("Renders a dropdown with all storage and asset providers", () => {
-            const storageProviders = _.values(storageProviderRegistrations);
-            const assetProviders = _.values(assetProviderRegistrations);
-
-            const allProviders = _([])
-                .concat(assetProviders)
-                .concat(storageProviders)
-                .uniqBy("name")
-                .orderBy("displayName")
-                .value();
-
+        it("Renders a dropdown with cortexia providers", () => {
             const picker = wrapper.find("select");
             const htmlNode = picker.getDOMNode() as HTMLSelectElement;
 
             // Count of unique providers + the "Select" option
             expect(htmlNode.id).toEqual(defaultProps.id);
             expect(htmlNode.value).toEqual(defaultProps.value);
-            expect(picker.find("option").length).toEqual(allProviders.length + 1);
+            expect(picker.find("option").length).toEqual(1);
         });
 
         it("Calls registred onChange handler when value changes", async () => {
@@ -67,19 +57,6 @@ describe("Connection Provider Picker", () => {
             });
 
             expect(onChangeHandler).toBeCalledWith(assetProviderRegistrations[1].name);
-        });
-    });
-
-    describe("With property overrides", () => {
-        it("Selects correct option based on value", () => {
-            const props = {
-                ...defaultProps,
-                value: storageProviderRegistrations[1].name,
-            };
-            wrapper = createComponent(props);
-
-            const htmlNode = wrapper.find("select").getDOMNode() as HTMLSelectElement;
-            expect(htmlNode.value).toEqual(props.value);
         });
     });
 });

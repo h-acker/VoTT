@@ -1,6 +1,4 @@
 import React from "react";
-import _ from "lodash";
-import { StorageProviderFactory } from "../../../../providers/storage/storageProviderFactory";
 import { AssetProviderFactory } from "../../../../providers/storage/assetProviderFactory";
 
 /**
@@ -20,15 +18,7 @@ export interface IConnectionProviderPickerProps {
  * @param props Properties for picker
  */
 export default function ConnectionProviderPicker(props: IConnectionProviderPickerProps) {
-    const storageProviders = _.values(StorageProviderFactory.providers);
-    const assetProviders = _.values(AssetProviderFactory.providers);
-
-    const allProviders = _([])
-        .concat(assetProviders)
-        .concat(storageProviders)
-        .uniqBy("name")
-        .orderBy("displayName")
-        .value();
+    const cortexiaApi = AssetProviderFactory.providers.cortexiaApi;
 
     function onChange(e) {
         props.onChange(e.target.value);
@@ -40,12 +30,9 @@ export default function ConnectionProviderPicker(props: IConnectionProviderPicke
             value={props.value}
             onChange={onChange}>
             <option value="">Select Provider</option>
-            {
-                allProviders.map((provider) =>
-                    <option key={provider.name} value={provider.name}>
-                        {provider.displayName}
-                    </option>)
-            }
+            {cortexiaApi && <option key={cortexiaApi.name} value={cortexiaApi.name}>
+                {cortexiaApi.displayName}
+            </option>}
         </select>
     );
 }
