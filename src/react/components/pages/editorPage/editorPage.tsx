@@ -45,6 +45,7 @@ import { ActiveLearningService } from "../../../../services/activeLearningServic
 import { toast } from "react-toastify";
 import ITrackingActions, * as trackingActions from "../../../../redux/actions/trackingActions";
 import { MagnifierModalMessage } from "./MagnifierModalMessage";
+import { relative } from "path";
 
 /**
  * Properties for Editor Page
@@ -260,7 +261,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                                 />
                             </div>
                             <div className="editor-page-content-main-body">
-                                {selectedAsset && (
+                                {selectedAsset ? (
                                     <Canvas
                                         ref={this.canvas}
                                         selectedAsset={this.state.selectedAsset}
@@ -282,7 +283,12 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                                             childAssets={this.state.childAssets}
                                         />
                                     </Canvas>
-                                )}
+                                ) : (
+                                    <div className="asset-loading" style={styles.assetLoading}>
+                                        <div className="asset-loading-spinner text-center" style={styles.assetLoadingSpinner}>
+                                            <i className="fas fa-circle-notch fa-spin" style={styles.icon} />
+                                        </div>
+                                    </div>)}
                             </div>
                         </div>
                         <div className="editor-page-right-sidebar">
@@ -877,3 +883,17 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         }
     }
 }
+
+const styles = {
+    assetLoading: {
+        width: '100%'
+    },
+    assetLoadingSpinner: {
+        height: '100%'
+    },
+    icon: {
+        fontSize: '5em',
+        position: 'relative',
+        top: '45%'
+    }
+} as any;
