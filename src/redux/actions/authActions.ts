@@ -6,6 +6,7 @@ import { Dispatch, Action } from "redux";
 export interface IUserInfo {
     fullName: string;
     userId: number;
+    isAdmin: boolean;
 }
 
 /**

@@ -34,14 +34,14 @@ function mapStateToProps(state: IApplicationState) {
     return {
         currentProject: state.currentProject,
         appError: state.appError,
-        auth: state.auth,
+        auth: state.auth
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators(appErrorActions, dispatch),
-        authActions: bindActionCreators(authActions, dispatch),
+        authActions: bindActionCreators(authActions, dispatch)
     };
 }
 
@@ -49,13 +49,16 @@ function mapDispatchToProps(dispatch) {
  * @name - App
  * @description - Root level component for VoTT Application
  */
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(
+    mapStateToProps,
+    mapDispatchToProps
+)
 export default class App extends React.Component<IAppProps, IAppState> {
     constructor(props, context) {
         super(props, context);
 
         this.state = {
-            currentProject: this.props.currentProject,
+            currentProject: this.props.currentProject
         };
     }
 
@@ -63,14 +66,15 @@ export default class App extends React.Component<IAppProps, IAppState> {
         this.props.actions.showError({
             errorCode: ErrorCode.GenericRenderError,
             title: error.name,
-            message: error.message,
+            message: error.message
         });
     }
 
     public render() {
+        const { auth } = this.props;
         const platform = global && global.process ? global.process.platform : "web";
-        if (this.props.auth.rememberUser === false) {
-            window.addEventListener("beforeunload", async (e) => {
+        if (auth.rememberUser === false) {
+            window.addEventListener("beforeunload", async e => {
                 event.preventDefault();
                 await this.props.authActions.signOut();
             });
@@ -81,22 +85,26 @@ export default class App extends React.Component<IAppProps, IAppState> {
                 <ErrorHandler
                     error={this.props.appError}
                     onError={this.props.actions.showError}
-                    onClearError={this.props.actions.clearError} />
+                    onClearError={this.props.actions.clearError}
+                />
                 {/* Don't render app contents during a render error */}
-                {(!this.props.appError || this.props.appError.errorCode !== ErrorCode.GenericRenderError) &&
+                {(!this.props.appError || this.props.appError.errorCode !== ErrorCode.GenericRenderError) && (
                     <KeyboardManager>
                         <Router history={history}>
                             <div className={`app-shell platform-${platform}`}>
-                                <TitleBar icon="fas fa-tags"
+                                <TitleBar
+                                    icon="fas fa-tags"
                                     title={this.props.currentProject ? this.props.currentProject.name : ""}
-                                    fullName={!!this.props.auth.accessToken ? this.props.auth.fullName : ""}>
-                                    <div className="app-help-menu-icon"><HelpMenu /></div>
+                                    fullName={!!auth.accessToken ? auth.fullName : ""}
+                                >
+                                    <div className="app-help-menu-icon">
+                                        <HelpMenu />
+                                    </div>
                                 </TitleBar>
                                 <div className="app-main">
-                                    {
-                                        !!this.props.auth.accessToken &&
+                                    {!!auth.accessToken && auth.isAdmin && (
                                         <Sidebar project={this.props.currentProject} />
-                                    }
+                                    )}
                                     <MainContentRouter />
                                 </div>
                                 <StatusBar>
@@ -104,11 +112,10 @@ export default class App extends React.Component<IAppProps, IAppState> {
                                 </StatusBar>
                                 <ToastContainer className="vott-toast-container" />
                             </div>
-                        </Router >
+                        </Router>
                     </KeyboardManager>
-                }
+                )}
             </Fragment>
         );
     }
-
 }
