@@ -125,10 +125,7 @@ function mapDispatchToProps(dispatch) {
  * @name - Editor Page
  * @description - Page for adding/editing/removing tags to assets
  */
-@connect(
-    mapStateToProps,
-    mapDispatchToProps
-)
+@connect(mapStateToProps, mapDispatchToProps)
 export default class EditorPage extends React.Component<IEditorPageProps, IEditorPageState> {
     public state: IEditorPageState = {
         selectedTag: null,
@@ -285,10 +282,14 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                                     </Canvas>
                                 ) : (
                                     <div className="asset-loading" style={styles.assetLoading}>
-                                        <div className="asset-loading-spinner text-center" style={styles.assetLoadingSpinner}>
+                                        <div
+                                            className="asset-loading-spinner text-center"
+                                            style={styles.assetLoadingSpinner}
+                                        >
                                             <i className="fas fa-circle-notch fa-spin" style={styles.icon} />
                                         </div>
-                                    </div>)}
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div className="editor-page-right-sidebar">
@@ -627,18 +628,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                     editorMode: EditorMode.Rectangle
                 });
                 break;
-            case ToolbarItemName.DrawPolygon:
-                this.setState({
-                    selectionMode: SelectionMode.POLYGON,
-                    editorMode: EditorMode.Polygon
-                });
-                break;
-            case ToolbarItemName.CopyRectangle:
-                this.setState({
-                    selectionMode: SelectionMode.COPYRECT,
-                    editorMode: EditorMode.CopyRect
-                });
-                break;
             case ToolbarItemName.SelectCanvas:
                 this.setState({
                     selectionMode: SelectionMode.NONE,
@@ -662,9 +651,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                 break;
             case ToolbarItemName.RemoveAllRegions:
                 this.canvas.current.confirmRemoveAllRegions();
-                break;
-            case ToolbarItemName.ActiveLearning:
-                await this.predictRegions();
                 break;
             case ToolbarItemName.Magnifier:
                 this.showNativeMagnifierModal();
@@ -886,14 +872,14 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
 
 const styles = {
     assetLoading: {
-        width: '100%'
+        width: "100%"
     },
     assetLoadingSpinner: {
-        height: '100%'
+        height: "100%"
     },
     icon: {
-        fontSize: '5em',
-        position: 'relative',
-        top: '45%'
+        fontSize: "5em",
+        position: "relative",
+        top: "45%"
     }
 } as any;

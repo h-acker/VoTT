@@ -1,23 +1,16 @@
 import { ToolbarItemFactory } from "./providers/toolbar/toolbarItemFactory";
-import { ExportProject } from "./react/components/toolbar/exportProject";
-import { SaveProject } from "./react/components/toolbar/saveProject";
 import { ToolbarItemType } from "./react/components/toolbar/toolbarItem";
 import { strings } from "./common/strings";
 
 export enum ToolbarItemName {
     SelectCanvas = "selectCanvas",
     DrawRectangle = "drawRectangle",
-    DrawPolygon = "drawPolygon",
-    CopyRectangle = "copyRectangle",
     CopyRegions = "copyRegions",
     CutRegions = "cutRegions",
     PasteRegions = "pasteRegions",
     RemoveAllRegions = "removeAllRegions",
     PreviousAsset = "navigatePreviousAsset",
     NextAsset = "navigateNextAsset",
-    SaveProject = "saveProject",
-    ExportProject = "exportProject",
-    ActiveLearning = "activeLearning",
     Magnifier = "magnifier",
     DeletePicture = "deletePicture",
     ReloadImages = "reloadImages"
@@ -27,7 +20,6 @@ export enum ToolbarItemGroup {
     Canvas = "canvas",
     Regions = "regions",
     Navigation = "navigation",
-    Project = "project",
     Helper = "helper",
     Action = "action"
 }
@@ -52,24 +44,6 @@ export default function registerToolbar() {
         group: ToolbarItemGroup.Canvas,
         type: ToolbarItemType.State,
         accelerators: ["R", "r"]
-    });
-
-    ToolbarItemFactory.register({
-        name: ToolbarItemName.DrawPolygon,
-        tooltip: strings.editorPage.toolbar.drawPolygon,
-        icon: "fa-draw-polygon",
-        group: ToolbarItemGroup.Canvas,
-        type: ToolbarItemType.State,
-        accelerators: ["P", "p"]
-    });
-
-    ToolbarItemFactory.register({
-        name: ToolbarItemName.CopyRectangle,
-        tooltip: strings.editorPage.toolbar.copyRectangle,
-        icon: "far fa-clone",
-        group: ToolbarItemGroup.Canvas,
-        type: ToolbarItemType.State,
-        accelerators: ["CmdOrCtrl+W", "CmdOrCtrl+w"]
     });
 
     ToolbarItemFactory.register({
@@ -109,15 +83,6 @@ export default function registerToolbar() {
     });
 
     ToolbarItemFactory.register({
-        name: ToolbarItemName.ActiveLearning,
-        tooltip: strings.editorPage.toolbar.activeLearning,
-        icon: "fas fa-graduation-cap",
-        group: ToolbarItemGroup.Canvas,
-        type: ToolbarItemType.Action,
-        accelerators: ["CmdOrCtrl+D", "CmdOrCtrl+d"]
-    });
-
-    ToolbarItemFactory.register({
         name: ToolbarItemName.PreviousAsset,
         tooltip: strings.editorPage.toolbar.previousAsset,
         icon: "fas fa-arrow-circle-up",
@@ -134,30 +99,6 @@ export default function registerToolbar() {
         type: ToolbarItemType.Action,
         accelerators: ["ArrowDown", "S", "s"]
     });
-
-    ToolbarItemFactory.register(
-        {
-            name: ToolbarItemName.SaveProject,
-            tooltip: strings.editorPage.toolbar.saveProject,
-            icon: "fa-save",
-            group: ToolbarItemGroup.Project,
-            type: ToolbarItemType.Action,
-            accelerators: ["CmdOrCtrl+S", "CmdOrCtrl+s"]
-        },
-        SaveProject
-    );
-
-    ToolbarItemFactory.register(
-        {
-            name: ToolbarItemName.ExportProject,
-            tooltip: strings.editorPage.toolbar.exportProject,
-            icon: "fa-external-link-square-alt",
-            group: ToolbarItemGroup.Project,
-            type: ToolbarItemType.Action,
-            accelerators: ["CmdOrCtrl+E", "CmdOrCtrl+e"]
-        },
-        ExportProject
-    );
 
     ToolbarItemFactory.register({
         name: ToolbarItemName.Magnifier,

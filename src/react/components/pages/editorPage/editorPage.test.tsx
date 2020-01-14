@@ -566,9 +566,6 @@ describe("Editor Page Component", () => {
         });
 
         it("editor mode is changed correctly", async () => {
-            wrapper.find(`.${ToolbarItemName.DrawPolygon}`).simulate("click");
-            expect(getState(wrapper).editorMode).toEqual(EditorMode.Polygon);
-
             wrapper.find(`.${ToolbarItemName.DrawRectangle}`).simulate("click");
             expect(getState(wrapper).editorMode).toEqual(EditorMode.Rectangle);
 
