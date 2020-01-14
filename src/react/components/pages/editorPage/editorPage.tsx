@@ -627,18 +627,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                     editorMode: EditorMode.Rectangle
                 });
                 break;
-            case ToolbarItemName.DrawPolygon:
-                this.setState({
-                    selectionMode: SelectionMode.POLYGON,
-                    editorMode: EditorMode.Polygon
-                });
-                break;
-            case ToolbarItemName.CopyRectangle:
-                this.setState({
-                    selectionMode: SelectionMode.COPYRECT,
-                    editorMode: EditorMode.CopyRect
-                });
-                break;
             case ToolbarItemName.SelectCanvas:
                 this.setState({
                     selectionMode: SelectionMode.NONE,
@@ -662,9 +650,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                 break;
             case ToolbarItemName.RemoveAllRegions:
                 this.canvas.current.confirmRemoveAllRegions();
-                break;
-            case ToolbarItemName.ActiveLearning:
-                await this.predictRegions();
                 break;
             case ToolbarItemName.Magnifier:
                 this.showNativeMagnifierModal();
