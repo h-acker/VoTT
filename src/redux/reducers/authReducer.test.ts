@@ -1,7 +1,7 @@
 import MockFactory from "../../common/mockFactory";
 import { reducer } from "./authReducer";
 import { IAuth } from "../../models/applicationState";
-import {signInAction, signOutAction} from "../actions/authActions";
+import { signInAction, signOutAction } from "../actions/authActions";
 import { anyOtherAction } from "../actions/actionCreators";
 
 describe("Auth Reducer", () => {
@@ -34,6 +34,7 @@ describe("Auth Reducer", () => {
         const result = reducer(state, action);
         expect(result.accessToken).toEqual(null);
         expect(result.fullName).toEqual(null);
+        expect(result.isAdmin).toEqual(null);
     });
 
     it("Unknown action performs a noop", () => {

@@ -52,7 +52,7 @@ export enum ErrorCode {
     ExportFormatNotFound = "exportFormatNotFound",
     PasteRegionTooBig = "pasteRegionTooBig",
     OverloadedKeyBinding = "overloadedKeyBinding",
-    ActiveLearningPredictionError = "activeLearningPredictionError",
+    ActiveLearningPredictionError = "activeLearningPredictionError"
 }
 
 /**
@@ -152,7 +152,7 @@ export interface ITag {
 export enum StorageType {
     Local = "local",
     Cloud = "cloud",
-    Other = "other",
+    Other = "other"
 }
 
 /**
@@ -224,7 +224,7 @@ export interface IProjectVideoSettings {
 export enum ModelPathType {
     Coco = "coco",
     File = "file",
-    Url = "url",
+    Url = "url"
 }
 
 /**
@@ -364,7 +364,7 @@ export enum AssetType {
     Image = 1,
     Video = 2,
     VideoFrame = 3,
-    TFRecord = 4,
+    TFRecord = 4
 }
 
 /**
@@ -377,7 +377,7 @@ export enum AssetType {
 export enum AssetState {
     NotVisited = 0,
     Visited = 1,
-    Tagged = 2,
+    Tagged = 2
 }
 
 /**
@@ -392,7 +392,7 @@ export enum RegionType {
     Point = "POINT",
     Rectangle = "RECTANGLE",
     Polygon = "POLYGON",
-    Square = "SQUARE",
+    Square = "SQUARE"
 }
 
 export enum EditorMode {
@@ -402,7 +402,7 @@ export enum EditorMode {
     Point = "POINT",
     Select = "SELECT",
     CopyRect = "COPYRECT",
-    None = "NONE",
+    None = "NONE"
 }
 
 export interface ISecureString {
@@ -431,10 +431,12 @@ export interface ITFRecordMetadata {
  * @member fullName - Full name of the signed user
  * @member userId - Id of the signed user
  * @member rememberUser - If user sign in should be remembered
+ * @member isAdmin - If user is super user then the flag is true
  */
 export interface IAuth {
     accessToken?: string;
     fullName?: string;
     userId?: number;
     rememberUser?: boolean;
+    isAdmin?: boolean;
 }
