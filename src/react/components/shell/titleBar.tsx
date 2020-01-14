@@ -297,8 +297,8 @@ export class TitleBar extends React.Component<ITitleBarProps, ITitleBarState> {
 
     private onClickSignOut = async () => {
         try {
-            await this.props.actions.signOut();
             await this.props.trackingActions.trackingSignOut(this.props.auth.userId);
+            await this.props.actions.signOut();
             history.push("/sign-in");
         } catch (error) {
             toast.error("Sorry, we could not log you out.", { position: toast.POSITION.TOP_CENTER} );
