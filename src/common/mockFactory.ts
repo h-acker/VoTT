@@ -1,9 +1,26 @@
 import shortid from "shortid";
 import {
-    AssetState, AssetType, IApplicationState, IAppSettings, IAsset, IAssetMetadata,
-    IConnection, IExportFormat, IProject, ITag, StorageType, ISecurityToken,
-    EditorMode, IAppError, IProjectVideoSettings, ErrorCode,
-    IPoint, IRegion, RegionType, ModelPathType, IAuth,
+    AssetState,
+    AssetType,
+    IApplicationState,
+    IAppSettings,
+    IAsset,
+    IAssetMetadata,
+    IConnection,
+    IExportFormat,
+    IProject,
+    ITag,
+    StorageType,
+    ISecurityToken,
+    EditorMode,
+    IAppError,
+    IProjectVideoSettings,
+    ErrorCode,
+    IPoint,
+    IRegion,
+    RegionType,
+    ModelPathType,
+    IAuth
 } from "../models/applicationState";
 import { IV1Project, IV1Region } from "../models/v1Models";
 import { ExportAssetState } from "../providers/export/exportProvider";
@@ -19,7 +36,8 @@ import Canvas, { ICanvasProps } from "../react/components/pages/editorPage/canva
 import { IBingImageSearchOptions, BingImageSearchAspectRatio } from "../providers/storage/bingImageSearch";
 import { IEditorPageProps } from "../react/components/pages/editorPage/editorPage";
 import {
-    IAzureCustomVisionTag, IAzureCustomVisionRegion,
+    IAzureCustomVisionTag,
+    IAzureCustomVisionRegion
 } from "../providers/export/azureCustomVision/azureCustomVisionService";
 import IApplicationActions, * as applicationActions from "../redux/actions/applicationActions";
 import { ILocalFileSystemProxyOptions } from "../providers/storage/localFileSystemProxy";
@@ -37,7 +55,6 @@ import { IActiveLearningPageProps } from "../react/components/pages/activeLearni
 import ITrackingActions, * as trackingActions from "../redux/actions/trackingActions";
 
 export default class MockFactory {
-
     /**
      * Creates sample IAppError
      * @param errorCode The error code to map to the error
@@ -48,11 +65,12 @@ export default class MockFactory {
     public static createAppError(
         errorCode: ErrorCode = ErrorCode.Unknown,
         title: string = "",
-        message: string = ""): IAppError {
+        message: string = ""
+    ): IAppError {
         return {
             errorCode,
             title,
-            message,
+            message
         };
     }
 
@@ -68,7 +86,8 @@ export default class MockFactory {
         assetState: AssetState = AssetState.NotVisited,
         path: string = encodeFileURI(`C:\\Desktop\\asset${name}.jpg`),
         assetType: AssetType = AssetType.Image,
-        timestamp: number = 0): IAsset {
+        timestamp: number = 0
+    ): IAsset {
         let testAsset = null;
         switch (assetType) {
             case AssetType.Video:
@@ -81,8 +100,8 @@ export default class MockFactory {
                     type: AssetType.Video,
                     size: {
                         width: 800,
-                        height: 600,
-                    },
+                        height: 600
+                    }
                 };
                 break;
             case AssetType.VideoFrame:
@@ -95,7 +114,7 @@ export default class MockFactory {
                     type: AssetType.VideoFrame,
                     size: {
                         width: 800,
-                        height: 600,
+                        height: 600
                     },
                     parent: {
                         id: `videoasset-${name}`,
@@ -106,9 +125,9 @@ export default class MockFactory {
                         type: AssetType.Video,
                         size: {
                             width: 800,
-                            height: 600,
-                        },
-                    },
+                            height: 600
+                        }
+                    }
                 };
                 break;
             case AssetType.Image:
@@ -121,8 +140,8 @@ export default class MockFactory {
                     type: assetType,
                     size: {
                         width: 800,
-                        height: 600,
-                    },
+                        height: 600
+                    }
                 };
                 break;
             case AssetType.TFRecord:
@@ -135,8 +154,8 @@ export default class MockFactory {
                     type: assetType,
                     size: {
                         width: 800,
-                        height: 600,
-                    },
+                        height: 600
+                    }
                 };
                 break;
             default:
@@ -149,8 +168,8 @@ export default class MockFactory {
                     type: assetType,
                     size: {
                         width: 800,
-                        height: 600,
-                    },
+                        height: 600
+                    }
                 };
         }
 
@@ -182,8 +201,8 @@ export default class MockFactory {
             type: AssetType.Video,
             size: {
                 width: 800,
-                height: 600,
-            },
+                height: 600
+            }
         };
     }
 
@@ -210,7 +229,7 @@ export default class MockFactory {
      * @param count The number of child assets to create (default 10)
      */
     public static createChildVideoAssets(rootAsset: IAsset, count: number = 10): IAsset[] {
-        return [...Array(count).keys()].map((index) => {
+        return [...Array(count).keys()].map(index => {
             return this.createChildVideoAsset(rootAsset, index);
         });
     }
@@ -222,7 +241,7 @@ export default class MockFactory {
      */
     public static createTestAssets(count: number = 10, startIndex: number = 1): IAsset[] {
         const assets: IAsset[] = [];
-        for (let i = startIndex; i < (count + startIndex); i++) {
+        for (let i = startIndex; i < count + startIndex; i++) {
             assets.push(MockFactory.createTestAsset(i.toString()));
         }
 
@@ -249,7 +268,7 @@ export default class MockFactory {
         return {
             asset: asset || MockFactory.createTestAsset(),
             regions: regions || [],
-            version: appInfo.version,
+            version: appInfo.version
         };
     }
 
@@ -290,9 +309,9 @@ export default class MockFactory {
                 modelPath: "",
                 modelUrl: "",
                 autoDetect: false,
-                predictTag: false,
+                predictTag: false
             },
-            autoSave: true,
+            autoSave: true
         };
     }
 
@@ -301,7 +320,7 @@ export default class MockFactory {
      * @param name Name of project.
      */
     public static createTestV1Project(frameCount: number = 10): IV1Project {
-        const frames: { [frameName: string]: IV1Region[]; } = {};
+        const frames: { [frameName: string]: IV1Region[] } = {};
         for (let i = 0; i < frameCount; i++) {
             const name = `testFrame${i}.jpg`;
             frames[name] = MockFactory.createTestV1Regions();
@@ -314,7 +333,7 @@ export default class MockFactory {
             suggestiontype: "suggestiontype",
             scd: true,
             visitedFrames: ["testFrame0.jpg"],
-            tag_colors: [MockFactory.randomColor(), MockFactory.randomColor()],
+            tag_colors: [MockFactory.randomColor(), MockFactory.randomColor()]
         };
     }
 
@@ -323,7 +342,7 @@ export default class MockFactory {
      * @param name Name of project.
      */
     public static createTestV1VideoProject(frameCount: number = 10): IV1Project {
-        const frames: { [frameName: string]: IV1Region[]; } = {};
+        const frames: { [frameName: string]: IV1Region[] } = {};
         for (let i = 0; i < frameCount; i++) {
             const name = `${i + 1}`;
             frames[name] = MockFactory.createTestV1Regions();
@@ -336,7 +355,7 @@ export default class MockFactory {
             suggestiontype: "suggestiontype",
             scd: true,
             visitedFrames: [1, 2],
-            tag_colors: [MockFactory.randomColor(), MockFactory.randomColor()],
+            tag_colors: [MockFactory.randomColor(), MockFactory.randomColor()]
         };
     }
 
@@ -362,14 +381,14 @@ export default class MockFactory {
                     x1: left,
                     y1: top,
                     x2: right,
-                    y2: bottom,
+                    y2: bottom
                 },
                 points: [],
                 UID: i.toString(),
                 id: 2,
                 type: "rect",
                 tags: [],
-                name: 1,
+                name: 1
             };
             regions.push(testRegion);
         }
@@ -391,13 +410,13 @@ export default class MockFactory {
             accountName: "myaccount",
             containerName: "container0",
             sas: "sas",
-            createContainer: undefined,
+            createContainer: undefined
         };
     }
 
     public static createLocalFileSystemOptions(): ILocalFileSystemProxyOptions {
         return {
-            folderPath: "C:\\projects\\vott\\project",
+            folderPath: "C:\\projects\\vott\\project"
         };
     }
 
@@ -407,7 +426,7 @@ export default class MockFactory {
     public static createAzureStorageListContainersResponse() {
         return {
             containerItems: MockFactory.createAzureContainers(),
-            nextMarker: null,
+            nextMarker: null
         };
     }
 
@@ -420,7 +439,7 @@ export default class MockFactory {
         for (let i = 0; i < count; i++) {
             result.push({
                 name: `container${i}`,
-                blobs: MockFactory.createAzureBlobs(i),
+                blobs: MockFactory.createAzureBlobs(i)
             });
         }
         return { containerItems: result };
@@ -438,7 +457,7 @@ export default class MockFactory {
             containerName: options.containerName,
             containers: MockFactory.createAzureContainers(),
             blobs: MockFactory.createAzureBlobs(),
-            options,
+            options
         };
     }
 
@@ -463,7 +482,7 @@ export default class MockFactory {
         const result = [];
         for (let i = 0; i < count; i++) {
             result.push({
-                name: `blob-${id}-${i}.jpg`,
+                name: `blob-${id}-${i}.jpg`
             });
         }
         return { segment: { blobItems: result } };
@@ -488,7 +507,7 @@ export default class MockFactory {
     public static createTestTag(name: string = "1"): ITag {
         return {
             name: `Tag ${name}`,
-            color: MockFactory.randomColor(),
+            color: MockFactory.randomColor()
         };
     }
 
@@ -498,10 +517,10 @@ export default class MockFactory {
      */
     public static createTestConnections(count: number = 10): IConnection[] {
         const connections: IConnection[] = [];
-        for (let i = 1; i <= (count / 2); i++) {
+        for (let i = 1; i <= count / 2; i++) {
             connections.push(MockFactory.createTestCloudConnection(i.toString()));
         }
-        for (let i = (count / 2) + 1; i <= count; i++) {
+        for (let i = count / 2 + 1; i <= count; i++) {
             connections.push(MockFactory.createTestConnection(i.toString()));
         }
         return connections;
@@ -533,13 +552,15 @@ export default class MockFactory {
      * @param providerType Type of Connection - default local file system
      */
     public static createTestConnection(
-        name: string = "test", providerType: string = "localFileSystemProxy"): IConnection {
+        name: string = "test",
+        providerType: string = "localFileSystemProxy"
+    ): IConnection {
         return {
             id: `connection-${name}`,
             name: `Connection ${name}`,
             description: `Description for Connection ${name}`,
             providerType,
-            providerOptions: MockFactory.getProviderOptions(providerType),
+            providerOptions: MockFactory.getProviderOptions(providerType)
         };
     }
 
@@ -550,7 +571,7 @@ export default class MockFactory {
         return {
             apiKey: "key",
             aspectRatio: BingImageSearchAspectRatio.All,
-            query: "test",
+            query: "test"
         };
     }
 
@@ -598,7 +619,7 @@ export default class MockFactory {
             listContainers: jest.fn(),
             createContainer: jest.fn(),
             deleteContainer: jest.fn(),
-            getAssets: jest.fn(),
+            getAssets: jest.fn()
         };
     }
 
@@ -609,7 +630,7 @@ export default class MockFactory {
     public static createStorageProviderFromConnection(connection: IConnection): IStorageProvider {
         return {
             ...MockFactory.createStorageProvider(),
-            storageType: MockFactory.getStorageType(connection.providerType),
+            storageType: MockFactory.getStorageType(connection.providerType)
         };
     }
 
@@ -621,7 +642,7 @@ export default class MockFactory {
             initialize: jest.fn(() => Promise.resolve()),
             getAssets(containerName?: string): Promise<IAsset[]> {
                 throw new Error("Method not implemented.");
-            },
+            }
         };
     }
 
@@ -632,8 +653,8 @@ export default class MockFactory {
         return {
             providerType: "vottJson",
             providerOptions: {
-                assetState: ExportAssetState.Tagged,
-            },
+                assetState: ExportAssetState.Tagged
+            }
         };
     }
 
@@ -685,7 +706,7 @@ export default class MockFactory {
             name,
             displayName: `${name} display name`,
             description: `${name} short description`,
-            factory: () => null,
+            factory: () => null
         };
 
         return registration;
@@ -700,7 +721,7 @@ export default class MockFactory {
             name,
             displayName: `${name} display name`,
             description: `${name} short description`,
-            factory: () => null,
+            factory: () => null
         };
 
         return registration;
@@ -714,7 +735,7 @@ export default class MockFactory {
             editorMode: EditorMode.Rectangle,
             selectionMode: SelectionMode.RECT,
             children: null,
-            lockedTags: [],
+            lockedTags: []
         };
         return new Canvas(canvasProps);
     }
@@ -739,11 +760,11 @@ export default class MockFactory {
     public static createTestRegion(id = null, tags: string[] = []): IRegion {
         const origin = {
             x: randomIntInRange(0, 1024),
-            y: randomIntInRange(0, 768),
+            y: randomIntInRange(0, 768)
         };
         const size = {
             width: randomIntInRange(1, 100),
-            height: randomIntInRange(1, 100),
+            height: randomIntInRange(1, 100)
         };
 
         return {
@@ -752,16 +773,16 @@ export default class MockFactory {
                 left: origin.x,
                 top: origin.y,
                 width: size.width,
-                height: size.height,
+                height: size.height
             },
             points: [
                 { x: origin.x, y: origin.y }, // Top left
                 { x: origin.x + size.width, y: origin.y }, // Top Right
                 { x: origin.x, y: origin.y + size.height }, // Bottom Left
-                { x: origin.x + size.width, y: origin.y + size.height }, // Bottom Right
+                { x: origin.x + size.width, y: origin.y + size.height } // Bottom Right
             ],
             tags,
-            type: RegionType.Rectangle,
+            type: RegionType.Rectangle
         };
     }
 
@@ -771,21 +792,26 @@ export default class MockFactory {
     public static createTestRegionData() {
         const origin = {
             x: randomIntInRange(0, 1024),
-            y: randomIntInRange(0, 768),
+            y: randomIntInRange(0, 768)
         };
         const size = {
             width: randomIntInRange(1, 100),
-            height: randomIntInRange(1, 100),
+            height: randomIntInRange(1, 100)
         };
 
-        return new RegionData(origin.x, origin.y, size.width, size.height,
+        return new RegionData(
+            origin.x,
+            origin.y,
+            size.width,
+            size.height,
             [
                 new Point2D(origin.x, origin.y), // Top left
                 new Point2D(origin.x + size.width, origin.y), // Top Right
                 new Point2D(origin.x, origin.y + size.height), // Bottom Left
-                new Point2D(origin.x + size.width, origin.y + size.height), // Bottom Right
+                new Point2D(origin.x + size.width, origin.y + size.height) // Bottom Right
             ],
-            RegionDataType.Rect);
+            RegionDataType.Rect
+        );
     }
     /**
      * Creates fake IAssetProviderRegistrationOptions
@@ -796,7 +822,7 @@ export default class MockFactory {
             name,
             displayName: `${name} display name`,
             description: `${name} short description`,
-            factory: () => null,
+            factory: () => null
         };
 
         return registration;
@@ -810,7 +836,7 @@ export default class MockFactory {
             load: jest.fn((project: IProject) => Promise.resolve(project)),
             save: jest.fn((project: IProject) => Promise.resolve(project)),
             delete: jest.fn((project: IProject) => Promise.resolve()),
-            isDuplicate: jest.fn((project: IProject, projectList: IProject[]) => true),
+            isDuplicate: jest.fn((project: IProject, projectList: IProject[]) => true)
         };
     }
 
@@ -828,7 +854,7 @@ export default class MockFactory {
             loadAssetMetadata: jest.fn(() => Promise.resolve()),
             saveAssetMetadata: jest.fn(() => Promise.resolve()),
             updateProjectTag: jest.fn(() => Promise.resolve()),
-            deleteProjectTag: jest.fn(() => Promise.resolve()),
+            deleteProjectTag: jest.fn(() => Promise.resolve())
         };
     }
 
@@ -839,7 +865,7 @@ export default class MockFactory {
         return {
             loadConnection: jest.fn((connection: IConnection) => Promise.resolve()),
             saveConnection: jest.fn((connection: IConnection) => Promise.resolve()),
-            deleteConnection: jest.fn((connection: IConnection) => Promise.resolve()),
+            deleteConnection: jest.fn((connection: IConnection) => Promise.resolve())
         };
     }
 
@@ -854,8 +880,8 @@ export default class MockFactory {
             securityTokens: [
                 ...securityTokens,
                 MockFactory.createSecurityToken("TestProject"),
-                MockFactory.createSecurityToken("test"),
-            ],
+                MockFactory.createSecurityToken("test")
+            ]
         };
     }
 
@@ -866,7 +892,7 @@ export default class MockFactory {
     public static createSecurityToken(nameSuffix: string): ISecurityToken {
         return {
             name: `Security-Token-${nameSuffix}`,
-            key: generateKey(),
+            key: generateKey()
         };
     }
 
@@ -891,7 +917,7 @@ export default class MockFactory {
         return {
             ...MockFactory.pageProps(projectId, "settings"),
             connections: MockFactory.createTestConnections(),
-            appSettings: MockFactory.appSettings(),
+            appSettings: MockFactory.appSettings()
         };
     }
 
@@ -906,7 +932,7 @@ export default class MockFactory {
             location: MockFactory.location(),
             match: MockFactory.match(projectId, "active-learning"),
             project: null,
-            recentProjects: MockFactory.createTestProjects(),
+            recentProjects: MockFactory.createTestProjects()
         };
     }
 
@@ -920,7 +946,7 @@ export default class MockFactory {
             applicationActions: (applicationActions as any) as IApplicationActions,
             ...MockFactory.pageProps(projectId, "edit"),
             auth: MockFactory.createTestAuth(),
-            trackingActions: (trackingActions as any) as ITrackingActions,
+            trackingActions: (trackingActions as any) as ITrackingActions
         };
     }
 
@@ -938,7 +964,7 @@ export default class MockFactory {
             currentProject: testProjects[0],
             ...state,
             appError: null,
-            auth: MockFactory.createTestAuth(),
+            auth: MockFactory.createTestAuth()
         };
     }
 
@@ -947,7 +973,7 @@ export default class MockFactory {
      * @param func - The function that updates the UI
      */
     public static flushUi(func: () => void = null): Promise<void> {
-        return new Promise<void>((resolve) => {
+        return new Promise<void>(resolve => {
             if (func) {
                 func();
             }
@@ -989,7 +1015,7 @@ export default class MockFactory {
             id: shortid.generate(),
             name,
             description: `Description for ${name}`,
-            imageCount: 0,
+            imageCount: 0
         };
     }
 
@@ -1009,7 +1035,7 @@ export default class MockFactory {
             left: 0,
             top: 0,
             width: 1,
-            height: 1,
+            height: 1
         };
     }
 
@@ -1029,13 +1055,13 @@ export default class MockFactory {
                 accelerators: [upper, lower],
                 handler: handlers[i],
                 icon: `test-icon-${i + 1}`,
-                keyEventType: KeyEventType.KeyDown,
+                keyEventType: KeyEventType.KeyDown
             };
             keyDownRegs[upper] = binding;
             keyDownRegs[lower] = binding;
         }
         return {
-            keydown: keyDownRegs,
+            keydown: keyDownRegs
         };
     }
 
@@ -1044,17 +1070,23 @@ export default class MockFactory {
      * @param accessToken Access token which is used to auth the user
      */
     public static createTestAuth(
-        accessToken?: string, fullName?: string, rememberUser?: boolean, userId?: number): IAuth {
+        accessToken?: string,
+        fullName?: string,
+        rememberUser?: boolean,
+        userId?: number,
+        isAdmin = false
+    ): IAuth {
         return {
             accessToken,
             fullName,
             rememberUser,
             userId,
+            isAdmin
         };
     }
 
     public static mockElement(assetTestCache: Map<string, IAsset>) {
-        document.createElement = jest.fn((elementType) => {
+        document.createElement = jest.fn(elementType => {
             switch (elementType) {
                 case "img":
                     const mockImage = MockFactory.mockImage(assetTestCache);
@@ -1074,7 +1106,7 @@ export default class MockFactory {
             const element: any = {
                 naturalWidth: 0,
                 naturalHeight: 0,
-                onload: jest.fn(),
+                onload: jest.fn()
             };
 
             setImmediate(() => {
@@ -1101,7 +1133,7 @@ export default class MockFactory {
                 videoHeight: 0,
                 onloadedmetadata: jest.fn(),
                 onseeked: jest.fn(),
-                onerror: jest.fn(),
+                onerror: jest.fn()
             };
 
             setImmediate(() => {
@@ -1128,12 +1160,12 @@ export default class MockFactory {
                 height: 600,
                 getContext: jest.fn(() => {
                     return {
-                        drawImage: jest.fn(),
+                        drawImage: jest.fn()
                     };
                 }),
-                toBlob: jest.fn((callback) => {
+                toBlob: jest.fn(callback => {
                     callback(new Blob(["Binary image data"]));
-                }),
+                })
             };
 
             return canvas;
@@ -1150,7 +1182,7 @@ export default class MockFactory {
             history: MockFactory.history(),
             location: MockFactory.location(),
             match: MockFactory.match(projectId, method),
-            auth: MockFactory.createTestAuth(),
+            auth: MockFactory.createTestAuth()
         };
     }
 
@@ -1162,11 +1194,11 @@ export default class MockFactory {
     private static match(projectId: string, method: string) {
         return {
             params: {
-                projectId,
+                projectId
             },
             isExact: true,
             path: `https://localhost:3000/projects/${projectId}/${method}`,
-            url: `https://localhost:3000/projects/${projectId}/${method}`,
+            url: `https://localhost:3000/projects/${projectId}/${method}`
         };
     }
 
@@ -1185,7 +1217,7 @@ export default class MockFactory {
             goForward: jest.fn(),
             block: jest.fn(),
             listen: jest.fn(),
-            createHref: jest.fn(),
+            createHref: jest.fn()
         };
     }
 
@@ -1197,7 +1229,7 @@ export default class MockFactory {
             hash: null,
             pathname: null,
             search: null,
-            state: null,
+            state: null
         };
     }
 
@@ -1205,7 +1237,7 @@ export default class MockFactory {
      * Generates a random color string
      */
     private static randomColor(): string {
-        return "#" + (Math.random() * 0xFFFFFF << 0).toString(16);
+        return "#" + ((Math.random() * 0xffffff) << 0).toString(16);
     }
 
     /**
