@@ -566,7 +566,6 @@ describe("Editor Page Component", () => {
         });
 
         it("editor mode is changed correctly", async () => {
-
             wrapper.find(`.${ToolbarItemName.DrawRectangle}`).simulate("click");
             expect(getState(wrapper).editorMode).toEqual(EditorMode.Rectangle);
 

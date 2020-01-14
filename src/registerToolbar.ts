@@ -82,7 +82,6 @@ export default function registerToolbar() {
         accelerators: ["CmdOrCtrl+Delete", "CmdOrCtrl+Backspace"]
     });
 
-
     ToolbarItemFactory.register({
         name: ToolbarItemName.PreviousAsset,
         tooltip: strings.editorPage.toolbar.previousAsset,
