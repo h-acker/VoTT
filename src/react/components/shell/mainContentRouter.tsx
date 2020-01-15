@@ -24,7 +24,6 @@ export default function MainContentRouter() {
                 <AnonymousRoute path="/connections/:connectionId" component={ConnectionPage} />
                 <AnonymousRoute path="/connections" exact component={ConnectionPage} />
                 <AnonymousRoute path="/projects/:projectId/edit" component={EditorPage} />
-                <AnonymousRoute path="/projects/create" component={ProjectSettingsPage} />
                 <AnonymousRoute path="/projects/:projectId/settings" component={ProjectSettingsPage} />
                 <AnonymousRoute path="/projects/:projectId/export" component={ExportPage} />
                 <AnonymousRoute path="/projects/:projectId/active-learning" component={ActiveLearningPage} />
