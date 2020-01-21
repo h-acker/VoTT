@@ -125,7 +125,10 @@ function mapDispatchToProps(dispatch) {
  * @name - Editor Page
  * @description - Page for adding/editing/removing tags to assets
  */
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(
+    mapStateToProps,
+    mapDispatchToProps
+)
 export default class EditorPage extends React.Component<IEditorPageProps, IEditorPageState> {
     public state: IEditorPageState = {
         selectedTag: null,
@@ -302,7 +305,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                                 onTagClick={this.onTagClicked}
                                 onCtrlTagClick={this.onCtrlTagClicked}
                                 onTagRenamed={this.confirmTagRenamed}
-                                onTagDeleted={this.confirmTagDeleted}
                             />
                         </div>
                         <Confirm
@@ -431,13 +433,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                 this.setState({ selectedAsset });
             }
         }
-    };
-
-    /**
-     * Open Confirm dialog for tag deletion
-     */
-    private confirmTagDeleted = (tagName: string): void => {
-        this.deleteTagConfirm.current.open(tagName);
     };
 
     private onReloadedImages = async () => {

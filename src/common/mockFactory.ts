@@ -53,6 +53,7 @@ import { KeyEventType } from "../react/components/common/keyboardManager/keyboar
 import { IKeyboardRegistrations } from "../react/components/common/keyboardManager/keyboardRegistrationManager";
 import { IActiveLearningPageProps } from "../react/components/pages/activeLearning/activeLearningPage";
 import ITrackingActions, * as trackingActions from "../redux/actions/trackingActions";
+import { ILitter } from "../services/apiService";
 
 export default class MockFactory {
     /**
@@ -486,6 +487,29 @@ export default class MockFactory {
             });
         }
         return { segment: { blobItems: result } };
+    }
+
+    /**
+     * Create array of fake ILitter
+     * @param count Number of litters
+     */
+    public static createTestLitters(count: number = 5): ILitter[] {
+        const tags: ILitter[] = [];
+        for (let i = 0; i < count; i++) {
+            tags.push(MockFactory.createTestLitter(i));
+        }
+        return tags;
+    }
+
+    /**
+     * Create fake ILitter with random color
+     * @param name Name of litter
+     */
+    public static createTestLitter(name: number = 0): ILitter {
+        return {
+            id: name,
+            color: MockFactory.randomColor()
+        };
     }
 
     /**
