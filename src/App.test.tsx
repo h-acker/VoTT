@@ -8,17 +8,24 @@ import { mount } from "enzyme";
 import { Router } from "react-router-dom";
 import { KeyboardManager } from "./react/components/common/keyboardManager/keyboardManager";
 import { ErrorHandler } from "./react/components/common/errorHandler/errorHandler";
+import ITrackingActions, * as trackingActions from "./redux/actions/trackingActions";
 
 describe("App Component", () => {
     const defaultState: IApplicationState = initialState;
     const store = createReduxStore(defaultState);
 
-    function createComponent() {
+    function createComponent(props = createProps()) {
         return mount(
             <Provider store={store}>
-                <App />
-            </Provider>,
+                <App {...props} />
+            </Provider>
         );
+    }
+
+    function createProps() {
+        return {
+            trackingActions: (trackingActions as any) as ITrackingActions
+        };
     }
 
     it("renders without crashing", () => {
@@ -30,5 +37,14 @@ describe("App Component", () => {
         expect(wrapper.find(Router).exists()).toBe(true);
         expect(wrapper.find(KeyboardManager).exists()).toEqual(true);
         expect(wrapper.find(ErrorHandler).exists()).toEqual(true);
+    });
+
+    it("dispatch tracking sing out action when beforeunload event is dispatched", () => {
+        const props = createProps();
+        const trackingSignOutAction = jest.spyOn(props.trackingActions, "trackingSignOut");
+        createComponent(props);
+        spyOn(window, "addEventListener");
+        window.dispatchEvent(new Event("beforeunload"));
+        expect(trackingSignOutAction).toHaveBeenCalled();
     });
 });

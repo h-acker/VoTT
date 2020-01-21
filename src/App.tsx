@@ -17,6 +17,7 @@ import { StatusBarMetrics } from "./react/components/shell/statusBarMetrics";
 import { HelpMenu } from "./react/components/shell/helpMenu";
 import history from "./history";
 import IAuthActions, * as authActions from "./redux/actions/authActions";
+import ITrackingActions, * as trackingActions from "./redux/actions/trackingActions";
 
 interface IAppProps {
     currentProject?: IProject;
@@ -24,6 +25,7 @@ interface IAppProps {
     actions?: IAppErrorActions;
     auth?: IAuth;
     authActions?: IAuthActions;
+    trackingActions?: ITrackingActions;
 }
 
 interface IAppState {
@@ -41,7 +43,8 @@ function mapStateToProps(state: IApplicationState) {
 function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators(appErrorActions, dispatch),
-        authActions: bindActionCreators(authActions, dispatch)
+        authActions: bindActionCreators(authActions, dispatch),
+        trackingActions: bindActionCreators(trackingActions, dispatch)
     };
 }
 
@@ -62,6 +65,17 @@ export default class App extends React.Component<IAppProps, IAppState> {
         };
     }
 
+    public componentDidMount() {
+        const { auth } = this.props;
+        window.addEventListener("beforeunload", async e => {
+            e.preventDefault();
+            await this.props.trackingActions.trackingSignOut(auth.userId);
+            if (auth.rememberUser === false) {
+                await this.props.authActions.signOut();
+            }
+        });
+    }
+
     public componentDidCatch(error: Error) {
         this.props.actions.showError({
             errorCode: ErrorCode.GenericRenderError,
@@ -73,12 +87,6 @@ export default class App extends React.Component<IAppProps, IAppState> {
     public render() {
         const { auth } = this.props;
         const platform = global && global.process ? global.process.platform : "web";
-        if (auth.rememberUser === false) {
-            window.addEventListener("beforeunload", async e => {
-                event.preventDefault();
-                await this.props.authActions.signOut();
-            });
-        }
 
         return (
             <Fragment>
