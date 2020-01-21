@@ -59,7 +59,9 @@ export default class TagInputItem extends React.Component<ITagInputItemProps, IT
                 {this.props.tag && (
                     <li className={this.getItemClassName()} style={style}>
                         <div className={`tag-color`} onClick={this.onColorClick}></div>
-                        <div className={"tag-content"} onClick={this.onNameClick}>{this.getTagContent()}</div>
+                        <div className={"tag-content"} onClick={this.onNameClick}>
+                            {this.getTagContent()}
+                        </div>
                         {this.state.isLocked && <div></div>}
                     </li>
                 )}
@@ -86,21 +88,27 @@ export default class TagInputItem extends React.Component<ITagInputItemProps, IT
 
         const ctrlKey = e.ctrlKey || e.metaKey;
         const altKey = e.altKey;
-        this.setState({
-            tagEditMode: TagEditMode.Name,
-        }, () => this.props.onClick(this.props.tag, { ctrlKey, altKey }));
-    }
+        this.setState(
+            {
+                tagEditMode: TagEditMode.Name
+            },
+            () => this.props.onClick(this.props.tag, { ctrlKey, altKey })
+        );
+    };
 
     private onColorClick = (e: MouseEvent) => {
         e.stopPropagation();
 
         const ctrlKey = e.ctrlKey || e.metaKey;
         const altKey = e.altKey;
-        this.setState({
-            tagEditMode: TagEditMode.Color,
-        }, () => this.props.onClick(this.props.tag, { ctrlKey, altKey, clickedColor: true }));
-    }
-    
+        this.setState(
+            {
+                tagEditMode: TagEditMode.Color
+            },
+            () => this.props.onClick(this.props.tag, { ctrlKey, altKey, clickedColor: true })
+        );
+    };
+
     private getItemClassName = () => {
         const classNames = ["tag-item"];
         if (this.props.isSelected) {
