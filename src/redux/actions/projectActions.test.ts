@@ -28,19 +28,20 @@ describe("Project Redux Actions", () => {
         const middleware = [thunk];
         const mockState: IApplicationState = {
             ...initialState,
-            appSettings,
+            appSettings
         };
 
         store = createMockStore<IApplicationState>(middleware)(mockState);
         projectServiceMock = ProjectService as jest.Mocked<typeof ProjectService>;
-        projectServiceMock.prototype.load = jest.fn((project) => Promise.resolve(project));
-        projectServiceMock.prototype.save = jest.fn((project) => Promise.resolve(project));
+        projectServiceMock.prototype.load = jest.fn(project => Promise.resolve(project));
+        projectServiceMock.prototype.save = jest.fn(project => Promise.resolve(project));
     });
 
     it("Load Project action resolves a promise and dispatches redux action", async () => {
         const project = MockFactory.createTestProject("TestProject");
-        const projectToken = appSettings.securityTokens
-            .find((securityToken) => securityToken.name === project.securityToken);
+        const projectToken = appSettings.securityTokens.find(
+            securityToken => securityToken.name === project.securityToken
+        );
 
         const result = await projectActions.loadProject(project)(store.dispatch, store.getState);
         const actions = store.getActions();
@@ -48,18 +49,19 @@ describe("Project Redux Actions", () => {
         expect(actions.length).toEqual(1);
         expect(actions[0]).toEqual({
             type: ActionTypes.LOAD_PROJECT_SUCCESS,
-            payload: project,
+            payload: project
         });
         expect(result).toEqual(project);
         expect(projectServiceMock.prototype.load).toBeCalledWith(project, projectToken);
     });
 
     it("Save Project action calls project service and dispatches redux action", async () => {
-        projectServiceMock.prototype.save = jest.fn((project) => Promise.resolve(project));
+        projectServiceMock.prototype.save = jest.fn(project => Promise.resolve(project));
 
         const project = MockFactory.createTestProject("TestProject");
-        const projectToken = appSettings.securityTokens
-            .find((securityToken) => securityToken.name === project.securityToken);
+        const projectToken = appSettings.securityTokens.find(
+            securityToken => securityToken.name === project.securityToken
+        );
 
         const result = await projectActions.saveProject(project)(store.dispatch, store.getState);
         const actions = store.getActions();
@@ -67,11 +69,11 @@ describe("Project Redux Actions", () => {
         expect(actions.length).toEqual(2);
         expect(actions[0]).toEqual({
             type: ActionTypes.SAVE_PROJECT_SUCCESS,
-            payload: project,
+            payload: project
         });
         expect(actions[1]).toEqual({
             type: ActionTypes.LOAD_PROJECT_SUCCESS,
-            payload: project,
+            payload: project
         });
         expect(result).toEqual(project);
         expect(projectServiceMock.prototype.save).toBeCalledWith(project, projectToken);
@@ -79,7 +81,7 @@ describe("Project Redux Actions", () => {
     });
 
     it("Save Project action correctly add project version", async () => {
-        projectServiceMock.prototype.save = jest.fn((project) => Promise.resolve(project));
+        projectServiceMock.prototype.save = jest.fn(project => Promise.resolve(project));
 
         const project = MockFactory.createTestProject("TestProject");
         const result = await projectActions.saveProject(project)(store.dispatch, store.getState);
@@ -88,7 +90,7 @@ describe("Project Redux Actions", () => {
     });
 
     it("Save Project action does not override existing export format", async () => {
-        projectServiceMock.prototype.save = jest.fn((project) => Promise.resolve(project));
+        projectServiceMock.prototype.save = jest.fn(project => Promise.resolve(project));
 
         const project = MockFactory.createTestProject("TestProject");
         const result = await projectActions.saveProject(project)(store.dispatch, store.getState);
@@ -108,7 +110,7 @@ describe("Project Redux Actions", () => {
         expect(actions.length).toEqual(1);
         expect(actions[0]).toEqual({
             type: ActionTypes.DELETE_PROJECT_SUCCESS,
-            payload: project,
+            payload: project
         });
         expect(projectServiceMock.prototype.delete).toBeCalledWith(project);
     });
@@ -121,13 +123,13 @@ describe("Project Redux Actions", () => {
         expect(actions.length).toEqual(0);
     });
 
-    it("Close project dispatches redux action", () => {
-        projectActions.closeProject()(store.dispatch);
+    it("Close project dispatches redux action", async () => {
+        await projectActions.closeProject()(store.dispatch);
         const actions = store.getActions();
 
         expect(actions.length).toEqual(1);
         expect(actions[0]).toEqual({
-            type: ActionTypes.CLOSE_PROJECT_SUCCESS,
+            type: ActionTypes.CLOSE_PROJECT_SUCCESS
         });
     });
 
@@ -143,7 +145,7 @@ describe("Project Redux Actions", () => {
         expect(actions.length).toEqual(1);
         expect(actions[0]).toEqual({
             type: ActionTypes.LOAD_PROJECT_ASSETS_SUCCESS,
-            payload: testAssets,
+            payload: testAssets
         });
 
         expect(mockAssetService.prototype.getAssets).toBeCalled();
@@ -163,7 +165,7 @@ describe("Project Redux Actions", () => {
         expect(actions.length).toEqual(1);
         expect(actions[0]).toEqual({
             type: ActionTypes.LOAD_ASSET_METADATA_SUCCESS,
-            payload: assetMetadata,
+            payload: assetMetadata
         });
 
         expect(mockAssetService.prototype.getAssetMetadata).toBeCalledWith(asset);
@@ -177,13 +179,13 @@ describe("Project Redux Actions", () => {
         mockAssetService.prototype.save = jest.fn(() => assetMetadata);
 
         const project = MockFactory.createTestProject("TestProject");
-        const result = await projectActions.saveAssetMetadata(project, assetMetadata)(store.dispatch);
+        const result = await projectActions.saveAssetMetadata(project, assetMetadata, [])(store.dispatch);
         const actions = store.getActions();
 
         expect(actions.length).toEqual(1);
         expect(actions[0]).toEqual({
             type: ActionTypes.SAVE_ASSET_METADATA_SUCCESS,
-            payload: assetMetadata,
+            payload: { savedMetadata: assetMetadata, tagsWithId: [] }
         });
 
         expect(mockAssetService.prototype.save).toBeCalledWith(assetMetadata);
@@ -197,7 +199,7 @@ describe("Project Redux Actions", () => {
         mockAssetService.prototype.save = jest.fn(() => assetMetadata);
 
         const project = MockFactory.createTestProject("TestProject");
-        const result = await projectActions.saveAssetMetadata(project, assetMetadata)(store.dispatch);
+        const result = await projectActions.saveAssetMetadata(project, assetMetadata, [])(store.dispatch);
 
         expect(result.version).toEqual(appInfo.version);
     });
@@ -205,7 +207,7 @@ describe("Project Redux Actions", () => {
     it("Export project calls export provider and dispatches redux action", async () => {
         const mockExportProvider: IExportProvider = {
             project: null,
-            export: jest.fn(() => Promise.resolve()),
+            export: jest.fn(() => Promise.resolve())
         };
         ExportProviderFactory.create = jest.fn(() => mockExportProvider);
 
@@ -216,13 +218,13 @@ describe("Project Redux Actions", () => {
         expect(actions.length).toEqual(1);
         expect(actions[0]).toEqual({
             type: ActionTypes.EXPORT_PROJECT_SUCCESS,
-            payload: project,
+            payload: project
         });
 
         expect(ExportProviderFactory.create).toBeCalledWith(
             project.exportFormat.providerType,
             project,
-            project.exportFormat.providerOptions,
+            project.exportFormat.providerOptions
         );
 
         expect(mockExportProvider.export).toHaveBeenCalled();
@@ -237,7 +239,7 @@ describe("Project Redux Actions", () => {
             const mockState: IApplicationState = {
                 ...initialState,
                 currentProject: project,
-                appSettings,
+                appSettings
             };
 
             store = createMockStore<IApplicationState>(middleware)(mockState);
@@ -249,7 +251,7 @@ describe("Project Redux Actions", () => {
 
             const updatedAssets = [
                 MockFactory.createTestAssetMetadata(projectAssets[0]),
-                MockFactory.createTestAssetMetadata(projectAssets[1]),
+                MockFactory.createTestAssetMetadata(projectAssets[1])
             ];
 
             const expectedTagName = `${updatedTag.name} - updated`;
@@ -260,7 +262,7 @@ describe("Project Redux Actions", () => {
             const actualUpdatedAssets = await projectActions.updateProjectTag(
                 project,
                 updatedTag.name,
-                expectedTagName,
+                expectedTagName
             )(store.dispatch, store.getState);
 
             const actions = store.getActions();
@@ -281,16 +283,16 @@ describe("Project Redux Actions", () => {
 
             const updatedAssets = [
                 MockFactory.createTestAssetMetadata(projectAssets[0]),
-                MockFactory.createTestAssetMetadata(projectAssets[1]),
+                MockFactory.createTestAssetMetadata(projectAssets[1])
             ];
 
             const assetServiceMock = AssetService as jest.Mocked<typeof AssetService>;
             assetServiceMock.prototype.deleteTag = jest.fn(() => Promise.resolve(updatedAssets));
 
-            const actualUpdatedAssets = await projectActions.deleteProjectTag(
-                project,
-                deletedTag.name,
-            )(store.dispatch, store.getState);
+            const actualUpdatedAssets = await projectActions.deleteProjectTag(project, deletedTag.name)(
+                store.dispatch,
+                store.getState
+            );
 
             const actions = store.getActions();
 

@@ -177,7 +177,7 @@ export default class HomePage extends React.Component<IHomePageProps, IHomePageS
             await this.props.actions.saveProject(project);
             await this.props.actions.loadProject(project);
             await generatedAssetMetadata.mapAsync(assetMetadata => {
-                return this.props.actions.saveAssetMetadata(this.props.project, assetMetadata);
+                return this.props.actions.saveAssetMetadata(this.props.project, assetMetadata, []);
             });
         } catch (e) {
             throw new Error(`Error importing project information - ${e.message}`);

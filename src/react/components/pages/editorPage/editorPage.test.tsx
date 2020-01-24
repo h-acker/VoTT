@@ -197,7 +197,8 @@ describe("Editor Page Component", () => {
                     ...expectedAsset,
                     state: AssetState.Visited
                 }
-            })
+            }),
+            [{ color: "#333333", name: undefined, id: 0 }]
         );
         expect(saveProjectSpy).toBeCalledWith(expect.objectContaining(partialProject));
     });
@@ -345,7 +346,8 @@ describe("Editor Page Component", () => {
                     ...expectedAsset,
                     state: AssetState.Visited
                 }
-            })
+            }),
+            [{ color: "#333333", id: 0, name: undefined }]
         );
         expect(saveProjectSpy).toBeCalledWith(expect.objectContaining(partialProject));
     });

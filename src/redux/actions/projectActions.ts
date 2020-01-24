@@ -12,11 +12,10 @@ import {
     IProject
 } from "../../models/applicationState";
 import { createAction, createPayloadAction, IPayloadAction } from "./actionCreators";
-import { ExportAssetState, IExportResults } from "../../providers/export/exportProvider";
+import { IExportResults } from "../../providers/export/exportProvider";
 import { appInfo } from "../../common/appInfo";
 import { strings } from "../../common/strings";
-import { IExportFormat } from "vott-react";
-import { IVottJsonExportProviderOptions } from "../../providers/export/vottJson";
+import { ITagWithId } from "../../react/components/common/tagInput/tagInput";
 
 /**
  * Actions to be performed in relation to projects
@@ -29,7 +28,11 @@ export default interface IProjectActions {
     exportProject(project: IProject): Promise<void> | Promise<IExportResults>;
     loadAssets(project: IProject): Promise<IAsset[]>;
     loadAssetMetadata(project: IProject, asset: IAsset): Promise<IAssetMetadata>;
-    saveAssetMetadata(project: IProject, assetMetadata: IAssetMetadata): Promise<IAssetMetadata>;
+    saveAssetMetadata(
+        project: IProject,
+        assetMetadata: IAssetMetadata,
+        tagsWithId: ITagWithId[]
+    ): Promise<IAssetMetadata>;
     updateProjectTag(project: IProject, oldTagName: string, newTagName: string): Promise<IAssetMetadata[]>;
     deleteProjectTag(project: IProject, tagName): Promise<IAssetMetadata[]>;
 }
@@ -169,14 +172,15 @@ export function loadAssetMetadata(project: IProject, asset: IAsset): (dispatch: 
  */
 export function saveAssetMetadata(
     project: IProject,
-    assetMetadata: IAssetMetadata
+    assetMetadata: IAssetMetadata,
+    tagsWithId: ITagWithId[]
 ): (dispatch: Dispatch) => Promise<IAssetMetadata> {
     const newAssetMetadata = { ...assetMetadata, version: appInfo.version };
 
     return async (dispatch: Dispatch) => {
         const assetService = new AssetService(project);
         const savedMetadata = await assetService.save(newAssetMetadata);
-        dispatch(saveAssetMetadataAction(savedMetadata));
+        dispatch(saveAssetMetadataAction({ savedMetadata, tagsWithId }));
 
         return { ...savedMetadata };
     };
@@ -200,7 +204,7 @@ export function updateProjectTag(
 
         // Save updated assets
         await assetUpdates.forEachAsync(async assetMetadata => {
-            await saveAssetMetadata(project, assetMetadata)(dispatch);
+            await saveAssetMetadata(project, assetMetadata, [])(dispatch);
         });
 
         const currentProject = getState().currentProject;
@@ -233,7 +237,7 @@ export function deleteProjectTag(
 
         // Save updated assets
         await assetUpdates.forEachAsync(async assetMetadata => {
-            await saveAssetMetadata(project, assetMetadata)(dispatch);
+            await saveAssetMetadata(project, assetMetadata, [])(dispatch);
         });
 
         const currentProject = getState().currentProject;
@@ -320,7 +324,8 @@ export interface ILoadAssetMetadataAction extends IPayloadAction<string, IAssetM
 /**
  * Save asset metadata action type
  */
-export interface ISaveAssetMetadataAction extends IPayloadAction<string, IAssetMetadata> {
+export interface ISaveAssetMetadataAction
+    extends IPayloadAction<string, { savedMetadata: IAssetMetadata; tagsWithId: ITagWithId[] }> {
     type: ActionTypes.SAVE_ASSET_METADATA_SUCCESS;
 }
 

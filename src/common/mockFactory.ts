@@ -508,7 +508,7 @@ export default class MockFactory {
     public static createTestLitter(name: number = 0): ILitter {
         return {
             id: name,
-            color: MockFactory.randomColor()
+            color: "#333333"
         };
     }
 

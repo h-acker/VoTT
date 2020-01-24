@@ -32,7 +32,7 @@ import { AssetService } from "../../../../services/assetService";
 import { AssetPreview } from "../../common/assetPreview/assetPreview";
 import { KeyboardBinding } from "../../common/keyboardBinding/keyboardBinding";
 import { KeyEventType } from "../../common/keyboardManager/keyboardManager";
-import { TagInput } from "../../common/tagInput/tagInput";
+import { TagInput, buildTagsWithId } from "../../common/tagInput/tagInput";
 import { ToolbarItem } from "../../toolbar/toolbarItem";
 import Canvas from "./canvas";
 import CanvasHelpers from "./canvasHelpers";
@@ -46,6 +46,7 @@ import { toast } from "react-toastify";
 import ITrackingActions, * as trackingActions from "../../../../redux/actions/trackingActions";
 import { MagnifierModalMessage } from "./MagnifierModalMessage";
 import { relative } from "path";
+import apiService, { ILitter } from "../../../../services/apiService";
 
 /**
  * Properties for Editor Page
@@ -102,6 +103,7 @@ export interface IEditorPageState {
     magnifierModalIsOpen: boolean;
     /** Base metadata of selected asset */
     selectedAssetBase?: IAssetMetadata;
+    litters: ILitter[];
 }
 
 function mapStateToProps(state: IApplicationState) {
@@ -144,7 +146,8 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         thumbnailSize: this.props.appSettings.thumbnailSize || { width: 175, height: 155 },
         isValid: true,
         showInvalidRegionWarning: false,
-        magnifierModalIsOpen: false
+        magnifierModalIsOpen: false,
+        litters: []
     };
 
     private activeLearningService: ActiveLearningService = null;
@@ -173,6 +176,10 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                 this.isAssetModified()
             );
         };
+        const litters = await apiService.getLitters();
+        this.setState({
+            litters: litters.data
+        });
     }
 
     public async componentDidUpdate(prevProps: Readonly<IEditorPageProps>) {
@@ -305,6 +312,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                                 onTagClick={this.onTagClicked}
                                 onCtrlTagClick={this.onCtrlTagClicked}
                                 onTagRenamed={this.confirmTagRenamed}
+                                litters={this.state.litters}
                             />
                         </div>
                         <Confirm
@@ -547,6 +555,8 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             assetMetadata.asset.state = AssetState.Visited;
         }
 
+        const tagsWithId = buildTagsWithId(this.state.litters);
+
         // Update root asset if not already in the "Tagged" state
         // This is primarily used in the case where a Video Frame is being edited.
         // We want to ensure that in this case the root video asset state is accurately
@@ -557,7 +567,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             const rootAssetMetadata = await this.props.actions.loadAssetMetadata(this.props.project, rootAsset);
             if (rootAssetMetadata.asset.state !== AssetState.Tagged) {
                 rootAssetMetadata.asset.state = assetMetadata.asset.state;
-                await this.props.actions.saveAssetMetadata(this.props.project, rootAssetMetadata);
+                await this.props.actions.saveAssetMetadata(this.props.project, rootAssetMetadata, tagsWithId);
             }
 
             rootAsset.state = rootAssetMetadata.asset.state;
@@ -565,7 +575,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
 
         // Only update asset metadata if state changes or is different
         if (initialState !== assetMetadata.asset.state || this.state.selectedAsset !== assetMetadata) {
-            await this.props.actions.saveAssetMetadata(this.props.project, assetMetadata);
+            await this.props.actions.saveAssetMetadata(this.props.project, assetMetadata, tagsWithId);
         }
 
         await this.props.actions.saveProject(this.props.project);
