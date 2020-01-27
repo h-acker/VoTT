@@ -1,15 +1,14 @@
 import { strings, addLocValues, IAppStrings, interpolate, interpolateJson } from "./strings";
-import { english } from "./localization/en-us";
-import { spanish } from "./localization/es-cl";
+import en from "./localization/en.json";
+import es from "./localization/es.json";
 
 const languages = ["en", "es"];
 
 describe("Localization tests", () => {
-
     function getLanguageJson(language: string): IAppStrings {
         return {
-            en: english,
-            es: spanish,
+            en,
+            es
         }[language];
     }
 
@@ -84,9 +83,11 @@ describe("Localization tests", () => {
                 expect(formProps.targetConnection.description).toEqual(lProj.targetConnection.description);
                 expect(formProps.videoSettings.title).toEqual(lProj.videoSettings.title);
                 expect(formProps.videoSettings.properties.frameExtractionRate.description).toEqual(
-                    lProj.videoSettings.description);
+                    lProj.videoSettings.description
+                );
                 expect(formProps.videoSettings.properties.frameExtractionRate.title).toEqual(
-                    lProj.videoSettings.frameExtractionRate);
+                    lProj.videoSettings.frameExtractionRate
+                );
                 expect(formProps.description.title).toEqual(common.description);
                 expect(formProps.tags.title).toEqual(languageJson.tags.title);
             }
@@ -96,11 +97,11 @@ describe("Localization tests", () => {
             const template = "Hello ${user.name}, my name is ${bot.handle}";
             const params = {
                 user: {
-                    name: "John Doe",
+                    name: "John Doe"
                 },
                 bot: {
-                    handle: "VoTT bot",
-                },
+                    handle: "VoTT bot"
+                }
             };
 
             const result = interpolate(template, params);
@@ -111,26 +112,26 @@ describe("Localization tests", () => {
             const template = {
                 user: {
                     firstName: "${user.firstName}",
-                    lastName: "${user.lastName}",
+                    lastName: "${user.lastName}"
                 },
                 address: {
                     street: "${address.street}",
                     city: "${address.city}",
                     state: "${address.state}",
-                    zipCode: "${address.zipCode}",
-                },
+                    zipCode: "${address.zipCode}"
+                }
             };
             const params = {
                 user: {
                     firstName: "John",
-                    lastName: "Doe",
+                    lastName: "Doe"
                 },
                 address: {
                     street: "1 Microsoft Way",
                     city: "Redmond",
                     state: "WA",
-                    zipCode: "98052",
-                },
+                    zipCode: "98052"
+                }
             };
 
             const result = interpolateJson(template, params);

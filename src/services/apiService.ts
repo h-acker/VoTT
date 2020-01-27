@@ -58,6 +58,11 @@ export interface IImage {
     id: number;
 }
 
+export interface ILitter {
+    id: number;
+    color: string;
+}
+
 export interface IImageWithAction extends IImage {
     last_action: IActionRequest;
 }
@@ -108,6 +113,10 @@ export class ApiService implements IApiService {
 
     public getImageWithLastAction = (): AxiosPromise<IImageWithAction[]> => {
         return this.client.get(Api.ImagesWithLastAction);
+    };
+
+    public getLitters = (data: number[] = []): AxiosPromise<ILitter[]> => {
+        return this.client.post(Api.Litters, data);
     };
 }
 

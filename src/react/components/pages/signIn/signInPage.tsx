@@ -25,25 +25,28 @@ export interface ISignInPageState {
 
 function mapStateToProps(state: IApplicationState) {
     return {
-        auth: state.auth,
+        auth: state.auth
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators(authActions, dispatch),
-        trackingActions: bindActionCreators(trackingActions, dispatch),
+        trackingActions: bindActionCreators(trackingActions, dispatch)
     };
 }
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(
+    mapStateToProps,
+    mapDispatchToProps
+)
 export default class SignInPage extends React.Component<ISignInPageProps, ISignInPageState> {
     constructor(props) {
         super(props);
         this.state = {
-            signIn: props.signIn || null,
+            signIn: props.signIn || null,
             loginRequestPayload: null,
-            auth: null,
+            auth: null
         };
         this.onFormSubmit = this.onFormSubmit;
     }
@@ -53,10 +56,7 @@ export default class SignInPage extends React.Component<ISignInPageProps, ISignI
             <div className="app-sign-in-page-form">
                 <Route exact path="/sign-in">
                     <div>
-                        <SignInForm
-                            signIn={this.state.signIn}
-                            onSubmit={this.onFormSubmit}
-                        />
+                        <SignInForm signIn={this.state.signIn} onSubmit={this.onFormSubmit} />
                     </div>
                 </Route>
             </div>
@@ -64,15 +64,18 @@ export default class SignInPage extends React.Component<ISignInPageProps, ISignI
     }
 
     private onFormSubmit = (signIn: ISignIn) => {
-        this.setState({
-            loginRequestPayload: {
-                username: signIn.email,
-                password: signIn.password,
+        this.setState(
+            {
+                loginRequestPayload: {
+                    username: signIn.email,
+                    password: signIn.password
+                }
             },
-        }, () => {
-            this.sendCredentials(signIn.rememberUser);
-        });
-    }
+            () => {
+                this.sendCredentials(signIn.rememberUser);
+            }
+        );
+    };
 
     private async sendCredentials(rememberUser: boolean) {
         try {
@@ -83,11 +86,16 @@ export default class SignInPage extends React.Component<ISignInPageProps, ISignI
                     fullName: null,
                     rememberUser,
                     userId: null,
-                },
+                    isAdmin: false
+                }
             });
             await this.props.actions.signIn(this.state.auth);
             const userInfo = await apiService.getCurrentUser();
-            await this.props.actions.saveUserInfo({fullName: userInfo.data.full_name, userId: userInfo.data.id});
+            await this.props.actions.saveUserInfo({
+                fullName: userInfo.data.full_name,
+                userId: userInfo.data.id,
+                isAdmin: userInfo.data.is_superuser
+            });
             await this.props.trackingActions.trackingSignIn(userInfo.data.id);
             history.push("/");
         } catch (error) {
@@ -101,7 +109,7 @@ export default class SignInPage extends React.Component<ISignInPageProps, ISignI
             } else {
                 errorMessage = "Sorry, something went wrong...";
             }
-            toast.error(errorMessage, { position: toast.POSITION.TOP_CENTER} );
+            toast.error(errorMessage, { position: toast.POSITION.TOP_CENTER });
         }
     }
 }

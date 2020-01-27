@@ -2,8 +2,8 @@ import _ from "lodash";
 import { ActionTypes } from "../actions/actionTypes";
 import { IProject, ITag } from "../../models/applicationState";
 import { AnyAction } from "../actions/actionCreators";
-// tslint:disable-next-line:no-var-requires
-const tagColors = require("../../react/components/common/tagColors.json");
+
+const defaultTagColor = "#000000";
 
 /**
  * Reducer for project. Actions handled:
@@ -38,19 +38,19 @@ export const reducer = (state: IProject = null, action: AnyAction): IProject => 
             }
 
             const updatedAssets = { ...state.assets } || {};
-            updatedAssets[action.payload.asset.id] = { ...action.payload.asset };
+            updatedAssets[action.payload.savedMetadata.asset.id] = { ...action.payload.savedMetadata.asset };
 
             const assetTags = new Set();
-            action.payload.regions.forEach(region => region.tags.forEach(tag => assetTags.add(tag)));
+            action.payload.savedMetadata.regions.forEach(region => region.tags.forEach(tag => assetTags.add(tag)));
 
             const newTags: ITag[] = state.tags ? [...state.tags] : [];
             let updateTags = false;
-
             assetTags.forEach(tag => {
                 if (!state.tags || state.tags.length === 0 || !state.tags.find(projectTag => tag === projectTag.name)) {
+                    const tagWithId = action.payload.tagsWithId.filter(item => item.name === tag)[0];
                     newTags.push({
                         name: tag,
-                        color: tagColors[newTags.length % tagColors.length]
+                        color: tagWithId ? tagWithId.color : defaultTagColor
                     });
                     updateTags = true;
                 }

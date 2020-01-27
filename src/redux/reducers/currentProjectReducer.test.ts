@@ -9,7 +9,7 @@ import {
     deleteProjectAction,
     loadProjectAssetsAction,
     saveAssetMetadataAction,
-    loadAssetMetadataAction,
+    loadAssetMetadataAction
 } from "../actions/projectActions";
 import { anyOtherAction } from "../actions/actionCreators";
 import { saveConnectionAction } from "../actions/connectionActions";
@@ -63,7 +63,7 @@ describe("Current Project Reducer", () => {
         expect(result).toEqual({
             ...currentProject,
             sourceConnection: updatedConnection,
-            targetConnection: updatedConnection,
+            targetConnection: updatedConnection
         });
     });
 
@@ -100,14 +100,14 @@ describe("Current Project Reducer", () => {
                 state: AssetState.Visited,
                 size: {
                     width: 1024,
-                    height: 768,
-                },
+                    height: 768
+                }
             },
             regions: [],
-            version: "",
+            version: ""
         };
 
-        const action = saveAssetMetadataAction(assetMetadata);
+        const action = saveAssetMetadataAction({ savedMetadata: assetMetadata, tagsWithId: [] });
         const result = reducer(state, action);
         expect(result).not.toBe(state);
         expect(result.assets[testAssets[0].id]).toEqual(assetMetadata.asset);
@@ -119,21 +119,17 @@ describe("Current Project Reducer", () => {
 
         const expectedTag: ITag = {
             name: "NEWTAG",
-            color: expect.any(String),
+            color: expect.any(String)
         };
 
-        const assetMetadata = MockFactory.createTestAssetMetadata(
-            testAssets[0],
-            [MockFactory.createTestRegion("Region 1", [expectedTag.name])],
-        );
+        const assetMetadata = MockFactory.createTestAssetMetadata(testAssets[0], [
+            MockFactory.createTestRegion("Region 1", [expectedTag.name])
+        ]);
 
-        const action = saveAssetMetadataAction(assetMetadata);
+        const action = saveAssetMetadataAction({ savedMetadata: assetMetadata, tagsWithId: [] });
         const result = reducer(state, action);
         expect(result).not.toBe(state);
-        expect(result.tags).toEqual([
-            ...state.tags,
-            expectedTag,
-        ]);
+        expect(result.tags).toEqual([...state.tags, expectedTag]);
     });
 
     it("Unknown action performs a noop", () => {

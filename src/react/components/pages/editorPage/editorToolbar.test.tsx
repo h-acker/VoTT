@@ -15,7 +15,7 @@ describe("Editor Toolbar", () => {
         return mount(
             <KeyboardManager>
                 <EditorToolbar {...props} />
-            </KeyboardManager>,
+            </KeyboardManager>
         );
     }
 
@@ -24,7 +24,7 @@ describe("Editor Toolbar", () => {
             actions: MockFactory.projectActions(),
             project: MockFactory.createTestProject("TestProject"),
             items: ToolbarItemFactory.getToolbarItems(),
-            onToolbarItemSelected: (toolbarItem: ToolbarItem) => null,
+            onToolbarItemSelected: (toolbarItem: ToolbarItem) => null
         };
     }
 
@@ -45,7 +45,10 @@ describe("Editor Toolbar", () => {
     it("Renders toolbar items in groups", () => {
         const toolbarGroups = wrapper.find(".btn-group");
         const toolbarRegistry = ToolbarItemFactory.getToolbarItems();
-        const groups = _(toolbarRegistry).groupBy("config.group").values().value();
+        const groups = _(toolbarRegistry)
+            .groupBy("config.group")
+            .values()
+            .value();
 
         expect(toolbarGroups.length).toEqual(groups.length);
     });
@@ -56,19 +59,11 @@ describe("Editor Toolbar", () => {
         expect(items.length).toEqual(toolbarRegistry.length);
     });
 
-    it("Sets the selected toolbar item", async () => {
-        const exportProject = wrapper.find(".exportProject");
-        exportProject.find("button").simulate("click");
-
-        const toolbar = wrapper.find(EditorToolbar) as ReactWrapper<IEditorToolbarProps, IEditorToolbarState>;
-        expect(toolbar.state().selectedItem).toEqual(ToolbarItemName.ExportProject);
-    });
-
     it("Sets correct keyboard binding when accelerator is defined", () => {
         const toolbar = wrapper.find(EditorToolbar) as ReactWrapper<IEditorToolbarProps, IEditorToolbarState>;
         const select = toolbar.props().items[0];
         const toolbarRegistry = ToolbarItemFactory.getToolbarItems();
-        expect(select.config).toHaveProperty("accelerators", ["V", "v" ]);
+        expect(select.config).toHaveProperty("accelerators", ["V", "v"]);
         expect(select.config).toEqual(toolbarRegistry[0].config);
     });
 });

@@ -1,17 +1,14 @@
-import React, { SyntheticEvent } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { strings, interpolate } from "../../../../common/strings";
 import IProjectActions, * as projectActions from "../../../../redux/actions/projectActions";
 import IApplicationActions, * as applicationActions from "../../../../redux/actions/applicationActions";
-import { CloudFilePicker } from "../../common/cloudFilePicker/cloudFilePicker";
 import CondensedList from "../../common/condensedList/condensedList";
 import Confirm from "../../common/confirm/confirm";
-import FilePicker from "../../common/filePicker/filePicker";
 import "./homePage.scss";
 import RecentProjectItem from "./recentProjectItem";
-import { constants } from "../../../../common/constants";
 import {
     IApplicationState,
     IConnection,
@@ -19,12 +16,13 @@ import {
     IFileInfo,
     ErrorCode,
     AppError,
-    IAppSettings
+    IAppSettings,
+    ModelPathType
 } from "../../../../models/applicationState";
 import ImportService from "../../../../services/importService";
 import { IAssetMetadata } from "../../../../models/applicationState";
 import { toast } from "react-toastify";
-import { isElectron } from "../../../../common/hostProcess";
+import IConnectionActions, * as connectionActions from "../../../../redux/actions/connectionActions";
 
 export interface IHomePageProps extends RouteComponentProps {
     recentProjects: IProject[];
@@ -33,6 +31,7 @@ export interface IHomePageProps extends RouteComponentProps {
     applicationActions: IApplicationActions;
     appSettings: IAppSettings;
     project: IProject;
+    connectionActions: IConnectionActions;
 }
 
 export interface IHomePageState {
@@ -51,7 +50,8 @@ function mapStateToProps(state: IApplicationState) {
 function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators(projectActions, dispatch),
-        applicationActions: bindActionCreators(applicationActions, dispatch)
+        applicationActions: bindActionCreators(applicationActions, dispatch),
+        connectionActions: bindActionCreators(connectionActions, dispatch)
     };
 }
 
@@ -60,61 +60,16 @@ function mapDispatchToProps(dispatch) {
     mapDispatchToProps
 )
 export default class HomePage extends React.Component<IHomePageProps, IHomePageState> {
-    public state: IHomePageState = {
-        cloudPickerOpen: false
-    };
-    private filePicker: React.RefObject<FilePicker> = React.createRef();
     private deleteConfirm: React.RefObject<Confirm> = React.createRef();
-    private cloudFilePicker: React.RefObject<CloudFilePicker> = React.createRef();
     private importConfirm: React.RefObject<Confirm> = React.createRef();
+
+    public componentDidMount() {
+        this.startupProject();
+    }
 
     public render() {
         return (
             <div className="app-homepage">
-                <div className="app-homepage-main">
-                    <ul>
-                        <li>
-                            <a href="#" onClick={this.createNewProject} className="p-5 new-project">
-                                <i className="fas fa-folder-plus fa-9x" />
-                                <h6>{strings.homePage.newProject}</h6>
-                            </a>
-                        </li>
-                        {isElectron() && (
-                            <li>
-                                <a
-                                    href="#"
-                                    className="p-5 file-upload"
-                                    onClick={() => this.filePicker.current.upload()}
-                                >
-                                    <i className="fas fa-folder-open fa-9x" />
-                                    <h6>{strings.homePage.openLocalProject.title}</h6>
-                                </a>
-                                <FilePicker
-                                    ref={this.filePicker}
-                                    onChange={this.onProjectFileUpload}
-                                    onError={this.onProjectFileUploadError}
-                                />
-                            </li>
-                        )}
-                        <li>
-                            {/*Open Cloud Project*/}
-                            <a
-                                href="#"
-                                onClick={this.handleOpenCloudProjectClick}
-                                className="p-5 cloud-open-project"
-                            >
-                                <i className="fas fa-cloud fa-9x" />
-                                <h6>{strings.homePage.openCloudProject.title}</h6>
-                            </a>
-                            <CloudFilePicker
-                                ref={this.cloudFilePicker}
-                                connections={this.props.connections}
-                                onSubmit={content => this.loadSelectedProject(JSON.parse(content))}
-                                fileExtension={constants.projectFileExtension}
-                            />
-                        </li>
-                    </ul>
-                </div>
                 {this.props.recentProjects && this.props.recentProjects.length > 0 && (
                     <div className="app-homepage-recent bg-lighter-1">
                         <CondensedList
@@ -129,9 +84,7 @@ export default class HomePage extends React.Component<IHomePageProps, IHomePageS
                 <Confirm
                     title="Delete Project"
                     ref={this.deleteConfirm as any}
-                    message={(project: IProject) =>
-                        `${strings.homePage.deleteProject.confirmation} ${project.name}?`
-                    }
+                    message={(project: IProject) => `${strings.homePage.deleteProject.confirmation} ${project.name}?`}
                     confirmButtonColor="danger"
                     onConfirm={this.deleteProject}
                 />
@@ -148,44 +101,44 @@ export default class HomePage extends React.Component<IHomePageProps, IHomePageS
         );
     }
 
-    private createNewProject = (e: SyntheticEvent) => {
-        this.props.actions.closeProject();
-        this.props.history.push("/projects/create");
+    private startupProject = async () => {
+        let project = this.props.recentProjects.filter(item => item.name === "Cortexia")[0];
+        if (!project) {
+            const connectionName = "cortexiaApi";
+            const cortexiaConnection = this.props.connections.filter(item => item.name === connectionName)[0];
+            const connection = cortexiaConnection
+                ? cortexiaConnection
+                : {
+                      providerType: connectionName,
+                      providerOptions: [],
+                      name: connectionName,
+                      id: connectionName
+                  };
+            await this.props.connectionActions.saveConnection(connection);
 
-        e.preventDefault();
-    };
+            project = {
+                name: "project",
+                id: "Cortexia",
+                version: "Version",
+                securityToken: "security token",
+                tags: [],
+                sourceConnection: connection,
+                targetConnection: connection,
+                exportFormat: { providerType: "vottJson", providerOptions: { encrypted: "" } },
+                videoSettings: { frameExtractionRate: 15 },
+                activeLearningSettings: {
+                    autoDetect: false,
+                    predictTag: true,
+                    modelPathType: ModelPathType.Coco
+                },
+                autoSave: true,
+                assets: {}
+            };
 
-    private handleOpenCloudProjectClick = () => {
-        this.cloudFilePicker.current.open();
-    };
-
-    private onProjectFileUpload = async (e, project) => {
-        let projectJson: IProject;
-
-        try {
-            projectJson = JSON.parse(project.content);
-        } catch (error) {
-            throw new AppError(ErrorCode.ProjectInvalidJson, "Error parsing JSON");
+            await this.props.applicationActions.ensureSecurityToken(project);
+            await this.props.actions.saveProject(project);
         }
-
-        // need a better check to tell if its v1
-        if (projectJson.name === null || projectJson.name === undefined) {
-            try {
-                await this.importConfirm.current.open(project);
-            } catch (e) {
-                throw new Error(e.message);
-            }
-        } else {
-            await this.loadSelectedProject(projectJson);
-        }
-    };
-
-    private onProjectFileUploadError = (e, error: any) => {
-        if (error instanceof AppError) {
-            throw error;
-        }
-
-        throw new AppError(ErrorCode.ProjectUploadError, "Error uploading project file");
+        this.loadSelectedProject(project);
     };
 
     private loadSelectedProject = async (project: IProject) => {
@@ -224,7 +177,7 @@ export default class HomePage extends React.Component<IHomePageProps, IHomePageS
             await this.props.actions.saveProject(project);
             await this.props.actions.loadProject(project);
             await generatedAssetMetadata.mapAsync(assetMetadata => {
-                return this.props.actions.saveAssetMetadata(this.props.project, assetMetadata);
+                return this.props.actions.saveAssetMetadata(this.props.project, assetMetadata, []);
             });
         } catch (e) {
             throw new Error(`Error importing project information - ${e.message}`);

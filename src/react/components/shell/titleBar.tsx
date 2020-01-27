@@ -4,7 +4,7 @@ import { PlatformType } from "../../../common/hostProcess";
 import "./titleBar.scss";
 import { strings } from "../../../common/strings";
 import IAuthActions, * as authActions from "../../../redux/actions/authActions";
-import { IApplicationState, IAuth } from "../../../models/applicationState";
+import { IApplicationState, IAuth } from "../../../models/applicationState";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import history from "../../../history";
@@ -30,14 +30,14 @@ export interface ITitleBarState {
 
 function mapStateToProps(state: IApplicationState) {
     return {
-        auth: state.auth,
+        auth: state.auth
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators(authActions, dispatch),
-        trackingActions: bindActionCreators(trackingActions, dispatch),
+        trackingActions: bindActionCreators(trackingActions, dispatch)
     };
 }
 
@@ -47,7 +47,7 @@ export class TitleBar extends React.Component<ITitleBarProps, ITitleBarState> {
         platform: global && global.process && global.process.platform ? global.process.platform : "web",
         maximized: false,
         fullscreen: false,
-        menu: null,
+        menu: null
     };
 
     private menu: Menu = React.createRef();
@@ -70,7 +70,7 @@ export class TitleBar extends React.Component<ITitleBarProps, ITitleBarState> {
                 isElectron: true,
                 maximized: this.currentWindow.isMaximized(),
                 fullscreen: this.currentWindow.isFullScreen(),
-                menu: this.remote.Menu.getApplicationMenu(),
+                menu: this.remote.Menu.getApplicationMenu()
             });
         }
     }
@@ -85,64 +85,70 @@ export class TitleBar extends React.Component<ITitleBarProps, ITitleBarState> {
         if (this.state.fullscreen) {
             return null;
         }
-        const {fullName, auth} = this.props;
+        const { fullName, auth } = this.props;
 
         return (
             <div className="title-bar bg-lighter-3">
-                {(this.state.platform === PlatformType.Windows || this.state.platform === PlatformType.Web) &&
+                {(this.state.platform === PlatformType.Windows || this.state.platform === PlatformType.Web) && (
                     <div className="title-bar-icon">
-                        {typeof (this.props.icon) === "string" && <i className={`${this.props.icon}`}></i>}
-                        {typeof (this.props.icon) !== "string" && this.props.icon}
+                        {typeof this.props.icon === "string" && <i className={`${this.props.icon}`}></i>}
+                        {typeof this.props.icon !== "string" && this.props.icon}
                     </div>
-                }
-                {this.state.platform === PlatformType.Windows &&
+                )}
+                {this.state.platform === PlatformType.Windows && (
                     <div className="title-bar-menu">
-                        <Menu ref={this.menu}
+                        <Menu
+                            ref={this.menu}
                             mode="horizontal"
                             selectable={false}
                             triggerSubMenuAction="click"
-                            onClick={this.onMenuItemSelected}>
+                            onClick={this.onMenuItemSelected}
+                        >
                             {this.renderMenu(this.state.menu)}
                         </Menu>
                     </div>
-                }
+                )}
                 <div className="title-bar-main">{this.props.title || "Welcome"} - VoTT</div>
-                {fullName &&
-                    <div className="title-bar-user-full-name">
-                        {fullName}
-                    </div>
-                }
-                {auth.accessToken &&
+                {fullName && <div className="title-bar-user-full-name">{fullName}</div>}
+                {auth.accessToken && (
                     <div className="title-bar-sign-out" onClick={this.onClickSignOut}>
                         {strings.titleBar.signOut}
                     </div>
-                }
+                )}
                 <div className="title-bar-controls">
                     {this.props.children}
-                    {this.state.platform === PlatformType.Windows &&
+                    {this.state.platform === PlatformType.Windows && (
                         <ul>
-                            <li title={strings.titleBar.minimize} className="btn-window-minimize"
-                                    onClick={this.minimizeWindow}>
+                            <li
+                                title={strings.titleBar.minimize}
+                                className="btn-window-minimize"
+                                onClick={this.minimizeWindow}
+                            >
                                 <i className="far fa-window-minimize" />
                             </li>
-                            {!this.state.maximized &&
-                                <li title={strings.titleBar.maximize} className="btn-window-maximize"
-                                        onClick={this.maximizeWindow}>
+                            {!this.state.maximized && (
+                                <li
+                                    title={strings.titleBar.maximize}
+                                    className="btn-window-maximize"
+                                    onClick={this.maximizeWindow}
+                                >
                                     <i className="far fa-window-maximize" />
                                 </li>
-                            }
-                            {this.state.maximized &&
-                                <li title={strings.titleBar.restore} className="btn-window-restore"
-                                        onClick={this.unmaximizeWindow}>
+                            )}
+                            {this.state.maximized && (
+                                <li
+                                    title={strings.titleBar.restore}
+                                    className="btn-window-restore"
+                                    onClick={this.unmaximizeWindow}
+                                >
                                     <i className="far fa-window-restore" />
                                 </li>
-                            }
-                            <li title={strings.titleBar.close} className="btn-window-close"
-                                    onClick={this.closeWindow}>
+                            )}
+                            <li title={strings.titleBar.close} className="btn-window-close" onClick={this.closeWindow}>
                                 <i className="fas fa-times" />
                             </li>
                         </ul>
-                    }
+                    )}
                 </div>
             </div>
         );
@@ -150,15 +156,15 @@ export class TitleBar extends React.Component<ITitleBarProps, ITitleBarState> {
 
     private onMaximize = (isMaximized: boolean) => {
         this.setState({
-            maximized: isMaximized,
+            maximized: isMaximized
         });
-    }
+    };
 
     private onFullScreen = (isFullScreen: boolean) => {
         this.setState({
-            fullscreen: isFullScreen,
+            fullscreen: isFullScreen
         });
-    }
+    };
 
     private renderMenu = (menu: Electron.Menu) => {
         if (!menu) {
@@ -166,7 +172,7 @@ export class TitleBar extends React.Component<ITitleBarProps, ITitleBarState> {
         }
 
         return menu.items.map(this.renderMenuItem);
-    }
+    };
 
     private renderMenuItem = (menuItem: Electron.MenuItem, index: number) => {
         if (!menuItem.visible) {
@@ -183,35 +189,46 @@ export class TitleBar extends React.Component<ITitleBarProps, ITitleBarState> {
                     </SubMenu>
                 );
             case "separator":
-                return (<Divider key={index} />);
+                return <Divider key={index} />;
             case "checkbox":
                 return (
-                    <MenuItem key={menuItem.label}
+                    <MenuItem
+                        key={menuItem.label}
                         disabled={!menuItem.enabled}
-                        onClick={(e) => this.onMenuItemClick(e, menuItem)}>
+                        onClick={e => this.onMenuItemClick(e, menuItem)}
+                    >
                         <div className="menu-item-container">
-                            {Boolean(menuItem.checked) &&
+                            {Boolean(menuItem.checked) && (
                                 <div className="menu-item-checkbox">
                                     <i className="fas fa-check" />
                                 </div>
-                            }
-                            <div className="menu-item-label">{menuItem.label}{menuItem["sublabel"]}</div>
+                            )}
+                            <div className="menu-item-label">
+                                {menuItem.label}
+                                {menuItem["sublabel"]}
+                            </div>
                             <div className="menu-item-accelerator">{this.getAcceleratorString(menuItem)}</div>
                         </div>
-                    </MenuItem>);
+                    </MenuItem>
+                );
             case "normal":
                 return (
-                    <MenuItem key={menuItem.label}
+                    <MenuItem
+                        key={menuItem.label}
                         disabled={!menuItem.enabled}
-                        onClick={(e) => this.onMenuItemClick(e, menuItem)}>
+                        onClick={e => this.onMenuItemClick(e, menuItem)}
+                    >
                         <div className="menu-item-container">
-                            <div className="menu-item-label">{menuItem.label}{menuItem["sublabel"]}</div>
+                            <div className="menu-item-label">
+                                {menuItem.label}
+                                {menuItem["sublabel"]}
+                            </div>
                             <div className="menu-item-accelerator">{this.getAcceleratorString(menuItem)}</div>
                         </div>
                     </MenuItem>
                 );
         }
-    }
+    };
 
     private onMenuItemClick(e: any, menuItem: Electron.MenuItem) {
         if (menuItem.click) {
@@ -225,31 +242,31 @@ export class TitleBar extends React.Component<ITitleBarProps, ITitleBarState> {
         if (this.state.isElectron) {
             this.currentWindow.setTitle(`${this.props.title} - VoTT`);
         }
-    }
+    };
 
     private minimizeWindow = () => {
         this.currentWindow.minimize();
-    }
+    };
 
     private maximizeWindow = () => {
         this.currentWindow.maximize();
-    }
+    };
 
     private unmaximizeWindow = () => {
         this.currentWindow.unmaximize();
-    }
+    };
 
     private closeWindow = () => {
         this.currentWindow.close();
-    }
+    };
 
     private onMenuItemSelected = (key: string, item: React.Component) => {
         // Required to auto-close the menu after user selects an item.
         this.menu.current.store.setState({
             openKeys: [],
-            selectedKeys: [],
+            selectedKeys: []
         });
-    }
+    };
 
     private getAcceleratorString(menuItem: Electron.MenuItem) {
         const accelerator = menuItem["accelerator"] || this.getAcceleratorFromRole(menuItem["role"]);
@@ -297,13 +314,13 @@ export class TitleBar extends React.Component<ITitleBarProps, ITitleBarState> {
 
     private onClickSignOut = async () => {
         try {
-            await this.props.actions.signOut();
             await this.props.trackingActions.trackingSignOut(this.props.auth.userId);
+            await this.props.actions.signOut();
             history.push("/sign-in");
         } catch (error) {
-            toast.error("Sorry, we could not log you out.", { position: toast.POSITION.TOP_CENTER} );
+            toast.error("Sorry, we could not log you out.", { position: toast.POSITION.TOP_CENTER });
         }
-    }
+    };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TitleBar);

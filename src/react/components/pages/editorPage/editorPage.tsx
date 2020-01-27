@@ -32,7 +32,7 @@ import { AssetService } from "../../../../services/assetService";
 import { AssetPreview } from "../../common/assetPreview/assetPreview";
 import { KeyboardBinding } from "../../common/keyboardBinding/keyboardBinding";
 import { KeyEventType } from "../../common/keyboardManager/keyboardManager";
-import { TagInput } from "../../common/tagInput/tagInput";
+import { TagInput, buildTagsWithId } from "../../common/tagInput/tagInput";
 import { ToolbarItem } from "../../toolbar/toolbarItem";
 import Canvas from "./canvas";
 import CanvasHelpers from "./canvasHelpers";
@@ -46,6 +46,7 @@ import { toast } from "react-toastify";
 import ITrackingActions, * as trackingActions from "../../../../redux/actions/trackingActions";
 import { MagnifierModalMessage } from "./MagnifierModalMessage";
 import { relative } from "path";
+import apiService, { ILitter } from "../../../../services/apiService";
 
 /**
  * Properties for Editor Page
@@ -102,6 +103,7 @@ export interface IEditorPageState {
     magnifierModalIsOpen: boolean;
     /** Base metadata of selected asset */
     selectedAssetBase?: IAssetMetadata;
+    litters: ILitter[];
 }
 
 function mapStateToProps(state: IApplicationState) {
@@ -144,7 +146,8 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         thumbnailSize: this.props.appSettings.thumbnailSize || { width: 175, height: 155 },
         isValid: true,
         showInvalidRegionWarning: false,
-        magnifierModalIsOpen: false
+        magnifierModalIsOpen: false,
+        litters: []
     };
 
     private activeLearningService: ActiveLearningService = null;
@@ -173,6 +176,10 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                 this.isAssetModified()
             );
         };
+        const litters = await apiService.getLitters();
+        this.setState({
+            litters: litters.data
+        });
     }
 
     public async componentDidUpdate(prevProps: Readonly<IEditorPageProps>) {
@@ -285,10 +292,14 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                                     </Canvas>
                                 ) : (
                                     <div className="asset-loading" style={styles.assetLoading}>
-                                        <div className="asset-loading-spinner text-center" style={styles.assetLoadingSpinner}>
+                                        <div
+                                            className="asset-loading-spinner text-center"
+                                            style={styles.assetLoadingSpinner}
+                                        >
                                             <i className="fas fa-circle-notch fa-spin" style={styles.icon} />
                                         </div>
-                                    </div>)}
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div className="editor-page-right-sidebar">
@@ -301,7 +312,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                                 onTagClick={this.onTagClicked}
                                 onCtrlTagClick={this.onCtrlTagClicked}
                                 onTagRenamed={this.confirmTagRenamed}
-                                onTagDeleted={this.confirmTagDeleted}
+                                litters={this.state.litters}
                             />
                         </div>
                         <Confirm
@@ -432,13 +443,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         }
     };
 
-    /**
-     * Open Confirm dialog for tag deletion
-     */
-    private confirmTagDeleted = (tagName: string): void => {
-        this.deleteTagConfirm.current.open(tagName);
-    };
-
     private onReloadedImages = async () => {
         await this.loadProjectAssets(true).then(() => {
             this.forceUpdate();
@@ -551,6 +555,8 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             assetMetadata.asset.state = AssetState.Visited;
         }
 
+        const tagsWithId = buildTagsWithId(this.state.litters);
+
         // Update root asset if not already in the "Tagged" state
         // This is primarily used in the case where a Video Frame is being edited.
         // We want to ensure that in this case the root video asset state is accurately
@@ -561,7 +567,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             const rootAssetMetadata = await this.props.actions.loadAssetMetadata(this.props.project, rootAsset);
             if (rootAssetMetadata.asset.state !== AssetState.Tagged) {
                 rootAssetMetadata.asset.state = assetMetadata.asset.state;
-                await this.props.actions.saveAssetMetadata(this.props.project, rootAssetMetadata);
+                await this.props.actions.saveAssetMetadata(this.props.project, rootAssetMetadata, tagsWithId);
             }
 
             rootAsset.state = rootAssetMetadata.asset.state;
@@ -569,7 +575,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
 
         // Only update asset metadata if state changes or is different
         if (initialState !== assetMetadata.asset.state || this.state.selectedAsset !== assetMetadata) {
-            await this.props.actions.saveAssetMetadata(this.props.project, assetMetadata);
+            await this.props.actions.saveAssetMetadata(this.props.project, assetMetadata, tagsWithId);
         }
 
         await this.props.actions.saveProject(this.props.project);
@@ -627,18 +633,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                     editorMode: EditorMode.Rectangle
                 });
                 break;
-            case ToolbarItemName.DrawPolygon:
-                this.setState({
-                    selectionMode: SelectionMode.POLYGON,
-                    editorMode: EditorMode.Polygon
-                });
-                break;
-            case ToolbarItemName.CopyRectangle:
-                this.setState({
-                    selectionMode: SelectionMode.COPYRECT,
-                    editorMode: EditorMode.CopyRect
-                });
-                break;
             case ToolbarItemName.SelectCanvas:
                 this.setState({
                     selectionMode: SelectionMode.NONE,
@@ -662,9 +656,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                 break;
             case ToolbarItemName.RemoveAllRegions:
                 this.canvas.current.confirmRemoveAllRegions();
-                break;
-            case ToolbarItemName.ActiveLearning:
-                await this.predictRegions();
                 break;
             case ToolbarItemName.Magnifier:
                 this.showNativeMagnifierModal();
@@ -886,14 +877,14 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
 
 const styles = {
     assetLoading: {
-        width: '100%'
+        width: "100%"
     },
     assetLoadingSpinner: {
-        height: '100%'
+        height: "100%"
     },
     icon: {
-        fontSize: '5em',
-        position: 'relative',
-        top: '45%'
+        fontSize: "5em",
+        position: "relative",
+        top: "45%"
     }
 } as any;

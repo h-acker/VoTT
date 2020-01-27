@@ -8,7 +8,7 @@ _release = '0.7.0-5-g117cae4'
 # you can set the next version number manually
 # if you do not, the system will make sure that version > release
 # => read-write, >_release
-_version = '2020.01.1'
+_version = '2020.01.26'
 
 # the build number will generate conflicts on each PR merge
 # just keep yours every time
