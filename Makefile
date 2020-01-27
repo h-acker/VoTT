@@ -109,7 +109,7 @@ create-release: check-release
 	# create branch and tag
 	git checkout -b release-$(VERSION)
 	git add .
-	git commit -m "Prepared release $(VERSION)"
+	git commit -m "Prepared release $(VERSION)" || true
 	git push --set-upstream origin release-$(VERSION)
 
 	git tag $(VERSION)
