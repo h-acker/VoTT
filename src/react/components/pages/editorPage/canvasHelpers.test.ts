@@ -6,38 +6,30 @@ import { Point2D } from "vott-ct/lib/js/CanvasTools/Core/Point2D";
 
 describe("Canvas Helpers", () => {
     it("Replace tag in the list", () => {
-        const tags = MockFactory.createTestTags().map((tag) => tag.name);
+        const tags = MockFactory.createTestTags().map(tag => tag.name);
         const newTag = MockFactory.createTestTag("New Tag");
-        const toggled = CanvasHelpers.toggleTag(
-            tags,
-            newTag.name,
-        );
+        const toggled = CanvasHelpers.toggleTag(tags, newTag.name);
         expect(toggled).toHaveLength(1);
         expect(toggled[0]).toEqual(newTag.name);
     });
 
     it("Removes a tag from list", () => {
-        const tags = MockFactory.createTestTags().map((tag) => tag.name);
+        const tags = MockFactory.createTestTags().map(tag => tag.name);
         const originalLength = tags.length;
         const originalFirstTag = tags[0];
-        const removed = CanvasHelpers.toggleTag(
-            tags,
-            tags[0],
-        );
+        const removed = CanvasHelpers.toggleTag(tags, tags[0]);
         expect(removed).toHaveLength(originalLength - 1);
         expect(removed[0]).not.toEqual(originalFirstTag);
     });
 
     it("Gets correct region data", () => {
         const expected = new RegionData(
-            0, 0, 100, 100,
-            [
-                new Point2D(0, 0),
-                new Point2D(1, 0),
-                new Point2D(1, 1),
-                new Point2D(0, 0),
-            ],
-            RegionDataType.Polygon,
+            0,
+            0,
+            100,
+            100,
+            [new Point2D(0, 0), new Point2D(1, 0), new Point2D(1, 1), new Point2D(0, 0)],
+            RegionDataType.Polygon
         );
 
         const region: IRegion = {
@@ -46,23 +38,28 @@ describe("Canvas Helpers", () => {
                 left: 0,
                 top: 0,
                 width: 100,
-                height: 100,
+                height: 100
             },
             points: [
                 {
-                    x: 0, y: 0,
+                    x: 0,
+                    y: 0
                 },
                 {
-                    x: 1, y: 0,
+                    x: 1,
+                    y: 0
                 },
                 {
-                    x: 1, y: 1,
-                }, {
-                    x: 0, y: 0,
+                    x: 1,
+                    y: 1
                 },
+                {
+                    x: 0,
+                    y: 0
+                }
             ],
             type: RegionType.Polygon,
-            tags: [],
+            tags: []
         };
         expect(CanvasHelpers.getRegionData(region)).toEqual(expected);
     });
@@ -80,25 +77,25 @@ describe("Canvas Helpers", () => {
             left: 0,
             top: 0,
             width: 100,
-            height: 100,
+            height: 100
         };
         expect(CanvasHelpers.fromBoundingBox(boundingBox)).toEqual([
             {
                 x: 0,
-                y: 0,
+                y: 0
             },
             {
                 x: 100,
-                y: 0,
+                y: 0
             },
             {
                 x: 100,
-                y: 100,
+                y: 100
             },
             {
                 x: 0,
-                y: 100,
-            },
+                y: 100
+            }
         ]);
     });
 
@@ -111,14 +108,14 @@ describe("Canvas Helpers", () => {
             boundingBox: {
                 ...regions[0].boundingBox,
                 left: regions[0].boundingBox.left + CanvasHelpers.pasteMargin,
-                top: regions[0].boundingBox.top + CanvasHelpers.pasteMargin,
+                top: regions[0].boundingBox.top + CanvasHelpers.pasteMargin
             },
-            points: regions[0].points.map((p) => {
+            points: regions[0].points.map(p => {
                 return {
                     x: p.x + CanvasHelpers.pasteMargin,
-                    y: p.y + CanvasHelpers.pasteMargin,
+                    y: p.y + CanvasHelpers.pasteMargin
                 };
-            }),
+            })
         });
     });
 
@@ -128,24 +125,24 @@ describe("Canvas Helpers", () => {
             left,
             top,
             width,
-            height,
+            height
         };
         regions[0] = {
             ...regions[0],
             boundingBox,
-            points: CanvasHelpers.fromBoundingBox(boundingBox),
+            points: CanvasHelpers.fromBoundingBox(boundingBox)
         };
         const duplicates = CanvasHelpers.duplicateRegionsAndMove([regions[0]], regions, 10000, 10000);
         const expectedBoundingBox: IBoundingBox = {
             ...boundingBox,
             left: 0,
-            top: 0,
+            top: 0
         };
         expect(duplicates[0]).toMatchObject({
             ...regions[0],
             id: expect.any(String),
             boundingBox: expectedBoundingBox,
-            points: CanvasHelpers.fromBoundingBox(expectedBoundingBox),
+            points: CanvasHelpers.fromBoundingBox(expectedBoundingBox)
         });
     }
 
@@ -197,13 +194,13 @@ describe("Canvas Helpers", () => {
         const originals = MockFactory.createTestRegions();
         const updatedRegion = {
             ...originals[0],
-            tags: ["tag1"],
+            tags: ["tag1"]
         };
 
         const updated = CanvasHelpers.updateRegions(originals, [updatedRegion]);
         expect(updated[0]).toEqual({
             ...originals[0],
-            tags: ["tag1"],
+            tags: ["tag1"]
         });
 
         expect(CanvasHelpers.updateRegions(originals, [])).toEqual(originals);
