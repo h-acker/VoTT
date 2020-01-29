@@ -32,10 +32,9 @@ import { AssetService } from "../../../../services/assetService";
 import { AssetPreview } from "../../common/assetPreview/assetPreview";
 import { KeyboardBinding } from "../../common/keyboardBinding/keyboardBinding";
 import { KeyEventType } from "../../common/keyboardManager/keyboardManager";
-import { TagInput, buildTagsWithId } from "../../common/tagInput/tagInput";
+import { TagInput, buildTagsWithId, buildTags } from "../../common/tagInput/tagInput";
 import { ToolbarItem } from "../../toolbar/toolbarItem";
 import Canvas from "./canvas";
-import CanvasHelpers from "./canvasHelpers";
 import "./editorPage.scss";
 import EditorSideBar from "./editorSideBar";
 import { EditorToolbar } from "./editorToolbar";
@@ -45,7 +44,6 @@ import { ActiveLearningService } from "../../../../services/activeLearningServic
 import { toast } from "react-toastify";
 import ITrackingActions, * as trackingActions from "../../../../redux/actions/trackingActions";
 import { MagnifierModalMessage } from "./MagnifierModalMessage";
-import { relative } from "path";
 import apiService, { ILitter } from "../../../../services/apiService";
 
 /**
@@ -104,6 +102,7 @@ export interface IEditorPageState {
     /** Base metadata of selected asset */
     selectedAssetBase?: IAssetMetadata;
     litters: ILitter[];
+    pressedKeys: number[];
 }
 
 function mapStateToProps(state: IApplicationState) {
@@ -147,7 +146,8 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         isValid: true,
         showInvalidRegionWarning: false,
         magnifierModalIsOpen: false,
-        litters: []
+        litters: [],
+        pressedKeys: []
     };
 
     private activeLearningService: ActiveLearningService = null;
@@ -227,18 +227,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                         />
                     );
                 })}
-                {[...Array(10).keys()].map(index => {
-                    return (
-                        <KeyboardBinding
-                            displayName={strings.editorPage.tags.hotKey.lock}
-                            key={index}
-                            keyEventType={KeyEventType.KeyDown}
-                            accelerators={[`CmdOrCtrl+${index}`]}
-                            icon={"fa-lock"}
-                            handler={this.handleCtrlTagHotKey}
-                        />
-                    );
-                })}
                 <SplitPane
                     split="vertical"
                     defaultSize={this.state.thumbnailSize.width}
@@ -310,7 +298,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                                 onChange={this.onTagsChanged}
                                 onLockedTagsChange={this.onLockedTagsChanged}
                                 onTagClick={this.onTagClicked}
-                                onCtrlTagClick={this.onCtrlTagClicked}
                                 onTagRenamed={this.confirmTagRenamed}
                                 litters={this.state.litters}
                             />
@@ -462,33 +449,9 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         }
     };
 
-    private onCtrlTagClicked = (tag: ITag): void => {
-        const locked = this.state.lockedTags;
-        this.setState(
-            {
-                selectedTag: tag.name,
-                lockedTags: CanvasHelpers.toggleTag(locked, tag.name)
-            },
-            () => this.canvas.current.applyTag(tag.name)
-        );
-    };
-
-    private getTagFromKeyboardEvent = (event: KeyboardEvent): ITag => {
-        let key = parseInt(event.key, 10);
-        if (isNaN(key)) {
-            try {
-                key = parseInt(event.key.split("+")[1], 10);
-            } catch (e) {
-                return;
-            }
-        }
-        let index: number;
-        const tags = this.props.project.tags;
-        if (key === 0 && tags.length >= 10) {
-            index = 9;
-        } else if (key < 10) {
-            index = key - 1;
-        }
+    private getTagFromPressedKeys = (): ITag => {
+        const tags = buildTags(this.state.litters);
+        const index = parseInt(this.state.pressedKeys.join(""), 10);
         if (index < tags.length) {
             return tags[index];
         }
@@ -500,17 +463,14 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
      * @param event KeyDown event
      */
     private handleTagHotKey = (event: KeyboardEvent): void => {
-        const tag = this.getTagFromKeyboardEvent(event);
-        if (tag) {
-            this.onTagClicked(tag);
-        }
-    };
-
-    private handleCtrlTagHotKey = (event: KeyboardEvent): void => {
-        const tag = this.getTagFromKeyboardEvent(event);
-        if (tag) {
-            this.onCtrlTagClicked(tag);
-        }
+        this.setState({ pressedKeys: [...this.state.pressedKeys, parseInt(event.key, 10)] });
+        _.debounce(() => {
+            const tag = this.getTagFromPressedKeys();
+            if (tag) {
+                this.onTagClicked(tag);
+            }
+            this.setState({ pressedKeys: [] });
+        }, 500)();
     };
 
     /**

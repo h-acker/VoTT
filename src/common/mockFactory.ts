@@ -505,7 +505,7 @@ export default class MockFactory {
      * Create fake ILitter with random color
      * @param name Name of litter
      */
-    public static createTestLitter(name: number = 0): ILitter {
+    public static createTestLitter(name: number = 1): ILitter {
         return {
             id: name,
             color: "#333333"
