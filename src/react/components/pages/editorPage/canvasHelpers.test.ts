@@ -5,16 +5,15 @@ import { RegionDataType, RegionData } from "vott-ct/lib/js/CanvasTools/Core/Regi
 import { Point2D } from "vott-ct/lib/js/CanvasTools/Core/Point2D";
 
 describe("Canvas Helpers", () => {
-    it("Adds a tag to list", () => {
+    it("Replace tag in the list", () => {
         const tags = MockFactory.createTestTags().map((tag) => tag.name);
-        const originalLength = tags.length;
         const newTag = MockFactory.createTestTag("New Tag");
         const toggled = CanvasHelpers.toggleTag(
             tags,
             newTag.name,
         );
-        expect(toggled).toHaveLength(originalLength + 1);
-        expect(toggled[toggled.length - 1]).toEqual(newTag.name);
+        expect(toggled).toHaveLength(1);
+        expect(toggled[0]).toEqual(newTag.name);
     });
 
     it("Removes a tag from list", () => {
@@ -177,21 +176,15 @@ describe("Canvas Helpers", () => {
     });
 
     it("Toggles a tag", () => {
-        const tags = ["tag1", "tag2", "tag3"];
-        expect(CanvasHelpers.toggleTag(tags, "tag1")).toEqual(["tag2", "tag3"]);
-        expect(CanvasHelpers.toggleTag(tags, "tag4")).toEqual(["tag1", "tag2", "tag3", "tag4"]);
+        const tags = ["tag1"];
+        expect(CanvasHelpers.toggleTag(tags, "tag1")).toEqual([]);
+        expect(CanvasHelpers.toggleTag(tags, "tag4")).toEqual(["tag4"]);
     });
 
     it("Adds tag if missing", () => {
-        const tags = ["tag1", "tag2", "tag3"];
-        expect(CanvasHelpers.addIfMissing(tags, "tag2")).toEqual(["tag1", "tag2", "tag3"]);
-        expect(CanvasHelpers.addIfMissing(tags, "tag4")).toEqual(["tag1", "tag2", "tag3", "tag4"]);
-    });
-
-    it("Adds all tags if missing", () => {
-        const tags = ["tag1", "tag2", "tag3"];
-        const targets = ["tag3", "tag4", "tag5"];
-        expect(CanvasHelpers.addAllIfMissing(tags, targets)).toEqual(["tag1", "tag2", "tag3", "tag4", "tag5"]);
+        const tags = ["tag2"];
+        expect(CanvasHelpers.addIfMissing(tags, "tag2")).toEqual(["tag2"]);
+        expect(CanvasHelpers.addIfMissing(tags, "tag4")).toEqual(["tag4"]);
     });
 
     it("Removes tag if contained", () => {

@@ -463,7 +463,7 @@ describe("Editor Canvas", () => {
     it("Applies locked tags to selected region with empty tags", () => {
         const wrapper = createComponent();
         const onAssetMetadataChanged = jest.fn();
-        const lockedTags = ["tag1", "tag2", "tag3"];
+        const lockedTags = ["tag1"];
         wrapper.setProps({
             onAssetMetadataChanged,
             lockedTags,
@@ -486,7 +486,7 @@ describe("Editor Canvas", () => {
         };
         const wrapper = createComponent(canvasProps);
         const onAssetMetadataChanged = jest.fn();
-        const lockedTags = ["tag1", "tag2", "tag3"];
+        const lockedTags = ["tag1"];
 
         wrapper.setProps({
             onAssetMetadataChanged,
@@ -497,7 +497,7 @@ describe("Editor Canvas", () => {
         mockSelectedRegions(["test1"]);
         canvas.editor.onRegionSelected("test1", null);
 
-        const expectedTags = ["tag4", ...lockedTags];
+        const expectedTags = ["tag1"];
 
         const expected: IAssetMetadata = cloneWithUpdatedRegionTags(original, "test1", expectedTags);
         expect(wrapper.state().currentAsset.regions[0].tags).toEqual(expectedTags);
