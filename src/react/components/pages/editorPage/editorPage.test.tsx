@@ -655,7 +655,7 @@ describe("Editor Page Component", () => {
 
             dispatchKeyEvent("0");
 
-            expect(editorPage.state().selectedTag).toEqual(strings.wasteTypes[1]);
+            expect(editorPage.state().selectedTag).toEqual(project.tags[0].name);
         });
 
         it("does not set selected tag when invalid hot key is pressed", async () => {

@@ -36,7 +36,6 @@ export interface ITagInputProps {
     showTagInputBox?: boolean;
     /** Always show tag search box */
     showSearchBox?: boolean;
-    litters: ILitter[];
 }
 
 export interface ITagWithId extends ITag {
@@ -145,10 +144,10 @@ export class TagInput extends React.Component<ITagInputProps, ITagInputState> {
     }
 
     public componentDidUpdate(prevProps: ITagInputProps) {
-        const { litters } = this.props;
-        if (prevProps.litters !== litters) {
+        const { tags } = this.props;
+        if (prevProps.tags !== tags) {
             this.setState({
-                tags: buildTags(litters)
+                tags
             });
         }
         if (prevProps.selectedRegions !== this.props.selectedRegions && this.props.selectedRegions.length > 0) {

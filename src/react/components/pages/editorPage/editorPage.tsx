@@ -198,7 +198,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                 }
             });
         }
-
         if (this.props.project && prevProps.project && this.props.project.tags !== prevProps.project.tags) {
             this.updateRootAssets();
         }
@@ -299,7 +298,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                                 onLockedTagsChange={this.onLockedTagsChanged}
                                 onTagClick={this.onTagClicked}
                                 onTagRenamed={this.confirmTagRenamed}
-                                litters={this.state.litters}
                             />
                         </div>
                         <Confirm
@@ -450,7 +448,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
     };
 
     private getTagFromPressedKeys = (): ITag => {
-        const tags = buildTags(this.state.litters);
+        const { tags } = this.props.project;
         const index = parseInt(this.state.pressedKeys.join(""), 10);
         if (index < tags.length) {
             return tags[index];

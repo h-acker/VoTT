@@ -2,8 +2,12 @@ import _ from "lodash";
 import shortid from "shortid";
 import { StorageProviderFactory } from "../providers/storage/storageProviderFactory";
 import {
-    IProject, ISecurityToken, AppError,
-    ErrorCode, ModelPathType, IActiveLearningSettings,
+    IProject,
+    ISecurityToken,
+    AppError,
+    ErrorCode,
+    ModelPathType,
+    IActiveLearningSettings
 } from "../models/applicationState";
 import Guard from "../common/guard";
 import { constants } from "../common/constants";
@@ -12,6 +16,8 @@ import { decryptProject, encryptProject } from "../common/utils";
 import packageJson from "../../package.json";
 import { ExportAssetState } from "../providers/export/exportProvider";
 import { IExportFormat } from "vott-react";
+import apiService from "./apiService";
+import { buildTags } from "../react/components/common/tagInput/tagInput";
 
 /**
  * Functions required for a project service
@@ -28,15 +34,15 @@ export interface IProjectService {
 const defaultActiveLearningSettings: IActiveLearningSettings = {
     autoDetect: false,
     predictTag: true,
-    modelPathType: ModelPathType.Coco,
+    modelPathType: ModelPathType.Coco
 };
 
 const defaultExportOptions: IExportFormat = {
     providerType: "vottJson",
     providerOptions: {
         assetState: ExportAssetState.Visited,
-        includeImages: true,
-    },
+        includeImages: true
+    }
 };
 
 /**
@@ -49,16 +55,14 @@ export default class ProjectService implements IProjectService {
      * @param project The project JSON to load
      * @param securityToken The security token used to decrypt sensitive project settings
      */
-    public load(project: IProject, securityToken: ISecurityToken): Promise<IProject> {
+    public async load(project: IProject, securityToken: ISecurityToken): Promise<IProject> {
         Guard.null(project);
 
         try {
             const loadedProject = decryptProject(project, securityToken);
 
-            // Ensure tags is always initialized to an array
-            if (!loadedProject.tags) {
-                loadedProject.tags = [];
-            }
+            const litters = await apiService.getLitters();
+            loadedProject.tags = buildTags(litters.data);
 
             // Initialize active learning settings if they don't exist
             if (!loadedProject.activeLearningSettings) {
@@ -114,7 +118,7 @@ export default class ProjectService implements IProjectService {
 
         await storageProvider.writeText(
             `${project.name}${constants.projectFileExtension}`,
-            JSON.stringify(project, null, 4),
+            JSON.stringify(project, null, 4)
         );
 
         return project;
@@ -130,8 +134,9 @@ export default class ProjectService implements IProjectService {
         const storageProvider = StorageProviderFactory.createFromConnection(project.targetConnection);
 
         // Delete all asset metadata files created for project
-        const deleteFiles = _.values(project.assets)
-            .map((asset) => storageProvider.deleteFile(`${asset.id}${constants.assetMetadataFileExtension}`));
+        const deleteFiles = _.values(project.assets).map(asset =>
+            storageProvider.deleteFile(`${asset.id}${constants.assetMetadataFileExtension}`)
+        );
 
         await Promise.all(deleteFiles);
         await storageProvider.deleteFile(`${project.name}${constants.projectFileExtension}`);
@@ -143,13 +148,14 @@ export default class ProjectService implements IProjectService {
      * @param projectList The list of known projects
      */
     public isDuplicate(project: IProject, projectList: IProject[]): boolean {
-        const duplicateProjects = projectList.find((p) =>
-            p.id !== project.id &&
-            p.name === project.name &&
-            JSON.stringify(p.targetConnection.providerOptions) ===
-            JSON.stringify(project.targetConnection.providerOptions),
+        const duplicateProjects = projectList.find(
+            p =>
+                p.id !== project.id &&
+                p.name === project.name &&
+                JSON.stringify(p.targetConnection.providerOptions) ===
+                    JSON.stringify(project.targetConnection.providerOptions)
         );
-        return (duplicateProjects !== undefined);
+        return duplicateProjects !== undefined;
     }
 
     private async saveExportSettings(project: IProject): Promise<void> {
