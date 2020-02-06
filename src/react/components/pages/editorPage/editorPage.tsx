@@ -708,7 +708,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                 this.isAssetModified()
             );
         }
-
         const assetMetadata = await actions.loadAssetMetadata(project, asset);
 
         try {
@@ -720,12 +719,10 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             console.warn("Error computing asset size");
         }
 
-        const assetService = new AssetService(project);
-        const newAssetMetadata = await assetService.getAssetMetadata(asset);
         this.setState(
             {
                 selectedAsset: assetMetadata,
-                selectedAssetBase: newAssetMetadata
+                selectedAssetBase: assetMetadata
             },
             async () => {
                 await this.onAssetMetadataChanged(assetMetadata);
@@ -735,7 +732,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         /**
          * Track user enters on the image
          */
-        await trackingActions.trackingImgIn(auth.userId, newAssetMetadata.asset.id, newAssetMetadata.regions);
+        await trackingActions.trackingImgIn(auth.userId, assetMetadata.asset.id, assetMetadata.regions);
     };
 
     private isAssetModified = (): boolean => {
