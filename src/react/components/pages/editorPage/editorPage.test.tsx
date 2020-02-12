@@ -41,6 +41,7 @@ import { TagInput } from "../../common/tagInput/tagInput";
 import { ActiveLearningService } from "../../../../services/activeLearningService";
 import ApiService from "../../../../services/apiService";
 jest.mock("../../../../services/apiService");
+import { strings } from "../../../../common/strings";
 
 function createComponent(store, props: IEditorPageProps): ReactWrapper<IEditorPageProps, IEditorPageState, EditorPage> {
     return mount(
@@ -198,7 +199,7 @@ describe("Editor Page Component", () => {
                     state: AssetState.Visited
                 }
             }),
-            [{ color: "#333333", name: undefined, id: 0 }]
+            []
         );
         expect(saveProjectSpy).toBeCalledWith(expect.objectContaining(partialProject));
     });
@@ -347,7 +348,7 @@ describe("Editor Page Component", () => {
                     state: AssetState.Visited
                 }
             }),
-            [{ color: "#333333", id: 0, name: undefined }]
+            []
         );
         expect(saveProjectSpy).toBeCalledWith(expect.objectContaining(partialProject));
     });
@@ -640,6 +641,7 @@ describe("Editor Page Component", () => {
         });
 
         it("sets selected tag when hot key is pressed", async () => {
+            _.debounce = jest.fn(fn => fn);
             const project = MockFactory.createTestProject("test", 5);
             const store = createReduxStore({
                 ...MockFactory.initialState(),
@@ -651,28 +653,9 @@ describe("Editor Page Component", () => {
 
             expect(editorPage.state().selectedTag).toBeNull();
 
-            dispatchKeyEvent("1");
+            dispatchKeyEvent("0");
 
             expect(editorPage.state().selectedTag).toEqual(project.tags[0].name);
-        });
-
-        it("sets selected tag and locked tags when CmdOrCtrl + hot key is pressed", async () => {
-            const project = MockFactory.createTestProject("test", 5);
-            const store = createReduxStore({
-                ...MockFactory.initialState(),
-                currentProject: project
-            });
-
-            const wrapper = createComponent(store, MockFactory.editorPageProps());
-            await waitForSelectedAsset(wrapper);
-
-            expect(editorPage.state().selectedTag).toBeNull();
-
-            dispatchKeyEvent("CmdOrCtrl+1");
-
-            const firstTag = project.tags[0].name;
-            expect(editorPage.state().selectedTag).toEqual(firstTag);
-            expect(editorPage.state().lockedTags).toEqual([firstTag]);
         });
 
         it("does not set selected tag when invalid hot key is pressed", async () => {

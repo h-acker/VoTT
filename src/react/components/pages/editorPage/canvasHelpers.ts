@@ -30,8 +30,8 @@ export default class CanvasHelpers {
     public static toggleTag(tags: string[], tag: string): string[] {
         const tagIndex = tags.findIndex(existingTag => existingTag === tag);
         if (tagIndex === -1) {
-            // Tag isn't found within region tags, add it
-            return [...tags, tag];
+            // Tag isn't found within region tags, return it
+            return [tag];
         } else {
             // Tag is within region tags, remove it
             return tags.filter(t => t !== tag);
@@ -45,7 +45,7 @@ export default class CanvasHelpers {
      */
     public static addIfMissing(tags: string[], tag: string): string[] {
         if (!tags.find(t => t === tag)) {
-            return [...tags, tag];
+            return [tag];
         }
         return tags;
     }

@@ -121,7 +121,7 @@ export default class TagInputItem extends React.Component<ITagInputItemProps, IT
     };
 
     private getTagContent = () => {
-        const displayIndex = this.getDisplayIndex();
+        const { index } = this.props;
         return (
             <div className={"tag-name-container"}>
                 <div className="tag-name-body">
@@ -130,7 +130,7 @@ export default class TagInputItem extends React.Component<ITagInputItemProps, IT
                     </span>
                 </div>
                 <div className="tag-lock-icon">{this.props.isLocked && <i className="fas fa-lock" />}</div>
-                <div className={"tag-index"}>{displayIndex !== null && <span>[{displayIndex}]</span>}</div>
+                <div className={"tag-index"}>{index !== null && <span>[{index}]</span>}</div>
             </div>
         );
     };
@@ -141,11 +141,5 @@ export default class TagInputItem extends React.Component<ITagInputItemProps, IT
             classNames.push(" tag-color-edit");
         }
         return classNames.join(" ");
-    };
-
-    private getDisplayIndex = () => {
-        const index = this.props.index;
-        const displayIndex = index === 9 ? 0 : index + 1;
-        return displayIndex < 10 ? displayIndex : null;
     };
 }

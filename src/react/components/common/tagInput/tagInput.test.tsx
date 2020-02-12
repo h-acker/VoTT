@@ -21,12 +21,6 @@ describe("Tag Input Component", () => {
             onLockedTagsChange: jest.fn(),
             onTagClick: jest.fn(),
             onCtrlTagClick: jest.fn(),
-            litters: [
-                {
-                    color: "#ffffff",
-                    id: 0
-                }
-            ]
         };
     }
 

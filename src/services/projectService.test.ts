@@ -3,8 +3,13 @@ import ProjectService, { IProjectService } from "./projectService";
 import MockFactory from "../common/mockFactory";
 import { StorageProviderFactory } from "../providers/storage/storageProviderFactory";
 import {
-    IProject, IExportFormat, ISecurityToken,
-    AssetState, IActiveLearningSettings, ModelPathType,
+    IProject,
+    IExportFormat,
+    ISecurityToken,
+    AssetState,
+    IActiveLearningSettings,
+    ModelPathType,
+    ITag
 } from "../models/applicationState";
 import { constants } from "../common/constants";
 import { ExportProviderFactory } from "../providers/export/exportProviderFactory";
@@ -13,6 +18,9 @@ import { encryptProject, decryptProject } from "../common/utils";
 import { ExportAssetState } from "../providers/export/exportProvider";
 import { IVottJsonExportProviderOptions } from "../providers/export/vottJson";
 import { IPascalVOCExportProviderOptions } from "../providers/export/pascalVOC";
+import apiService, { ILitter } from "../services/apiService";
+import { strings } from "../common/strings";
+jest.mock("../services/apiService");
 
 describe("Project Service", () => {
     let projectSerivce: IProjectService = null;
@@ -21,13 +29,13 @@ describe("Project Service", () => {
     let securityToken: ISecurityToken = null;
 
     const storageProviderMock = {
-        writeText: jest.fn((project) => Promise.resolve(project)),
-        deleteFile: jest.fn(() => Promise.resolve()),
+        writeText: jest.fn(project => Promise.resolve(project)),
+        deleteFile: jest.fn(() => Promise.resolve())
     };
 
     const exportProviderMock = {
         export: jest.fn(() => Promise.resolve()),
-        save: jest.fn((exportFormat: IExportFormat) => Promise.resolve(exportFormat.providerOptions)),
+        save: jest.fn((exportFormat: IExportFormat) => Promise.resolve(exportFormat.providerOptions))
     };
 
     StorageProviderFactory.create = jest.fn(() => storageProviderMock);
@@ -36,20 +44,28 @@ describe("Project Service", () => {
     beforeEach(() => {
         securityToken = {
             name: "TestToken",
-            key: generateKey(),
+            key: generateKey()
         };
         testProject = MockFactory.createTestProject("TestProject");
         projectSerivce = new ProjectService();
 
         storageProviderMock.writeText.mockClear();
         storageProviderMock.deleteFile.mockClear();
+        jest.spyOn(apiService, "getLitters").mockImplementation(() =>
+            Promise.resolve({
+                data: [MockFactory.createTestLitter(1)]
+            })
+        );
     });
 
     it("Load decrypts any project settings using the specified key", async () => {
         const encryptedProject = encryptProject(testProject, securityToken);
         const decryptedProject = await projectSerivce.load(encryptedProject, securityToken);
-
-        expect(decryptedProject).toEqual(testProject);
+        const litter: ILitter = MockFactory.createTestLitter(1);
+        expect(decryptedProject).toEqual({
+            ...testProject,
+            tags: [{ name: strings.wasteTypes[litter.id], color: "#333333" }]
+        });
     });
 
     it("Saves calls project storage provider to write project", async () => {
@@ -59,27 +75,28 @@ describe("Project Service", () => {
             ...testProject,
             sourceConnection: { ...testProject.sourceConnection },
             targetConnection: { ...testProject.targetConnection },
-            exportFormat: { ...testProject.exportFormat },
+            exportFormat: { ...testProject.exportFormat }
         };
         encryptedProject.sourceConnection.providerOptions = {
-            encrypted: expect.any(String),
+            encrypted: expect.any(String)
         };
         encryptedProject.targetConnection.providerOptions = {
-            encrypted: expect.any(String),
+            encrypted: expect.any(String)
         };
         encryptedProject.exportFormat.providerOptions = {
-            encrypted: expect.any(String),
+            encrypted: expect.any(String)
         };
 
         expect(result).toEqual(encryptedProject);
         expect(StorageProviderFactory.create).toBeCalledWith(
             testProject.targetConnection.providerType,
-            testProject.targetConnection.providerOptions,
+            testProject.targetConnection.providerOptions
         );
 
         expect(storageProviderMock.writeText).toBeCalledWith(
             `${testProject.name}${constants.projectFileExtension}`,
-            expect.any(String));
+            expect.any(String)
+        );
     });
 
     it("sets default export settings when not defined", async () => {
@@ -88,12 +105,12 @@ describe("Project Service", () => {
 
         const vottJsonExportProviderOptions: IVottJsonExportProviderOptions = {
             assetState: ExportAssetState.Visited,
-            includeImages: true,
+            includeImages: true
         };
 
         const expectedExportFormat: IExportFormat = {
             providerType: "vottJson",
-            providerOptions: vottJsonExportProviderOptions,
+            providerOptions: vottJsonExportProviderOptions
         };
 
         const decryptedProject = decryptProject(result, securityToken);
@@ -108,7 +125,7 @@ describe("Project Service", () => {
         const activeLearningSettings: IActiveLearningSettings = {
             autoDetect: false,
             predictTag: true,
-            modelPathType: ModelPathType.Coco,
+            modelPathType: ModelPathType.Coco
         };
 
         expect(result.activeLearningSettings).toEqual(activeLearningSettings);
@@ -124,7 +141,7 @@ describe("Project Service", () => {
     it("Save calls configured export provider save when defined", async () => {
         testProject.exportFormat = {
             providerType: "azureCustomVision",
-            providerOptions: null,
+            providerOptions: null
         };
 
         await projectSerivce.save(testProject, securityToken);
@@ -132,7 +149,7 @@ describe("Project Service", () => {
         expect(ExportProviderFactory.create).toBeCalledWith(
             testProject.exportFormat.providerType,
             testProject,
-            testProject.exportFormat.providerOptions,
+            testProject.exportFormat.providerOptions
         );
         expect(exportProviderMock.save).toBeCalledWith(testProject.exportFormat);
     });
@@ -146,7 +163,9 @@ describe("Project Service", () => {
     it("Save throws error if storage provider cannot be created", async () => {
         const expectedError = new Error("Error creating storage provider");
         const createMock = StorageProviderFactory.create as jest.Mock;
-        createMock.mockImplementationOnce(() => { throw expectedError; });
+        createMock.mockImplementationOnce(() => {
+            throw expectedError;
+        });
 
         await expect(projectSerivce.save(testProject, securityToken)).rejects.toEqual(expectedError);
     });
@@ -156,7 +175,7 @@ describe("Project Service", () => {
 
         expect(StorageProviderFactory.create).toBeCalledWith(
             testProject.targetConnection.providerType,
-            testProject.targetConnection.providerOptions,
+            testProject.targetConnection.providerOptions
         );
 
         expect(storageProviderMock.deleteFile).toBeCalledWith(`${testProject.name}${constants.projectFileExtension}`);
@@ -164,8 +183,7 @@ describe("Project Service", () => {
 
     it("Delete call fails if deleting from storageProvider fails", async () => {
         const expectedError = "Error deleting from storage provider";
-        storageProviderMock.deleteFile
-            .mockImplementationOnce(() => Promise.reject(expectedError));
+        storageProviderMock.deleteFile.mockImplementationOnce(() => Promise.reject(expectedError));
 
         await expect(projectSerivce.delete(testProject)).rejects.toEqual(expectedError);
     });
@@ -173,7 +191,9 @@ describe("Project Service", () => {
     it("Delete call fails if storage provider cannot be created", async () => {
         const expectedError = new Error("Error creating storage provider");
         const createMock = StorageProviderFactory.create as jest.Mock;
-        createMock.mockImplementationOnce(() => { throw expectedError; });
+        createMock.mockImplementationOnce(() => {
+            throw expectedError;
+        });
 
         await expect(projectSerivce.delete(testProject)).rejects.toEqual(expectedError);
     });
@@ -193,11 +213,11 @@ describe("Project Service", () => {
 
     it("deletes all asset metadata files when project is deleted", async () => {
         const assets = MockFactory.createTestAssets(10);
-        assets.forEach((asset) => {
+        assets.forEach(asset => {
             asset.state = AssetState.Tagged;
         });
 
-        testProject.assets = _.keyBy(assets, (asset) => asset.id);
+        testProject.assets = _.keyBy(assets, asset => asset.id);
 
         await projectSerivce.delete(testProject);
         expect(storageProviderMock.deleteFile.mock.calls).toHaveLength(assets.length + 1);
@@ -211,8 +231,8 @@ describe("Project Service", () => {
             providerOptions: {
                 assetState: ExportAssetState.All,
                 exportUnassigned: true,
-                testTrainSplit: 80,
-            } as IPascalVOCExportProviderOptions,
+                testTrainSplit: 80
+            } as IPascalVOCExportProviderOptions
         };
 
         const encryptedProject = encryptProject(testProject, securityToken);

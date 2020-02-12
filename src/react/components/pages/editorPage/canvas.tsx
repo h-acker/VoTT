@@ -2,10 +2,7 @@ import React, { Fragment, ReactElement } from "react";
 import * as shortid from "shortid";
 import { CanvasTools } from "vott-ct";
 import { RegionData } from "vott-ct/lib/js/CanvasTools/Core/RegionData";
-import {
-    EditorMode, IAssetMetadata,
-    IProject, IRegion, RegionType,
-} from "../../../../models/applicationState";
+import { EditorMode, IAssetMetadata, IProject, IRegion, RegionType } from "../../../../models/applicationState";
 import CanvasHelpers from "./canvasHelpers";
 import { AssetPreview, ContentSource } from "../../common/assetPreview/assetPreview";
 import { Editor } from "vott-ct/lib/js/CanvasTools/CanvasTools.Editor";
@@ -40,7 +37,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
         editorMode: EditorMode.Select,
         selectedAsset: null,
         project: null,
-        lockedTags: [],
+        lockedTags: []
     };
 
     public editor: Editor;
@@ -48,7 +45,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
     public state: ICanvasState = {
         currentAsset: this.props.selectedAsset,
         contentSource: null,
-        enabled: false,
+        enabled: false
     };
 
     private canvasZone: React.RefObject<HTMLDivElement> = React.createRef();
@@ -67,7 +64,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
         this.editor.AS.setSelectionMode({ mode: this.props.selectionMode });
 
         window.addEventListener("resize", this.onWindowResize);
-    }
+    };
 
     public componentWillUnmount() {
         window.removeEventListener("resize", this.onWindowResize);
@@ -81,7 +78,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
 
         // Handle selection mode changes
         if (this.props.selectionMode !== prevProps.selectionMode) {
-            const options = (this.props.selectionMode === SelectionMode.COPYRECT) ? this.template : null;
+            const options = this.props.selectionMode === SelectionMode.COPYRECT ? this.template : null;
             this.editor.AS.setSelectionMode({ mode: this.props.selectionMode, template: options });
         }
 
@@ -109,26 +106,28 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
                 if (this.props.onSelectedRegionsChanged) {
                     this.props.onSelectedRegionsChanged(this.getSelectedRegions());
                 }
-            } else { // When the canvas has been disabled
+            } else {
+                // When the canvas has been disabled
                 this.editor.AS.disable();
                 this.clearAllRegions();
                 this.editor.AS.setSelectionMode(SelectionMode.NONE);
             }
         }
-    }
+    };
 
     public render = () => {
         const className = this.state.enabled ? "canvas-enabled" : "canvas-disabled";
 
         return (
             <Fragment>
-                <Confirm title={strings.editorPage.canvas.removeAllRegions.title}
+                <Confirm
+                    title={strings.editorPage.canvas.removeAllRegions.title}
                     ref={this.clearConfirm as any}
                     message={strings.editorPage.canvas.removeAllRegions.confirmation}
                     confirmButtonColor="danger"
                     onConfirm={this.removeAllRegions}
                 />
-                <div id="ct-zone" ref={this.canvasZone} className={className} onClick={(e) => e.stopPropagation()}>
+                <div id="ct-zone" ref={this.canvasZone} className={className} onClick={e => e.stopPropagation()}>
                     <div id="selection-zone">
                         <div id="editor-zone" className="full-size" />
                     </div>
@@ -136,7 +135,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
                 {this.renderChildren()}
             </Fragment>
         );
-    }
+    };
 
     /**
      * Toggles tag on all selected regions
@@ -154,7 +153,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
         if (lockedTagsEmpty) {
             // Tag selected while region(s) selected
             transformer = CanvasHelpers.toggleTag;
-        } else if (lockedTags.find((t) => t === tag)) {
+        } else if (lockedTags.find(t => t === tag)) {
             // Tag added to locked tags while region(s) selected
             transformer = CanvasHelpers.addIfMissing;
         } else {
@@ -168,17 +167,17 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
         if (this.props.onSelectedRegionsChanged) {
             this.props.onSelectedRegionsChanged(selectedRegions);
         }
-    }
+    };
 
     public copyRegions = async () => {
         await Clipboard.writeObject(this.getSelectedRegions());
-    }
+    };
 
     public cutRegions = async () => {
         const selectedRegions = this.getSelectedRegions();
         await Clipboard.writeObject(selectedRegions);
         this.deleteRegions(selectedRegions);
-    }
+    };
 
     public pasteRegions = async () => {
         const regionsToPaste: IRegion[] = await Clipboard.readObject();
@@ -187,51 +186,46 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
             regionsToPaste,
             asset.regions,
             asset.asset.size.width,
-            asset.asset.size.height,
+            asset.asset.size.height
         );
         this.addRegions(duplicates);
-    }
+    };
 
     public confirmRemoveAllRegions = () => {
         this.clearConfirm.current.open();
-    }
+    };
 
     public getSelectedRegions = (): IRegion[] => {
-        const selectedRegions = this.editor.RM.getSelectedRegionsBounds().map((rb) => rb.id);
-        return this.state.currentAsset.regions.filter((r) => selectedRegions.find((id) => r.id === id));
-    }
+        const selectedRegions = this.editor.RM.getSelectedRegionsBounds().map(rb => rb.id);
+        return this.state.currentAsset.regions.filter(r => selectedRegions.find(id => r.id === id));
+    };
 
     public updateCanvasToolsRegionTags = (): void => {
         for (const region of this.state.currentAsset.regions) {
-            this.editor.RM.updateTagsById(
-                region.id,
-                CanvasHelpers.getTagsDescriptor(this.props.project.tags, region),
-            );
+            this.editor.RM.updateTagsById(region.id, CanvasHelpers.getTagsDescriptor(this.props.project.tags, region));
         }
-    }
+    };
 
     public forceResize = (): void => {
         this.onWindowResize();
-    }
+    };
 
     private removeAllRegions = () => {
-        const ids = this.state.currentAsset.regions.map((r) => r.id);
+        const ids = this.state.currentAsset.regions.map(r => r.id);
         for (const id of ids) {
             this.editor.RM.deleteRegionById(id);
         }
         this.deleteRegionsFromAsset(this.state.currentAsset.regions);
-    }
+    };
 
     private addRegions = (regions: IRegion[]) => {
         this.addRegionsToCanvasTools(regions);
         this.addRegionsToAsset(regions);
-    }
+    };
 
     private addRegionsToAsset = (regions: IRegion[]) => {
-        this.updateAssetRegions(
-            this.state.currentAsset.regions.concat(regions),
-        );
-    }
+        this.updateAssetRegions(this.state.currentAsset.regions.concat(regions));
+    };
 
     private addRegionsToCanvasTools = (regions: IRegion[]) => {
         for (const region of regions) {
@@ -239,32 +233,33 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
             const scaledRegionData = this.editor.scaleRegionToFrameSize(
                 regionData,
                 this.state.currentAsset.asset.size.width,
-                this.state.currentAsset.asset.size.height);
+                this.state.currentAsset.asset.size.height
+            );
             this.editor.RM.addRegion(
                 region.id,
                 scaledRegionData,
-                CanvasHelpers.getTagsDescriptor(this.props.project.tags, region),
+                CanvasHelpers.getTagsDescriptor(this.props.project.tags, region)
             );
         }
-    }
+    };
 
     private deleteRegions = (regions: IRegion[]) => {
         this.deleteRegionsFromCanvasTools(regions);
         this.deleteRegionsFromAsset(regions);
-    }
+    };
 
     private deleteRegionsFromAsset = (regions: IRegion[]) => {
-        const filteredRegions = this.state.currentAsset.regions.filter((assetRegion) => {
-            return !regions.find((r) => r.id === assetRegion.id);
+        const filteredRegions = this.state.currentAsset.regions.filter(assetRegion => {
+            return !regions.find(r => r.id === assetRegion.id);
         });
         this.updateAssetRegions(filteredRegions);
-    }
+    };
 
     private deleteRegionsFromCanvasTools = (regions: IRegion[]) => {
         for (const region of regions) {
             this.editor.RM.deleteRegionById(region.id);
         }
-    }
+    };
 
     /**
      * Method that gets called when a new region is drawn
@@ -285,7 +280,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
         const scaledRegionData = this.editor.scaleRegionToSourceSize(
             regionData,
             this.state.currentAsset.asset.size.width,
-            this.state.currentAsset.asset.size.height,
+            this.state.currentAsset.asset.size.height
         );
         const lockedTags = this.props.lockedTags;
         const newRegion = {
@@ -296,9 +291,9 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
                 height: scaledRegionData.height,
                 width: scaledRegionData.width,
                 left: scaledRegionData.x,
-                top: scaledRegionData.y,
+                top: scaledRegionData.y
             },
-            points: scaledRegionData.points,
+            points: scaledRegionData.points
         };
         if (lockedTags && lockedTags.length) {
             this.editor.RM.updateTagsById(id, CanvasHelpers.getTagsDescriptor(this.props.project.tags, newRegion));
@@ -307,7 +302,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
         if (this.props.onSelectedRegionsChanged) {
             this.props.onSelectedRegionsChanged([newRegion]);
         }
-    }
+    };
 
     /**
      * Update regions within the current asset
@@ -317,14 +312,17 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
     private updateAssetRegions = (regions: IRegion[]) => {
         const currentAsset: IAssetMetadata = {
             ...this.state.currentAsset,
-            regions,
+            regions
         };
-        this.setState({
-            currentAsset,
-        }, () => {
-            this.props.onAssetMetadataChanged(currentAsset);
-        });
-    }
+        this.setState(
+            {
+                currentAsset
+            },
+            () => {
+                this.props.onAssetMetadataChanged(currentAsset);
+            }
+        );
+    };
 
     /**
      * Method called when moving a region already in the editor
@@ -334,12 +332,12 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
      */
     private onRegionMoveEnd = (id: string, regionData: RegionData) => {
         const currentRegions = this.state.currentAsset.regions;
-        const movedRegionIndex = currentRegions.findIndex((region) => region.id === id);
+        const movedRegionIndex = currentRegions.findIndex(region => region.id === id);
         const movedRegion = currentRegions[movedRegionIndex];
         const scaledRegionData = this.editor.scaleRegionToSourceSize(
             regionData,
             this.state.currentAsset.asset.size.width,
-            this.state.currentAsset.asset.size.height,
+            this.state.currentAsset.asset.size.height
         );
 
         if (movedRegion) {
@@ -348,13 +346,13 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
                 height: scaledRegionData.height,
                 width: scaledRegionData.width,
                 left: scaledRegionData.x,
-                top: scaledRegionData.y,
+                top: scaledRegionData.y
             };
         }
 
         currentRegions[movedRegionIndex] = movedRegion;
         this.updateAssetRegions(currentRegions);
-    }
+    };
 
     /**
      * Method called when deleting a region from the editor
@@ -367,14 +365,14 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
 
         // Remove from project
         const currentRegions = this.state.currentAsset.regions;
-        const deletedRegionIndex = currentRegions.findIndex((region) => region.id === id);
+        const deletedRegionIndex = currentRegions.findIndex(region => region.id === id);
         currentRegions.splice(deletedRegionIndex, 1);
 
         this.updateAssetRegions(currentRegions);
         if (this.props.onSelectedRegionsChanged) {
             this.props.onSelectedRegionsChanged([]);
         }
-    }
+    };
 
     /**
      * Method called when deleting a region from the editor
@@ -388,7 +386,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
             this.props.onSelectedRegionsChanged(selectedRegions);
         }
         // Gets the scaled region data
-        const selectedRegionsData = this.editor.RM.getSelectedRegionsBounds().find((region) => region.id === id);
+        const selectedRegionsData = this.editor.RM.getSelectedRegionsBounds().find(region => region.id === id);
 
         if (selectedRegionsData) {
             this.template = new Rect(selectedRegionsData.width, selectedRegionsData.height);
@@ -400,7 +398,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
             }
             this.updateRegions(selectedRegions);
         }
-    }
+    };
 
     private renderChildren = () => {
         return React.cloneElement(this.props.children, {
@@ -408,16 +406,16 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
             onLoaded: this.onAssetLoaded,
             onError: this.onAssetError,
             onActivated: this.onAssetActivated,
-            onDeactivated: this.onAssetDeactivated,
+            onDeactivated: this.onAssetDeactivated
         });
-    }
+    };
 
     /**
      * Raised when the asset bound to the asset preview has changed
      */
     private onAssetChanged = () => {
         this.setState({ enabled: false });
-    }
+    };
 
     /**
      * Raised when the underlying asset has completed loading
@@ -425,20 +423,20 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
     private onAssetLoaded = (contentSource: ContentSource) => {
         this.setState({ contentSource });
         this.positionCanvas(contentSource);
-    }
+    };
 
     private onAssetError = () => {
         this.setState({
-            enabled: false,
+            enabled: false
         });
-    }
+    };
 
     /**
      * Raised when the asset is taking control over the rendering
      */
     private onAssetActivated = () => {
         this.setState({ enabled: false });
-    }
+    };
 
     /**
      * Raise when the asset is handing off control of rendering
@@ -446,9 +444,9 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
     private onAssetDeactivated = (contentSource: ContentSource) => {
         this.setState({
             contentSource,
-            enabled: true,
+            enabled: true
         });
-    }
+    };
 
     /**
      * Set the loaded asset content source into the canvas tools canvas
@@ -464,7 +462,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
         } catch (e) {
             console.warn(e);
         }
-    }
+    };
 
     /**
      * Positions the canvas tools drawing surface to be exactly over the asset content
@@ -483,7 +481,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
             canvas.style.height = `${boundingBox.height}px`;
             this.editor.resize(boundingBox.width, boundingBox.height);
         }
-    }
+    };
 
     /**
      * Resizes and re-renders the canvas when the application window size changes
@@ -494,7 +492,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
         }
 
         this.positionCanvas(this.state.contentSource);
-    }
+    };
 
     /**
      * Updates regions in both Canvas Tools and the asset data store
@@ -506,16 +504,21 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
         for (const update of updates) {
             this.editor.RM.updateTagsById(update.id, CanvasHelpers.getTagsDescriptor(this.props.project.tags, update));
         }
-        this.updateAssetRegions(updatedRegions);
+
+        const currentAsset: IAssetMetadata = {
+            ...this.state.currentAsset,
+            regions: updatedRegions
+        };
+        this.props.onAssetMetadataChanged(currentAsset);
         this.updateCanvasToolsRegionTags();
-    }
+    };
 
     /**
      * Updates the background of the canvas and draws the asset's regions
      */
     private clearAllRegions = () => {
         this.editor.RM.deleteAllRegions();
-    }
+    };
 
     private refreshCanvasToolsRegions = () => {
         this.clearAllRegions();
@@ -532,11 +535,12 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
                 this.editor.scaleRegionToFrameSize(
                     loadedRegionData,
                     this.state.currentAsset.asset.size.width,
-                    this.state.currentAsset.asset.size.height,
+                    this.state.currentAsset.asset.size.height
                 ),
-                CanvasHelpers.getTagsDescriptor(this.props.project.tags, region));
+                CanvasHelpers.getTagsDescriptor(this.props.project.tags, region)
+            );
         });
-    }
+    };
 
     private editorModeToType = (editorMode: EditorMode) => {
         let type;
@@ -558,5 +562,5 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
                 break;
         }
         return type;
-    }
+    };
 }
