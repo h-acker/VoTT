@@ -418,6 +418,4 @@ export const deleteProjectTagAction = createPayloadAction<IDeleteProjectTagActio
 /**
  * Instance of Save project images action
  */
-export const saveProjectImages = createPayloadAction<ISaveProjectImages>(
-    ActionTypes.SAVE_PROJECT_IMAGES_SUCCESS
-);
+export const saveProjectImages = createPayloadAction<ISaveProjectImages>(ActionTypes.SAVE_PROJECT_IMAGES_SUCCESS);

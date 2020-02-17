@@ -83,8 +83,8 @@ export const reducer = (state: IProject = null, action: AnyAction): IProject => 
         case ActionTypes.SAVE_PROJECT_IMAGES_SUCCESS:
             return {
                 ...state,
-                images: action.payload,
-            }
+                images: action.payload
+            };
 
         default:
             return state;

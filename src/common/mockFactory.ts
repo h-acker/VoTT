@@ -313,7 +313,7 @@ export default class MockFactory {
                 predictTag: false
             },
             autoSave: true,
-            images: [],
+            images: []
         };
     }
 
@@ -880,7 +880,7 @@ export default class MockFactory {
             saveAssetMetadata: jest.fn(() => Promise.resolve()),
             updateProjectTag: jest.fn(() => Promise.resolve()),
             deleteProjectTag: jest.fn(() => Promise.resolve()),
-            saveProjectImages: jest.fn(() => Promise.resolve()),
+            saveProjectImages: jest.fn(() => Promise.resolve())
         };
     }
 

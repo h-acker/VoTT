@@ -184,7 +184,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
 
     public saveImages = (images: IImageWithAction[]) => {
         this.props.actions.saveProjectImages(images);
-    }
+    };
 
     public async componentDidUpdate(prevProps: Readonly<IEditorPageProps>) {
         if (this.props.project && this.state.assets.length === 0) {
@@ -771,7 +771,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
 
         // Get all root assets from source asset provider
         const images = await apiService.getImagesFromDispatcher();
-        console.log('**********************************************************');
+        console.log("**********************************************************");
         this.props.actions.saveProjectImages(images.data);
         const sourceAssets = await this.props.actions.loadAssets(this.props.project);
 

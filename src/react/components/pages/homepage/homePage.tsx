@@ -133,7 +133,7 @@ export default class HomePage extends React.Component<IHomePageProps, IHomePageS
                 },
                 autoSave: true,
                 assets: {},
-                images: [],
+                images: []
             };
 
             await this.props.applicationActions.ensureSecurityToken(project);
