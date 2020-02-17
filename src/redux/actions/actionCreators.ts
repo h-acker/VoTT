@@ -19,6 +19,7 @@ import {
     ILoadAssetMetadataAction,
     IExportProjectAction,
     IDeleteProjectAction,
+    ISaveProjectImages,
 } from "./projectActions";
 import {
     IShowAppErrorAction,
@@ -103,4 +104,5 @@ export type AnyAction = IOtherAction |
     ITrackingImgInAction |
     ITrackingImgOutAction |
     ITrackingImgDeleteAction |
-    ISaveUserInfoAction;
+    ISaveUserInfoAction |
+    ISaveProjectImages;

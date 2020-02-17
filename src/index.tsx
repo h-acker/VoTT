@@ -20,7 +20,7 @@ setUpAppInsights();
 registerMixins();
 registerProviders();
 const defaultState: IApplicationState = initialState;
-const store = createReduxStore(defaultState, true);
+export const store = createReduxStore(defaultState, true);
 
 ReactDOM.render(
     <Provider store={store}>

@@ -76,7 +76,6 @@ export abstract class ExportProvider
         const getProjectAssets = () => Promise.resolve(_.values(this.project.assets));
         const getAllAssets = async () => {
             const projectAssets = await getProjectAssets();
-
             return _(projectAssets)
                 .concat((await this.assetProvider.getAssets()))
                 .uniqBy((asset) => asset.id)

@@ -312,7 +312,8 @@ export default class MockFactory {
                 autoDetect: false,
                 predictTag: false
             },
-            autoSave: true
+            autoSave: true,
+            images: [],
         };
     }
 
@@ -878,7 +879,8 @@ export default class MockFactory {
             loadAssetMetadata: jest.fn(() => Promise.resolve()),
             saveAssetMetadata: jest.fn(() => Promise.resolve()),
             updateProjectTag: jest.fn(() => Promise.resolve()),
-            deleteProjectTag: jest.fn(() => Promise.resolve())
+            deleteProjectTag: jest.fn(() => Promise.resolve()),
+            saveProjectImages: jest.fn(() => Promise.resolve()),
         };
     }
 

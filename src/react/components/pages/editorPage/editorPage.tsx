@@ -44,7 +44,7 @@ import { ActiveLearningService } from "../../../../services/activeLearningServic
 import { toast } from "react-toastify";
 import ITrackingActions, * as trackingActions from "../../../../redux/actions/trackingActions";
 import { MagnifierModalMessage } from "./MagnifierModalMessage";
-import apiService, { ILitter } from "../../../../services/apiService";
+import apiService, { ILitter, IImageWithAction } from "../../../../services/apiService";
 
 /**
  * Properties for Editor Page
@@ -180,6 +180,10 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         this.setState({
             litters: litters.data
         });
+    }
+
+    public saveImages = (images: IImageWithAction[]) => {
+        this.props.actions.saveProjectImages(images);
     }
 
     public async componentDidUpdate(prevProps: Readonly<IEditorPageProps>) {
@@ -766,6 +770,9 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         this.loadingProjectAssets = true;
 
         // Get all root assets from source asset provider
+        const images = await apiService.getImagesFromDispatcher();
+        console.log('**********************************************************');
+        this.props.actions.saveProjectImages(images.data);
         const sourceAssets = await this.props.actions.loadAssets(this.props.project);
 
         const lastVisited = sourceAssets.find(asset => asset.id === this.props.project.lastVisitedAssetId);

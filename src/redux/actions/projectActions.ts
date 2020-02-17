@@ -16,6 +16,7 @@ import { IExportResults } from "../../providers/export/exportProvider";
 import { appInfo } from "../../common/appInfo";
 import { strings } from "../../common/strings";
 import { ITagWithId } from "../../react/components/common/tagInput/tagInput";
+import { IImageWithAction } from "../../services/apiService";
 
 /**
  * Actions to be performed in relation to projects
@@ -35,6 +36,7 @@ export default interface IProjectActions {
     ): Promise<IAssetMetadata>;
     updateProjectTag(project: IProject, oldTagName: string, newTagName: string): Promise<IAssetMetadata[]>;
     deleteProjectTag(project: IProject, tagName): Promise<IAssetMetadata[]>;
+    saveProjectImages(images: IImageWithAction[]): Promise<IAsset>;
 }
 
 /**
@@ -145,7 +147,6 @@ export function loadAssets(project: IProject): (dispatch: Dispatch) => Promise<I
         const assetService = new AssetService(project);
         const assets = await assetService.getAssets();
         dispatch(loadProjectAssetsAction(assets));
-
         return assets;
     };
 }
@@ -351,6 +352,20 @@ export interface IDeleteProjectTagAction extends IPayloadAction<string, IProject
 }
 
 /**
+ * Delete project tag action type
+ */
+export interface IDeleteProjectTagAction extends IPayloadAction<string, IProject> {
+    type: ActionTypes.DELETE_PROJECT_TAG_SUCCESS;
+}
+
+/**
+ * Save images action type
+ */
+export interface ISaveProjectImages extends IPayloadAction<string, IImageWithAction[]> {
+    type: ActionTypes.SAVE_PROJECT_IMAGES_SUCCESS;
+}
+
+/**
  * Instance of Load Project action
  */
 export const loadProjectAction = createPayloadAction<ILoadProjectAction>(ActionTypes.LOAD_PROJECT_SUCCESS);
@@ -399,4 +414,10 @@ export const updateProjectTagAction = createPayloadAction<IUpdateProjectTagActio
  */
 export const deleteProjectTagAction = createPayloadAction<IDeleteProjectTagAction>(
     ActionTypes.DELETE_PROJECT_TAG_SUCCESS
+);
+/**
+ * Instance of Save project images action
+ */
+export const saveProjectImages = createPayloadAction<ISaveProjectImages>(
+    ActionTypes.SAVE_PROJECT_IMAGES_SUCCESS
 );
