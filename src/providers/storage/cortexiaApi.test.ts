@@ -11,30 +11,31 @@ import { store } from "../../redux/store/store";
 jest.mock("../../redux/store/store");
 
 describe("Cortexia Api", () => {
-
     const mockState = {
         currentProject: {
-            images: [{ 
-                path: 'path',
-                size: null,
-                predicted: false,
-                type: 1,
-                state: 0,
-                is_deleted: false,
-                tagger_id: 0,
-                id: 1,
-                last_action: {
+            images: [
+                {
+                    path: "path",
+                    size: null,
+                    predicted: false,
                     type: 1,
-                    timestamp: '',
-                    regions: {},
-                    is_modified: false,
-                    user_id: 0,
-                    image_id: 1,
-                },
-                name: 'path',
-            }]
-        }        
-    }
+                    state: 0,
+                    is_deleted: false,
+                    tagger_id: 0,
+                    id: 1,
+                    last_action: {
+                        type: 1,
+                        timestamp: "",
+                        regions: {},
+                        is_modified: false,
+                        user_id: 0,
+                        image_id: 1
+                    },
+                    name: "path"
+                }
+            ]
+        }
+    };
 
     it("reads text from asset metadata received by api", async () => {
         const responseObject = {
@@ -44,7 +45,7 @@ describe("Cortexia Api", () => {
                 regions: {}
             }
         };
-        store.getState = () => mockState
+        store.getState = () => mockState;
         const apiResponeMock = [{ ...responseObject }, { ...responseObject, id: 1 }, { ...responseObject, id: 2 }];
         AssetService.createAssetFromFilePath = jest.fn(() => ({ type: AssetType.Image }));
         const provider: CortexiaApi = new CortexiaApi();
@@ -58,50 +59,51 @@ describe("Cortexia Api", () => {
     });
 
     describe("getAssets", () => {
-
         const mockState = {
             currentProject: {
-                images: [{ 
-                    path: 'path',
-                    size: null,
-                    predicted: false,
-                    type: 1,
-                    state: 0,
-                    is_deleted: false,
-                    tagger_id: 1,
-                    id: 1,
-                    last_action: {
+                images: [
+                    {
+                        path: "path",
+                        size: null,
+                        predicted: false,
                         type: 1,
-                        timestamp: '',
-                        regions: {},
-                        is_modified: false,
-                        user_id: 0,
-                        image_id: 1,
+                        state: 0,
+                        is_deleted: false,
+                        tagger_id: 1,
+                        id: 1,
+                        last_action: {
+                            type: 1,
+                            timestamp: "",
+                            regions: {},
+                            is_modified: false,
+                            user_id: 0,
+                            image_id: 1
+                        },
+                        name: "path"
                     },
-                    name: 'path',
-                },
-                { 
-                    path: 'path',
-                    size: null,
-                    predicted: false,
-                    type: 1,
-                    state: 0,
-                    is_deleted: false,
-                    tagger_id: 1,
-                    id: 2,
-                    last_action: {
+                    {
+                        path: "path",
+                        size: null,
+                        predicted: false,
                         type: 1,
-                        timestamp: '',
-                        regions: {},
-                        is_modified: false,
-                        user_id: 0,
-                        image_id: 1,
-                    },
-                    name: 'path',
-                }]
-            }        
-        }
-    
+                        state: 0,
+                        is_deleted: false,
+                        tagger_id: 1,
+                        id: 2,
+                        last_action: {
+                            type: 1,
+                            timestamp: "",
+                            regions: {},
+                            is_modified: false,
+                            user_id: 0,
+                            image_id: 1
+                        },
+                        name: "path"
+                    }
+                ]
+            }
+        };
+
         const userImage = {
             path: "path",
             size: {},
