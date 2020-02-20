@@ -1,8 +1,6 @@
-import registerProviders from "../../registerProviders";
 import { AssetService } from "../../services/assetService";
 jest.mock("../../services/assetService");
 import { AssetType } from "../../models/applicationState";
-import ApiService from "../../services/apiService";
 import { CortexiaApi } from "./cortexiaApi";
 import { appInfo } from "../../common/appInfo";
 jest.mock("../../services/apiService");
