@@ -1,5 +1,6 @@
 import { ExportAssetState } from "../providers/export/exportProvider";
 import { IAssetPreviewSettings } from "../react/components/common/assetPreview/assetPreview";
+import { IImageWithAction } from "../services/apiService";
 
 /**
  * @name - Application State
@@ -112,6 +113,7 @@ export interface IProject {
     securityToken: string;
     description?: string;
     tags: ITag[];
+    images: IImageWithAction[];
     sourceConnection: IConnection;
     targetConnection: IConnection;
     exportFormat: IExportFormat;

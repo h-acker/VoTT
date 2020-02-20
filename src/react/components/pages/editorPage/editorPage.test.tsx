@@ -103,6 +103,11 @@ describe("Editor Page Component", () => {
     });
 
     beforeEach(() => {
+        jest.spyOn(ApiService, "getImagesFromDispatcher").mockImplementation(() =>
+            Promise.resolve({
+                data: [MockFactory.createImageWithActions()]
+            })
+        );
         assetServiceMock = AssetService as jest.Mocked<typeof AssetService>;
         assetServiceMock.prototype.getAssetMetadata = jest.fn(asset => {
             const assetMetadata: IAssetMetadata = {

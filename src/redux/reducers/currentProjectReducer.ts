@@ -80,6 +80,12 @@ export const reducer = (state: IProject = null, action: AnyAction): IProject => 
                 targetConnection:
                     state.targetConnection.id === action.payload.id ? { ...action.payload } : state.targetConnection
             };
+        case ActionTypes.SAVE_PROJECT_IMAGES_SUCCESS:
+            return {
+                ...state,
+                images: action.payload
+            };
+
         default:
             return state;
     }
