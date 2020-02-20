@@ -517,24 +517,26 @@ export default class MockFactory {
      * Create fake image set
      */
     public static createImageWithActions(): IImageWithAction[] {
-        return [{
-            path: 'fakePath.pg',
-            size: {width:10, height:10},
-            predicted: false,
-            type: 1,
-            state: 1,
-            is_deleted: false,
-            tagger_id: 1,
-            id: 1,
-            last_action: {
-                type: '',
-                timestamp: '',
-                regions: null,
-                is_modified: false,
-                user_id:1,
-                image_id: 1
+        return [
+            {
+                path: "fakePath.pg",
+                size: { width: 10, height: 10 },
+                predicted: false,
+                type: 1,
+                state: 1,
+                is_deleted: false,
+                tagger_id: 1,
+                id: 1,
+                last_action: {
+                    type: "",
+                    timestamp: "",
+                    regions: null,
+                    is_modified: false,
+                    user_id: 1,
+                    image_id: 1
+                }
             }
-        }];
+        ];
     }
 
     /**

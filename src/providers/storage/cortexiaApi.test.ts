@@ -7,8 +7,34 @@ import { CortexiaApi } from "./cortexiaApi";
 import { appInfo } from "../../common/appInfo";
 jest.mock("../../services/apiService");
 
+import { store } from "../../redux/store/store";
+jest.mock("../../redux/store/store");
+
 describe("Cortexia Api", () => {
-    registerProviders();
+
+    const mockState = {
+        currentProject: {
+            images: [{ 
+                path: 'path',
+                size: null,
+                predicted: false,
+                type: 1,
+                state: 0,
+                is_deleted: false,
+                tagger_id: 0,
+                id: 1,
+                last_action: {
+                    type: 1,
+                    timestamp: '',
+                    regions: {},
+                    is_modified: false,
+                    user_id: 0,
+                    image_id: 1,
+                },
+                name: 'path',
+            }]
+        }        
+    }
 
     it("reads text from asset metadata received by api", async () => {
         const responseObject = {
@@ -18,13 +44,9 @@ describe("Cortexia Api", () => {
                 regions: {}
             }
         };
+        store.getState = () => mockState
         const apiResponeMock = [{ ...responseObject }, { ...responseObject, id: 1 }, { ...responseObject, id: 2 }];
         AssetService.createAssetFromFilePath = jest.fn(() => ({ type: AssetType.Image }));
-        jest.spyOn(ApiService, "getImageWithLastAction").mockImplementationOnce(() =>
-            Promise.resolve({
-                data: apiResponeMock
-            })
-        );
         const provider: CortexiaApi = new CortexiaApi();
         const content = await provider.readText("1");
         const stringifiedAssetMetadata = JSON.stringify({
@@ -36,6 +58,50 @@ describe("Cortexia Api", () => {
     });
 
     describe("getAssets", () => {
+
+        const mockState = {
+            currentProject: {
+                images: [{ 
+                    path: 'path',
+                    size: null,
+                    predicted: false,
+                    type: 1,
+                    state: 0,
+                    is_deleted: false,
+                    tagger_id: 1,
+                    id: 1,
+                    last_action: {
+                        type: 1,
+                        timestamp: '',
+                        regions: {},
+                        is_modified: false,
+                        user_id: 0,
+                        image_id: 1,
+                    },
+                    name: 'path',
+                },
+                { 
+                    path: 'path',
+                    size: null,
+                    predicted: false,
+                    type: 1,
+                    state: 0,
+                    is_deleted: false,
+                    tagger_id: 1,
+                    id: 2,
+                    last_action: {
+                        type: 1,
+                        timestamp: '',
+                        regions: {},
+                        is_modified: false,
+                        user_id: 0,
+                        image_id: 1,
+                    },
+                    name: 'path',
+                }]
+            }        
+        }
+    
         const userImage = {
             path: "path",
             size: {},
@@ -48,6 +114,7 @@ describe("Cortexia Api", () => {
         };
 
         it("does not return assets with wrong file type", async () => {
+            store.getState = () => mockState;
             const assetsMock = [userImage, { ...userImage, id: 2 }];
             AssetService.createAssetFromFilePath = jest.fn((url, fileName, id) => ({
                 type: id !== 1 ? AssetType.Image : AssetType.Unknown,
@@ -55,11 +122,6 @@ describe("Cortexia Api", () => {
                 path: url,
                 name: fileName
             }));
-            jest.spyOn(ApiService, "getImagesFromDispatcher").mockImplementationOnce(() =>
-                Promise.resolve({
-                    data: assetsMock
-                })
-            );
             const provider: CortexiaApi = new CortexiaApi();
             const content = await provider.getAssets();
             const imageAsset = assetsMock[1];

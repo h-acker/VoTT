@@ -3,7 +3,7 @@ import { StorageType, IAsset, AssetType, IAssetMetadata, IRegion } from "../../m
 import { AssetService } from "../../services/assetService";
 import apiService, { IImage, IImageWithAction } from "../../services/apiService";
 import { appInfo } from "../../common/appInfo";
-import { store } from "../..";
+import { store } from "../../redux/store/store";
 
 export class CortexiaApi implements IStorageProvider {
     /**
@@ -18,7 +18,7 @@ export class CortexiaApi implements IStorageProvider {
      */
     public async readText(filePath: string): Promise<string> {
         const appStore = store.getState();
-        const images = appStore.currentProjet.images;
+        const images = appStore.currentProject.images;
         const lastAssetId = parseInt(filePath, 10);
         const imagesActionList = images.filter((item: IImageWithAction) => {
             return item.id === lastAssetId;

@@ -6,6 +6,7 @@ import { mergeInitialState } from "../middleware/localStorage";
 import { createAppInsightsLogger } from "../middleware/appInsights";
 import { Env } from "../../common/environment";
 import { composeWithDevTools } from "redux-devtools-extension";
+import initialState from "./initialState"
 
 /**
  * Creates initial redux store from initial application state
@@ -48,3 +49,6 @@ export default function createReduxStore(
         composeEnhancers(applyMiddleware(...middlewares)),
     );
 }
+
+const defaultState: IApplicationState = initialState;
+export const store = createReduxStore(defaultState, true);
