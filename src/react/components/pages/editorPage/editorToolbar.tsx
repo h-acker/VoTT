@@ -18,6 +18,7 @@ export interface IEditorToolbarProps {
     actions: IProjectActions;
     items: IToolbarItemRegistration[];
     onToolbarItemSelected: (toolbarItem: ToolbarItem) => void;
+    setImageNumber: (imageNumber: number) => void;
 }
 
 /**
@@ -26,6 +27,7 @@ export interface IEditorToolbarProps {
  */
 export interface IEditorToolbarState {
     selectedItem: ToolbarItemName;
+    imageNumber: number;
 }
 
 /**
@@ -36,6 +38,7 @@ export class EditorToolbar extends React.Component<IEditorToolbarProps, IEditorT
 
     public state = {
         selectedItem: ToolbarItemName.SelectCanvas,
+        imageNumber: 20,
     };
 
     public render() {
@@ -62,6 +65,15 @@ export class EditorToolbar extends React.Component<IEditorToolbarProps, IEditorT
                         })}
                     </div>,
                 )}
+                <div style={{marginTop:4}}>
+                    <p style={{fontSize: 11, marginBottom: 2}}>Images number</p>
+                    <select style={{marginLeft: 10, marginBottom: 10}}value={this.state.imageNumber} onChange={this.handleImageNumberChange}>
+                        <option value={10}>10</option>
+                        <option value={20}>20</option>
+                        <option value={50}>50</option>
+                        <option value={100}>100</option>
+                    </select>
+                </div>
             </div>
         );
     }
@@ -72,6 +84,12 @@ export class EditorToolbar extends React.Component<IEditorToolbarProps, IEditorT
         }, () => {
             this.props.onToolbarItemSelected(toolbarItem);
         });
+    }
+
+    private handleImageNumberChange = (event: any) => {
+        const imageNumber: number = Number(event.target.value);
+        this.setState({imageNumber});
+        this.props.setImageNumber(imageNumber);
     }
 
     private isComponentActive(selected: ToolbarItemName, componentRegistration: IToolbarItemRegistration) {
