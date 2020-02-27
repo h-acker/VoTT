@@ -132,7 +132,8 @@ export default class HomePage extends React.Component<IHomePageProps, IHomePageS
                     modelPathType: ModelPathType.Coco
                 },
                 autoSave: true,
-                assets: {}
+                assets: {},
+                images: []
             };
 
             await this.props.applicationActions.ensureSecurityToken(project);

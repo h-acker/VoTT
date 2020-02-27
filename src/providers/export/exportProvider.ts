@@ -1,7 +1,12 @@
 import Guard from "../../common/guard";
 import {
-    IProject, IExportFormat, IAssetMetadata, IAsset,
-    AssetState, AssetType, IExportProviderOptions,
+    IProject,
+    IExportFormat,
+    IAssetMetadata,
+    IAsset,
+    AssetState,
+    AssetType,
+    IExportProviderOptions
 } from "../../models/applicationState";
 import { IStorageProvider, StorageProviderFactory } from "../storage/storageProviderFactory";
 import { IAssetProvider, AssetProviderFactory } from "../storage/assetProviderFactory";
@@ -18,7 +23,7 @@ import { AssetService } from "../../services/assetService";
 export enum ExportAssetState {
     All = "all",
     Visited = "visited",
-    Tagged = "tagged",
+    Tagged = "tagged"
 }
 
 export interface IExportAssetResult {
@@ -54,8 +59,8 @@ export interface IExportProvider {
  * Base class implementation for all VoTT export providers
  * Provides quick access to the configured projects asset & storage providers
  */
-export abstract class ExportProvider
-    <TOptions extends IExportProviderOptions = IExportProviderOptions> implements IExportProvider {
+export abstract class ExportProvider<TOptions extends IExportProviderOptions = IExportProviderOptions>
+    implements IExportProvider {
     private storageProviderInstance: IStorageProvider;
     private assetProviderInstance: IAssetProvider;
     private assetService: AssetService;
@@ -76,10 +81,9 @@ export abstract class ExportProvider
         const getProjectAssets = () => Promise.resolve(_.values(this.project.assets));
         const getAllAssets = async () => {
             const projectAssets = await getProjectAssets();
-
             return _(projectAssets)
-                .concat((await this.assetProvider.getAssets()))
-                .uniqBy((asset) => asset.id)
+                .concat(await this.assetProvider.getAssets())
+                .uniqBy(asset => asset.id)
                 .value();
         };
 
@@ -87,10 +91,10 @@ export abstract class ExportProvider
 
         switch (this.options.assetState) {
             case ExportAssetState.Visited:
-                predicate = (asset) => asset.state === AssetState.Visited || asset.state === AssetState.Tagged;
+                predicate = asset => asset.state === AssetState.Visited || asset.state === AssetState.Tagged;
                 break;
             case ExportAssetState.Tagged:
-                predicate = (asset) => asset.state === AssetState.Tagged;
+                predicate = asset => asset.state === AssetState.Tagged;
                 break;
             case ExportAssetState.All:
             default:
@@ -100,9 +104,9 @@ export abstract class ExportProvider
         }
 
         return (await getAssetsFunc())
-            .filter((asset) => asset.type !== AssetType.Video)
+            .filter(asset => asset.type !== AssetType.Video)
             .filter(predicate)
-            .mapAsync(async (asset) => await this.assetService.getAssetMetadata(asset));
+            .mapAsync(async asset => await this.assetService.getAssetMetadata(asset));
     }
 
     /**
@@ -115,7 +119,7 @@ export abstract class ExportProvider
 
         this.storageProviderInstance = StorageProviderFactory.create(
             this.project.targetConnection.providerType,
-            this.project.targetConnection.providerOptions,
+            this.project.targetConnection.providerOptions
         );
 
         return this.storageProviderInstance;
@@ -131,7 +135,7 @@ export abstract class ExportProvider
 
         this.assetProviderInstance = AssetProviderFactory.create(
             this.project.sourceConnection.providerType,
-            this.project.sourceConnection.providerOptions,
+            this.project.sourceConnection.providerOptions
         );
 
         return this.assetProviderInstance;

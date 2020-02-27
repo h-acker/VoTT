@@ -1,8 +1,18 @@
 import shortid from "shortid";
 import {
-    IProject, ITag, IConnection, AppError, ErrorCode,
-    IAssetMetadata, IRegion, RegionType, AssetState, IFileInfo,
-    IAsset, AssetType, ModelPathType,
+    IProject,
+    ITag,
+    IConnection,
+    AppError,
+    ErrorCode,
+    IAssetMetadata,
+    IRegion,
+    RegionType,
+    AssetState,
+    IFileInfo,
+    IAsset,
+    AssetType,
+    ModelPathType
 } from "../models/applicationState";
 import { IV1Project, IV1Region } from "../models/v1Models";
 import packageJson from "../../package.json";
@@ -64,10 +74,11 @@ export default class ImportService implements IImportService {
             targetConnection: connection,
             exportFormat: null,
             videoSettings: {
-                frameExtractionRate: originalProject.framerate ? Number(originalProject.framerate) : 15,
+                frameExtractionRate: originalProject.framerate ? Number(originalProject.framerate) : 15
             },
             activeLearningSettings: null,
             autoSave: true,
+            images: []
         };
     }
 
@@ -86,10 +97,10 @@ export default class ImportService implements IImportService {
 
         originalProject = JSON.parse(v1Project.content as string);
 
-        const frames: IV1Frame[] = Object.keys(originalProject.frames).map((frameName) => {
+        const frames: IV1Frame[] = Object.keys(originalProject.frames).map(frameName => {
             return {
                 name: frameName,
-                regions: originalProject.frames[frameName],
+                regions: originalProject.frames[frameName]
             };
         });
 
@@ -110,7 +121,7 @@ export default class ImportService implements IImportService {
     private async generateImageAssets(v1Project: IFileInfo, frames: IV1Frame[]): Promise<IAssetMetadata[]> {
         const projectPath = normalizeSlashes(v1Project.file.path.replace(/\.[^/.]+$/, ""));
 
-        return await frames.mapAsync(async (frame) => {
+        return await frames.mapAsync(async frame => {
             const filePath = `${projectPath}/${frame.name}`;
             const asset = AssetService.createAssetFromFilePath(filePath);
             const assetState = this.getAssetState(frame);
@@ -128,7 +139,7 @@ export default class ImportService implements IImportService {
         const parentVideoAsset = await this.createParentVideoAsset(v1Project);
         const originalProject = JSON.parse(v1Project.content as string);
 
-        const videoFrameAssets = await frames.mapAsync(async (frame) => {
+        const videoFrameAssets = await frames.mapAsync(async frame => {
             const frameInt = Number(frame.name);
             const timestamp = (frameInt - 1) / Number(originalProject.framerate);
             const asset = this.createVideoFrameAsset(parentVideoAsset, timestamp);
@@ -137,8 +148,7 @@ export default class ImportService implements IImportService {
             return await this.createAssetMetadata(asset, assetState, frame.regions, parentVideoAsset);
         });
 
-        const taggedAssets = videoFrameAssets
-            .filter((assetMetadata) => assetMetadata.asset.state === AssetState.Tagged);
+        const taggedAssets = videoFrameAssets.filter(assetMetadata => assetMetadata.asset.state === AssetState.Tagged);
         const parentAssetState = taggedAssets.length > 0 ? AssetState.Tagged : AssetState.Visited;
         const parentAssetMetadata = await this.createAssetMetadata(parentVideoAsset, parentAssetState, []);
 
@@ -186,8 +196,8 @@ export default class ImportService implements IImportService {
             name: `${project.file.name.split(".")[0]} Connection`,
             providerType: "localFileSystemProxy",
             providerOptions: {
-                folderPath: normalizeSlashes(folderPath),
-            },
+                folderPath: normalizeSlashes(folderPath)
+            }
         };
 
         return connection;
@@ -204,10 +214,10 @@ export default class ImportService implements IImportService {
             .map((tagName, index) => {
                 return {
                     name: tagName,
-                    color: project.tag_colors[index],
+                    color: project.tag_colors[index]
                 } as ITag;
             })
-            .filter((tag) => !!tag.name);
+            .filter(tag => !!tag.name);
     }
 
     /**
@@ -216,7 +226,7 @@ export default class ImportService implements IImportService {
      * @param frameRegions - V1 Regions within the V1 Frame
      */
     private addRegions(metadata: IAssetMetadata, frameRegions: IV1Region[]): void {
-        frameRegions.forEach((region) => {
+        frameRegions.forEach(region => {
             const generatedRegion: IRegion = {
                 id: region.UID,
                 type: RegionType.Rectangle,
@@ -225,14 +235,14 @@ export default class ImportService implements IImportService {
                     { x: region.x1, y: region.y1 },
                     { x: region.x1, y: region.y2 },
                     { x: region.x2, y: region.y1 },
-                    { x: region.x2, y: region.y2 },
+                    { x: region.x2, y: region.y2 }
                 ],
                 boundingBox: {
-                    height: (region.y2 - region.y1),
-                    width: (region.x2 - region.x1),
+                    height: region.y2 - region.y1,
+                    width: region.x2 - region.x1,
                     left: region.x1,
-                    top: region.y1,
-                },
+                    top: region.y1
+                }
             };
             metadata.regions.push(generatedRegion);
         });
@@ -249,7 +259,7 @@ export default class ImportService implements IImportService {
             timestamp,
             parent,
             type: AssetType.VideoFrame,
-            size: parent.size,
+            size: parent.size
         };
     }
 
@@ -272,7 +282,7 @@ export default class ImportService implements IImportService {
         asset: IAsset,
         assetState: AssetState,
         frameRegions: IV1Region[],
-        parent?: IAsset,
+        parent?: IAsset
     ): Promise<IAssetMetadata> {
         const metadata = await this.assetService.getAssetMetadata(asset);
         this.addRegions(metadata, frameRegions);

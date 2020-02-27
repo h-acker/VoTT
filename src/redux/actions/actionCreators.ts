@@ -1,15 +1,12 @@
 import { Action } from "redux";
-import { IToggleDevToolsAction,
-         IRefreshApplicationAction,
-         ISaveAppSettingsAction,
-         IEnsureSecurityTokenAction,
+import {
+    IToggleDevToolsAction,
+    IRefreshApplicationAction,
+    ISaveAppSettingsAction,
+    IEnsureSecurityTokenAction
 } from "./applicationActions";
 import { ActionTypes } from "./actionTypes";
-import {
-    ILoadConnectionAction,
-    ISaveConnectionAction,
-    IDeleteConnectionAction,
-} from "./connectionActions";
+import { ILoadConnectionAction, ISaveConnectionAction, IDeleteConnectionAction } from "./connectionActions";
 import {
     ILoadProjectAction,
     ICloseProjectAction,
@@ -19,18 +16,16 @@ import {
     ILoadAssetMetadataAction,
     IExportProjectAction,
     IDeleteProjectAction,
+    ISaveProjectImages
 } from "./projectActions";
-import {
-    IShowAppErrorAction,
-    IClearErrorAction,
-} from "./appErrorActions";
+import { IShowAppErrorAction, IClearErrorAction } from "./appErrorActions";
 import { ISignInAction, ISignOutAction, ISaveUserInfoAction } from "./authActions";
 import {
     ITrackingSignInAction,
     ITrackingSignOutAction,
     ITrackingImgInAction,
     ITrackingImgOutAction,
-    ITrackingImgDeleteAction,
+    ITrackingImgDeleteAction
 } from "./trackingActions";
 
 /**
@@ -45,9 +40,11 @@ export interface IPayloadAction<TType, TPayload> extends Action<TType> {
  * @param type Name for action being created
  */
 // tslint:disable-next-line:max-line-length
-export function createAction<TAction extends Action<TAction["type"]>>(type: TAction["type"]): () => Action<TAction["type"]> {
+export function createAction<TAction extends Action<TAction["type"]>>(
+    type: TAction["type"]
+): () => Action<TAction["type"]> {
     return () => ({
-        type,
+        type
     });
 }
 
@@ -56,10 +53,12 @@ export function createAction<TAction extends Action<TAction["type"]>>(type: TAct
  * @param type Name for action being created
  */
 // tslint:disable-next-line:max-line-length
-export function createPayloadAction<TAction extends IPayloadAction<TAction["type"], TAction["payload"]>>(type: TAction["type"]): (payload: TAction["payload"]) => IPayloadAction<TAction["type"], TAction["payload"]> {
+export function createPayloadAction<TAction extends IPayloadAction<TAction["type"], TAction["payload"]>>(
+    type: TAction["type"]
+): (payload: TAction["payload"]) => IPayloadAction<TAction["type"], TAction["payload"]> {
     return (payload: TAction["payload"]) => ({
         type,
-        payload,
+        payload
     });
 }
 
@@ -78,29 +77,31 @@ export const anyOtherAction = createAction<IOtherAction>(ActionTypes.ANY_OTHER_A
 /**
  * Used by reducers to type-check all actions
  */
-export type AnyAction = IOtherAction |
-    IToggleDevToolsAction |
-    IRefreshApplicationAction |
-    ISaveAppSettingsAction |
-    IEnsureSecurityTokenAction |
-    ILoadConnectionAction |
-    ISaveConnectionAction |
-    IDeleteConnectionAction |
-    ILoadProjectAction |
-    ICloseProjectAction |
-    ISaveProjectAction |
-    IDeleteProjectAction |
-    ILoadProjectAssetsAction |
-    ISaveAssetMetadataAction |
-    ILoadAssetMetadataAction |
-    IExportProjectAction |
-    IShowAppErrorAction |
-    IClearErrorAction |
-    ISignInAction |
-    ISignOutAction |
-    ITrackingSignInAction |
-    ITrackingSignOutAction |
-    ITrackingImgInAction |
-    ITrackingImgOutAction |
-    ITrackingImgDeleteAction |
-    ISaveUserInfoAction;
+export type AnyAction =
+    | IOtherAction
+    | IToggleDevToolsAction
+    | IRefreshApplicationAction
+    | ISaveAppSettingsAction
+    | IEnsureSecurityTokenAction
+    | ILoadConnectionAction
+    | ISaveConnectionAction
+    | IDeleteConnectionAction
+    | ILoadProjectAction
+    | ICloseProjectAction
+    | ISaveProjectAction
+    | IDeleteProjectAction
+    | ILoadProjectAssetsAction
+    | ISaveAssetMetadataAction
+    | ILoadAssetMetadataAction
+    | IExportProjectAction
+    | IShowAppErrorAction
+    | IClearErrorAction
+    | ISignInAction
+    | ISignOutAction
+    | ITrackingSignInAction
+    | ITrackingSignOutAction
+    | ITrackingImgInAction
+    | ITrackingImgOutAction
+    | ITrackingImgDeleteAction
+    | ISaveUserInfoAction
+    | ISaveProjectImages;

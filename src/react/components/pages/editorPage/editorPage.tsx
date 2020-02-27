@@ -44,7 +44,8 @@ import { ActiveLearningService } from "../../../../services/activeLearningServic
 import { toast } from "react-toastify";
 import ITrackingActions, * as trackingActions from "../../../../redux/actions/trackingActions";
 import { MagnifierModalMessage } from "./MagnifierModalMessage";
-import apiService, { ILitter } from "../../../../services/apiService";
+import apiService, { ILitter, IImageWithAction } from "../../../../services/apiService";
+import CanvasHelpers from "./canvasHelpers";
 
 /**
  * Properties for Editor Page
@@ -182,6 +183,10 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         });
     }
 
+    public saveImages = (images: IImageWithAction[]) => {
+        this.props.actions.saveProjectImages(images);
+    };
+
     public async componentDidUpdate(prevProps: Readonly<IEditorPageProps>) {
         if (this.props.project && this.state.assets.length === 0) {
             await this.loadProjectAssets();
@@ -214,7 +219,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
 
         return (
             <div className="editor-page">
-                {[...Array(10).keys()].map(index => {
+                {[...project.tags.keys()].map(index => {
                     return (
                         <KeyboardBinding
                             displayName={strings.editorPage.tags.hotKey.apply}
@@ -223,6 +228,18 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                             accelerators={[`${index}`]}
                             icon={"fa-tag"}
                             handler={this.handleTagHotKey}
+                        />
+                    );
+                })}
+                {[...project.tags.keys()].map(index => {
+                    return (
+                        <KeyboardBinding
+                            displayName={strings.editorPage.tags.hotKey.lock}
+                            key={index}
+                            keyEventType={KeyEventType.KeyDown}
+                            accelerators={[`CmdOrCtrl+${index}`]}
+                            icon={"fa-lock"}
+                            handler={this.handleCtrlTagHotKey}
                         />
                     );
                 })}
@@ -291,12 +308,13 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                         </div>
                         <div className="editor-page-right-sidebar">
                             <TagInput
-                                tags={this.props.project.tags}
+                                tags={project.tags}
                                 lockedTags={this.state.lockedTags}
                                 selectedRegions={this.state.selectedRegions}
                                 onChange={this.onTagsChanged}
                                 onLockedTagsChange={this.onLockedTagsChanged}
                                 onTagClick={this.onTagClicked}
+                                onCtrlTagClick={this.onCtrlTagClicked}
                                 onTagRenamed={this.confirmTagRenamed}
                             />
                         </div>
@@ -469,6 +487,46 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             }
             this.setState({ pressedKeys: [] });
         }, 500)();
+    };
+
+    private handleCtrlTagHotKey = (event: KeyboardEvent): void => {
+        const tag = this.getTagFromKeyboardEvent(event);
+        if (tag) {
+            this.onCtrlTagClicked(tag);
+        }
+    };
+
+    private onCtrlTagClicked = (tag: ITag): void => {
+        const locked = this.state.lockedTags;
+        this.setState(
+            {
+                selectedTag: tag.name,
+                lockedTags: CanvasHelpers.toggleTag(locked, tag.name)
+            },
+            () => this.canvas.current.applyTag(tag.name)
+        );
+    };
+
+    private getTagFromKeyboardEvent = (event: KeyboardEvent): ITag => {
+        let key = parseInt(event.key, 10);
+        if (isNaN(key)) {
+            try {
+                key = parseInt(event.key.split("+")[1], 10);
+            } catch (e) {
+                return;
+            }
+        }
+        let index: number;
+        const tags = this.props.project.tags;
+        if (key === 0 && tags.length >= 10) {
+            index = 9;
+        } else if (key < 10) {
+            index = key - 1;
+        }
+        if (index < tags.length) {
+            return tags[index];
+        }
+        return null;
     };
 
     /**
@@ -766,6 +824,8 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         this.loadingProjectAssets = true;
 
         // Get all root assets from source asset provider
+        const images = await apiService.getImagesFromDispatcher();
+        this.props.actions.saveProjectImages(images.data);
         const sourceAssets = await this.props.actions.loadAssets(this.props.project);
 
         const lastVisited = sourceAssets.find(asset => asset.id === this.props.project.lastVisitedAssetId);

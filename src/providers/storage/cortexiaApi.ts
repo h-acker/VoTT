@@ -3,6 +3,7 @@ import { StorageType, IAsset, AssetType, IAssetMetadata, IRegion } from "../../m
 import { AssetService } from "../../services/assetService";
 import apiService, { IImage, IImageWithAction } from "../../services/apiService";
 import { appInfo } from "../../common/appInfo";
+import { store } from "../../redux/store/store";
 
 export class CortexiaApi implements IStorageProvider {
     /**
@@ -16,9 +17,10 @@ export class CortexiaApi implements IStorageProvider {
      * @param filePath
      */
     public async readText(filePath: string): Promise<string> {
-        const imagesWithLastAction = await apiService.getImageWithLastAction();
+        const appStore = store.getState();
+        const images = appStore.currentProject.images;
         const lastAssetId = parseInt(filePath, 10);
-        const imagesActionList = imagesWithLastAction.data.filter((item: IImageWithAction) => {
+        const imagesActionList = images.filter((item: IImageWithAction) => {
             return item.id === lastAssetId;
         });
         const lastImage = imagesActionList[imagesActionList.length - 1];
@@ -115,9 +117,10 @@ export class CortexiaApi implements IStorageProvider {
      * @param containerName - It's not required as our provider doesn't use containers.
      */
     public async getAssets(containerName?: string): Promise<IAsset[]> {
-        const images = await apiService.getImagesFromDispatcher();
+        const appStore = store.getState();
+        const images = appStore.currentProject.images;
         const result: IAsset[] = [];
-        images.data.map((image: IImage) => {
+        images.map((image: IImageWithAction) => {
             const url = image.path;
             const id = image.id;
             const asset = AssetService.createAssetFromFilePath(url, this.getFileName(url), id);

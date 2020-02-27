@@ -53,7 +53,7 @@ import { KeyEventType } from "../react/components/common/keyboardManager/keyboar
 import { IKeyboardRegistrations } from "../react/components/common/keyboardManager/keyboardRegistrationManager";
 import { IActiveLearningPageProps } from "../react/components/pages/activeLearning/activeLearningPage";
 import ITrackingActions, * as trackingActions from "../redux/actions/trackingActions";
-import { ILitter } from "../services/apiService";
+import { ILitter, IImageWithAction } from "../services/apiService";
 
 export default class MockFactory {
     /**
@@ -312,7 +312,8 @@ export default class MockFactory {
                 autoDetect: false,
                 predictTag: false
             },
-            autoSave: true
+            autoSave: true,
+            images: []
         };
     }
 
@@ -510,6 +511,32 @@ export default class MockFactory {
             id: name,
             color: "#333333"
         };
+    }
+
+    /**
+     * Create fake image set
+     */
+    public static createImageWithActions(): IImageWithAction[] {
+        return [
+            {
+                path: "fakePath.pg",
+                size: { width: 10, height: 10 },
+                predicted: false,
+                type: 1,
+                state: 1,
+                is_deleted: false,
+                tagger_id: 1,
+                id: 1,
+                last_action: {
+                    type: "",
+                    timestamp: "",
+                    regions: null,
+                    is_modified: false,
+                    user_id: 1,
+                    image_id: 1
+                }
+            }
+        ];
     }
 
     /**
@@ -878,7 +905,8 @@ export default class MockFactory {
             loadAssetMetadata: jest.fn(() => Promise.resolve()),
             saveAssetMetadata: jest.fn(() => Promise.resolve()),
             updateProjectTag: jest.fn(() => Promise.resolve()),
-            deleteProjectTag: jest.fn(() => Promise.resolve())
+            deleteProjectTag: jest.fn(() => Promise.resolve()),
+            saveProjectImages: jest.fn(() => Promise.resolve())
         };
     }
 
