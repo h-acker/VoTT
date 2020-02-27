@@ -150,7 +150,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         magnifierModalIsOpen: false,
         litters: [],
         pressedKeys: [],
-        imageNumber: 20,
+        imageNumber: 20
     };
 
     private activeLearningService: ActiveLearningService = null;
@@ -645,8 +645,8 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
     };
 
     private onChangeImageNumber = (imageNumber: number) => {
-        this.setState({imageNumber})
-    }
+        this.setState({ imageNumber });
+    };
 
     private onToolbarItemSelected = async (toolbarItem: ToolbarItem): Promise<void> => {
         switch (toolbarItem.props.name) {
@@ -831,8 +831,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         this.loadingProjectAssets = true;
 
         // Get all root assets from source asset provider
-        console.log('****************************************');
-        console.log(this.state.imageNumber);
         const images = await apiService.getImagesFromDispatcher(this.state.imageNumber);
         this.props.actions.saveProjectImages(images.data);
         const sourceAssets = await this.props.actions.loadAssets(this.props.project);
