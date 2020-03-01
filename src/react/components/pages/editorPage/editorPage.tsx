@@ -104,6 +104,7 @@ export interface IEditorPageState {
     selectedAssetBase?: IAssetMetadata;
     litters: ILitter[];
     pressedKeys: number[];
+    imageNumber: number;
 }
 
 function mapStateToProps(state: IApplicationState) {
@@ -148,7 +149,8 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         showInvalidRegionWarning: false,
         magnifierModalIsOpen: false,
         litters: [],
-        pressedKeys: []
+        pressedKeys: [],
+        imageNumber: 20
     };
 
     private activeLearningService: ActiveLearningService = null;
@@ -269,6 +271,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                                     items={this.toolbarItems}
                                     actions={this.props.actions}
                                     onToolbarItemSelected={this.onToolbarItemSelected}
+                                    setImageNumber={this.onChangeImageNumber}
                                 />
                             </div>
                             <div className="editor-page-content-main-body">
@@ -641,6 +644,10 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         this.setState({ lockedTags });
     };
 
+    private onChangeImageNumber = (imageNumber: number) => {
+        this.setState({ imageNumber });
+    };
+
     private onToolbarItemSelected = async (toolbarItem: ToolbarItem): Promise<void> => {
         switch (toolbarItem.props.name) {
             case ToolbarItemName.DrawRectangle:
@@ -824,7 +831,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         this.loadingProjectAssets = true;
 
         // Get all root assets from source asset provider
-        const images = await apiService.getImagesFromDispatcher();
+        const images = await apiService.getImagesFromDispatcher(this.state.imageNumber);
         this.props.actions.saveProjectImages(images.data);
         const sourceAssets = await this.props.actions.loadAssets(this.props.project);
 

@@ -107,8 +107,8 @@ export class ApiService implements IApiService {
         return this.client.post(Api.Actions, mapTrackingActionToApiBody(action));
     };
 
-    public getImagesFromDispatcher = (): AxiosPromise<IImageWithAction[]> => {
-        return this.client.put(Api.DispatcherImages);
+    public getImagesFromDispatcher = (limit: number = 20): AxiosPromise<IImageWithAction[]> => {
+        return this.client.put(`${Api.DispatcherImages}?limit=${limit}`, { limit });
     };
 
     public getImageWithLastAction = (): AxiosPromise<IImageWithAction[]> => {
