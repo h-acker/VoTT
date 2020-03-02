@@ -1,7 +1,7 @@
 import { Dispatch } from "redux";
 import { createPayloadAction, IPayloadAction } from "./actionCreators";
 import { ActionTypes } from "./actionTypes";
-import { ITrackingAction, TrackingActionType, createTrackingAction } from "../../models/trackingAction";
+import { ITrackingAction, TrackingActionType, createTrackingAction, TrackingAction } from "../../models/trackingAction";
 import { IRegion } from "../../models/applicationState";
 import apiService from "../../services/apiService";
 
@@ -17,7 +17,7 @@ export default interface ITrackingActions {
     trackingSignIn(userId: number): Promise<void>;
     trackingSignOut(userId: number): Promise<void>;
     trackingImgIn(userId: number, imageId: string, regions: IRegion[]): Promise<void>;
-    trackingImgOut(userId: number, imageId: string, regions: IRegion[], isModified: boolean): Promise<void>;
+    trackingImgOut(userId: number, imageId: string, regions: IRegion[], isModified: boolean): Promise<TrackingAction>;
     trackingImgDelete(userId: number, imageId: string): Promise<void>;
 }
 
@@ -69,12 +69,12 @@ export function trackingImgOut(
     imageId: string,
     regions: IRegion[],
     isModified: boolean
-): (dispatch: Dispatch) => Promise<void> {
+): (dispatch: Dispatch) => Promise<TrackingAction> {
     return async (dispatch: Dispatch) => {
         const trackingAction = createTrackingAction(TrackingActionType.ImgOut, userId, imageId, regions, isModified);
         await apiService.createAction(trackingAction);
         dispatch(trackingImgOutAction(trackingAction));
-        return Promise.resolve();
+        return Promise.resolve(trackingAction);
     };
 }
 
