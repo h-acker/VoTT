@@ -24,7 +24,8 @@ describe("Editor Toolbar", () => {
             actions: MockFactory.projectActions(),
             project: MockFactory.createTestProject("TestProject"),
             items: ToolbarItemFactory.getToolbarItems(),
-            onToolbarItemSelected: (toolbarItem: ToolbarItem) => null
+            onToolbarItemSelected: (toolbarItem: ToolbarItem) => null,
+            setImageNumber: (setImageNumber: number) => null
         };
     }
 
