@@ -482,10 +482,6 @@
         "activeLearningPredictionError": {
             "title": "Active Learning Error",
             "message": "An error occurred while predicting regions in the current asset.                 Please verify your active learning configuration and try again"
-        },
-        "actionSendingError": {
-            "title": "Action Error",
-            "message": "An error occurred while trying to send an action.                 Please check the regions of the last image"
         }
     },
     "consoleMessages": {

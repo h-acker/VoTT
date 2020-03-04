@@ -54,7 +54,6 @@ export enum ErrorCode {
     PasteRegionTooBig = "pasteRegionTooBig",
     OverloadedKeyBinding = "overloadedKeyBinding",
     ActiveLearningPredictionError = "activeLearningPredictionError",
-    ActionSendingError = "actionSendingError"
 }
 
 /**

@@ -455,7 +455,6 @@ export interface IAppStrings {
         pasteRegionTooBigError: IErrorMetadata;
         exportFormatNotFound: IErrorMetadata;
         activeLearningPredictionError: IErrorMetadata;
-        actionSendingError: IErrorMetadata;
     };
     consoleMessages: {
         getLitterFailed: string;
