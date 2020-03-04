@@ -62,7 +62,6 @@ export function loadProject(
         const loadedProject = await projectService.load(project, projectToken);
         dispatch(loadProjectAction(loadedProject));
         return loadedProject;
-        
     };
 }
 
@@ -97,12 +96,11 @@ export function saveProject(
         dispatch(saveProjectAction(savedProject));
 
         // Reload project after save actions
-        try{
+        try {
             await loadProject(savedProject)(dispatch, getState);
-        } catch(e) {
+        } catch (e) {
             console.warn("Could not load project (on save project)");
         }
-        
 
         return savedProject;
     };

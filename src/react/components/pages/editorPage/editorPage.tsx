@@ -183,14 +183,13 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                     this.isAssetModified()
                 );
             };
-        } catch(e) {
+        } catch (e) {
             console.warn("Action img_out could not be sent.");
         }
-            const litters = await apiService.getLitters();
-            this.setState({
-                litters: litters.data
-            }); 
-       
+        const litters = await apiService.getLitters();
+        this.setState({
+            litters: litters.data
+        });
     }
 
     public saveImages = (images: IImageWithAction[]) => {
@@ -774,12 +773,12 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
          * Track user leaves the image
          */
         if (selectedAsset && selectedAsset.asset) {
-            try{
+            try {
                 const imgOut = await trackingActions.trackingImgOut(
-                auth.userId,
-                selectedAsset.asset.id,
-                selectedAsset.regions,
-                this.isAssetModified()
+                    auth.userId,
+                    selectedAsset.asset.id,
+                    selectedAsset.regions,
+                    this.isAssetModified()
                 );
 
                 const id = parseInt(selectedAsset.asset.id, 10);
@@ -795,11 +794,9 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                     images: changedImages
                 });
                 this.saveImages(changedImages);
-            } catch(e) {
+            } catch (e) {
                 console.warn("Action img_out could not be sent.");
-            };
-            
-            
+            }
         }
 
         const assetMetadata = await actions.loadAssetMetadata(project, asset);
@@ -828,10 +825,9 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
          */
         try {
             await trackingActions.trackingImgIn(auth.userId, assetMetadata.asset.id, assetMetadata.regions);
-        } catch(e) {
+        } catch (e) {
             console.warn("Action img_in could not be sent.");
         }
-        
     };
 
     private isAssetModified = (): boolean => {

@@ -28,7 +28,7 @@ export function trackingSignIn(userId: number): (dispatch: Dispatch) => Promise<
     return async (dispatch: Dispatch) => {
         const trackingAction = createTrackingAction(TrackingActionType.SignIn, userId);
         try {
-            await apiService.createAction(trackingAction)
+            await apiService.createAction(trackingAction);
             dispatch(trackingSignInAction(trackingAction));
             return Promise.resolve();
         } catch {
