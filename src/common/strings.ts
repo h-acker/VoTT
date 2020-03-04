@@ -457,6 +457,12 @@ export interface IAppStrings {
         activeLearningPredictionError: IErrorMetadata;
         actionSendingError: IErrorMetadata;
     };
+    consoleMessages: {
+        getLitterFailed: string;
+        imgOutFailed: string;
+        imgInFailed: string;
+        loadProjectFailed: string;
+    };
     wasteTypes: {
         1: string;
         2: string;

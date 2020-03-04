@@ -488,6 +488,12 @@
         "message": "Se produjo un error al intentar enviar una acción.                Por favor verifique las regiones de la última imagen"
     }
   },
+  "consoleMessages": {
+      "getLitterFailed": "No se pudo obtener la lista de camadas",
+      "imgOutFailed": "Error al enviar la acción img_out",
+      "imgInFailed": "Error al enviar la acción img_in",
+      "loadProjectFailed": "No se pudo cargar el proyecto"
+  },
   "wasteTypes":{ 
     "1":"Cigarrillo",
     "2":"Hoja",

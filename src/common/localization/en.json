@@ -488,6 +488,12 @@
             "message": "An error occurred while trying to send an action.                 Please check the regions of the last image"
         }
     },
+    "consoleMessages": {
+        "getLitterFailed": "Failed to get the list of litters",
+        "imgOutFailed": "Failed to send img_out action",
+        "imgInFailed": "Failed to send img_in action",
+        "loadProjectFailed": "Could not load project"
+    },
     "wasteTypes": {
         "1": "Cigarette",
         "2": "Leaf",

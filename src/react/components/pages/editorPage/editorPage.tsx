@@ -184,7 +184,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                 );
             };
         } catch (e) {
-            console.warn("Action img_out could not be sent.");
+            console.warn(strings.consoleMessages.imgOutFailed);
         }
         const litters = await apiService.getLitters();
         this.setState({
@@ -795,7 +795,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                 });
                 this.saveImages(changedImages);
             } catch (e) {
-                console.warn("Action img_out could not be sent.");
+                console.warn(strings.consoleMessages.imgOutFailed);
             }
         }
 
@@ -826,7 +826,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         try {
             await trackingActions.trackingImgIn(auth.userId, assetMetadata.asset.id, assetMetadata.regions);
         } catch (e) {
-            console.warn("Action img_in could not be sent.");
+            console.warn(strings.consoleMessages.imgInFailed);
         }
     };
 
