@@ -173,19 +173,24 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             await this.props.actions.loadProject(project);
         }
         this.activeLearningService = new ActiveLearningService(this.props.project.activeLearningSettings);
-        window.onbeforeunload = () => {
-            const { selectedAsset } = this.state;
-            this.props.trackingActions.trackingImgOut(
-                this.props.auth.userId,
-                selectedAsset.asset.id,
-                selectedAsset.regions,
-                this.isAssetModified()
-            );
-        };
-        const litters = await apiService.getLitters();
-        this.setState({
-            litters: litters.data
-        });
+        try {
+            window.onbeforeunload = () => {
+                const { selectedAsset } = this.state;
+                this.props.trackingActions.trackingImgOut(
+                    this.props.auth.userId,
+                    selectedAsset.asset.id,
+                    selectedAsset.regions,
+                    this.isAssetModified()
+                );
+            };
+        } catch(e) {
+            console.warn("Action img_out could not be sent.");
+        }
+            const litters = await apiService.getLitters();
+            this.setState({
+                litters: litters.data
+            }); 
+       
     }
 
     public saveImages = (images: IImageWithAction[]) => {
@@ -769,26 +774,32 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
          * Track user leaves the image
          */
         if (selectedAsset && selectedAsset.asset) {
-            const imgOut = await trackingActions.trackingImgOut(
+            try{
+                const imgOut = await trackingActions.trackingImgOut(
                 auth.userId,
                 selectedAsset.asset.id,
                 selectedAsset.regions,
                 this.isAssetModified()
-            );
+                );
 
-            const id = parseInt(selectedAsset.asset.id, 10);
-            const images = [...this.state.images];
-            const changedImages = images.map(item => {
-                const object = { ...item };
-                if (object.id === id) {
-                    object.last_action = mapTrackingActionToApiBody(imgOut);
-                }
-                return object;
-            });
-            this.setState({
-                images: changedImages
-            });
-            this.saveImages(changedImages);
+                const id = parseInt(selectedAsset.asset.id, 10);
+                const images = [...this.state.images];
+                const changedImages = images.map(item => {
+                    const object = { ...item };
+                    if (object.id === id) {
+                        object.last_action = mapTrackingActionToApiBody(imgOut);
+                    }
+                    return object;
+                });
+                this.setState({
+                    images: changedImages
+                });
+                this.saveImages(changedImages);
+            } catch(e) {
+                console.warn("Action img_out could not be sent.");
+            };
+            
+            
         }
 
         const assetMetadata = await actions.loadAssetMetadata(project, asset);
@@ -815,7 +826,12 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         /**
          * Track user enters on the image
          */
-        await trackingActions.trackingImgIn(auth.userId, assetMetadata.asset.id, assetMetadata.regions);
+        try {
+            await trackingActions.trackingImgIn(auth.userId, assetMetadata.asset.id, assetMetadata.regions);
+        } catch(e) {
+            console.warn("Action img_in could not be sent.");
+        }
+        
     };
 
     private isAssetModified = (): boolean => {

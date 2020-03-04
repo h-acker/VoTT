@@ -455,6 +455,7 @@ export interface IAppStrings {
         pasteRegionTooBigError: IErrorMetadata;
         exportFormatNotFound: IErrorMetadata;
         activeLearningPredictionError: IErrorMetadata;
+        actionSendingError: IErrorMetadata;
     };
     wasteTypes: {
         1: string;

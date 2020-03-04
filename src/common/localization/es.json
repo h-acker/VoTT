@@ -482,6 +482,10 @@
     "activeLearningPredictionError":{ 
       "title":"Error de aprendizaje",
       "message":"Se ha producido un error al predecir regiones en el activo actual.                 Compruebe la configuración de aprendizaje activa y vuelva a intentarlo"
+    },
+    "actionSendingError": {
+        "title": "Error de acción",
+        "message": "Se produjo un error al intentar enviar una acción.                Por favor verifique las regiones de la última imagen"
     }
   },
   "wasteTypes":{ 

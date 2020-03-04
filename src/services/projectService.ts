@@ -61,9 +61,14 @@ export default class ProjectService implements IProjectService {
         try {
             const loadedProject = decryptProject(project, securityToken);
 
-            const litters = await apiService.getLitters();
-            loadedProject.tags = buildTags(litters.data);
-
+            try {
+                const litters = await apiService.getLitters();
+                loadedProject.tags = buildTags(litters.data);
+            } catch(e) {
+                console.warn("Unable to get litter list")
+                return Promise.reject();
+            }
+            
             // Initialize active learning settings if they don't exist
             if (!loadedProject.activeLearningSettings) {
                 loadedProject.activeLearningSettings = defaultActiveLearningSettings;
