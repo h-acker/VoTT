@@ -484,6 +484,12 @@
             "message": "An error occurred while predicting regions in the current asset.                 Please verify your active learning configuration and try again"
         }
     },
+    "consoleMessages": {
+        "getLitterFailed": "Failed to get the list of litters",
+        "imgOutFailed": "Failed to send img_out action",
+        "imgInFailed": "Failed to send img_in action",
+        "loadProjectFailed": "Could not load project"
+    },
     "wasteTypes": {
         "1": "Cigarette",
         "2": "Leaf",

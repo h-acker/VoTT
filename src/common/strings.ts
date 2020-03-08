@@ -456,6 +456,12 @@ export interface IAppStrings {
         exportFormatNotFound: IErrorMetadata;
         activeLearningPredictionError: IErrorMetadata;
     };
+    consoleMessages: {
+        getLitterFailed: string;
+        imgOutFailed: string;
+        imgInFailed: string;
+        loadProjectFailed: string;
+    };
     wasteTypes: {
         1: string;
         2: string;
