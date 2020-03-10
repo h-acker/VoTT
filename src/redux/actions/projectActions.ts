@@ -58,8 +58,8 @@ export function loadProject(
         if (!projectToken) {
             throw new AppError(ErrorCode.SecurityTokenNotFound, "Security Token Not Found");
         }
-        const loadedProject = await projectService.load(project, projectToken);
 
+        const loadedProject = await projectService.load(project, projectToken);
         dispatch(loadProjectAction(loadedProject));
         return loadedProject;
     };
@@ -96,7 +96,11 @@ export function saveProject(
         dispatch(saveProjectAction(savedProject));
 
         // Reload project after save actions
-        await loadProject(savedProject)(dispatch, getState);
+        try {
+            await loadProject(savedProject)(dispatch, getState);
+        } catch (e) {
+            console.warn("Could not load project (on save project)");
+        }
 
         return savedProject;
     };
@@ -123,7 +127,6 @@ export function deleteProject(
         }
 
         const decryptedProject = await projectService.load(project, projectToken);
-
         await projectService.delete(decryptedProject);
         dispatch(deleteProjectAction(decryptedProject));
     };

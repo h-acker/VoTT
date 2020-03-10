@@ -484,6 +484,12 @@
       "message":"Se ha producido un error al predecir regiones en el activo actual.                 Compruebe la configuración de aprendizaje activa y vuelva a intentarlo"
     }
   },
+  "consoleMessages": {
+      "getLitterFailed": "No se pudo obtener la lista de camadas",
+      "imgOutFailed": "Error al enviar la acción img_out",
+      "imgInFailed": "Error al enviar la acción img_in",
+      "loadProjectFailed": "No se pudo cargar el proyecto"
+  },
   "wasteTypes":{ 
     "1":"Cigarrillo",
     "2":"Hoja",

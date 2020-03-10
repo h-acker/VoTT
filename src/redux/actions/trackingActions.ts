@@ -1,8 +1,8 @@
 import { Dispatch } from "redux";
 import { createPayloadAction, IPayloadAction } from "./actionCreators";
 import { ActionTypes } from "./actionTypes";
-import { ITrackingAction, TrackingActionType, createTrackingAction } from "../../models/trackingAction";
-import { IRegion } from "../../models/applicationState";
+import { ITrackingAction, TrackingActionType, createTrackingAction, TrackingAction } from "../../models/trackingAction";
+import { IRegion, AppError, ErrorCode } from "../../models/applicationState";
 import apiService from "../../services/apiService";
 
 /**
@@ -17,7 +17,7 @@ export default interface ITrackingActions {
     trackingSignIn(userId: number): Promise<void>;
     trackingSignOut(userId: number): Promise<void>;
     trackingImgIn(userId: number, imageId: string, regions: IRegion[]): Promise<void>;
-    trackingImgOut(userId: number, imageId: string, regions: IRegion[], isModified: boolean): Promise<void>;
+    trackingImgOut(userId: number, imageId: string, regions: IRegion[], isModified: boolean): Promise<TrackingAction>;
     trackingImgDelete(userId: number, imageId: string): Promise<void>;
 }
 
@@ -27,9 +27,13 @@ export default interface ITrackingActions {
 export function trackingSignIn(userId: number): (dispatch: Dispatch) => Promise<void> {
     return async (dispatch: Dispatch) => {
         const trackingAction = createTrackingAction(TrackingActionType.SignIn, userId);
-        await apiService.createAction(trackingAction);
-        dispatch(trackingSignInAction(trackingAction));
-        return Promise.resolve();
+        try {
+            await apiService.createAction(trackingAction);
+            dispatch(trackingSignInAction(trackingAction));
+            return Promise.resolve();
+        } catch {
+            return Promise.reject();
+        }
     };
 }
 
@@ -39,9 +43,13 @@ export function trackingSignIn(userId: number): (dispatch: Dispatch) => Promise<
 export function trackingSignOut(userId: number): (dispatch: Dispatch) => Promise<void> {
     return async (dispatch: Dispatch) => {
         const trackingAction = createTrackingAction(TrackingActionType.SignOut, userId);
-        await apiService.createAction(trackingAction);
-        dispatch(trackingSignOutAction(trackingAction));
-        return Promise.resolve();
+        try {
+            await apiService.createAction(trackingAction);
+            dispatch(trackingSignOutAction(trackingAction));
+            return Promise.resolve();
+        } catch {
+            return Promise.reject();
+        }
     };
 }
 
@@ -55,9 +63,13 @@ export function trackingImgIn(
 ): (dispatch: Dispatch) => Promise<void> {
     return async (dispatch: Dispatch) => {
         const trackingAction = createTrackingAction(TrackingActionType.ImgIn, userId, imageId, regions);
-        await apiService.createAction(trackingAction);
-        dispatch(trackingImgInAction(trackingAction));
-        return Promise.resolve();
+        try {
+            await apiService.createAction(trackingAction);
+            dispatch(trackingImgInAction(trackingAction));
+            return Promise.resolve();
+        } catch {
+            return Promise.reject();
+        }
     };
 }
 
@@ -69,12 +81,16 @@ export function trackingImgOut(
     imageId: string,
     regions: IRegion[],
     isModified: boolean
-): (dispatch: Dispatch) => Promise<void> {
+): (dispatch: Dispatch) => Promise<TrackingAction> {
     return async (dispatch: Dispatch) => {
         const trackingAction = createTrackingAction(TrackingActionType.ImgOut, userId, imageId, regions, isModified);
-        await apiService.createAction(trackingAction);
-        dispatch(trackingImgOutAction(trackingAction));
-        return Promise.resolve();
+        try {
+            await apiService.createAction(trackingAction);
+            dispatch(trackingImgOutAction(trackingAction));
+            return Promise.resolve(trackingAction);
+        } catch {
+            return Promise.reject();
+        }
     };
 }
 
@@ -84,9 +100,13 @@ export function trackingImgOut(
 export function trackingImgDelete(userId: number, imageId: string): (dispatch: Dispatch) => Promise<void> {
     return async (dispatch: Dispatch) => {
         const trackingAction = createTrackingAction(TrackingActionType.ImgDelete, userId, imageId);
-        await apiService.createAction(trackingAction);
-        dispatch(trackingImgDeleteAction(trackingAction));
-        return Promise.resolve();
+        try {
+            await apiService.createAction(trackingAction);
+            dispatch(trackingImgDeleteAction(trackingAction));
+            return Promise.resolve();
+        } catch {
+            return Promise.reject();
+        }
     };
 }
 

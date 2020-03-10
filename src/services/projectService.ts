@@ -18,6 +18,7 @@ import { ExportAssetState } from "../providers/export/exportProvider";
 import { IExportFormat } from "vott-react";
 import apiService from "./apiService";
 import { buildTags } from "../react/components/common/tagInput/tagInput";
+import { strings } from "../common/strings";
 
 /**
  * Functions required for a project service
@@ -61,8 +62,13 @@ export default class ProjectService implements IProjectService {
         try {
             const loadedProject = decryptProject(project, securityToken);
 
-            const litters = await apiService.getLitters();
-            loadedProject.tags = buildTags(litters.data);
+            try {
+                const litters = await apiService.getLitters();
+                loadedProject.tags = buildTags(litters.data);
+            } catch (e) {
+                console.warn(strings.consoleMessages.getLitterFailed);
+                return Promise.reject();
+            }
 
             // Initialize active learning settings if they don't exist
             if (!loadedProject.activeLearningSettings) {

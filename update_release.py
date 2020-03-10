@@ -27,6 +27,8 @@ import sys
 
 from versions import __file__ as RELEASE_FILE, _build, _release, _version  # noqa; noqa
 
+RELEASE_FILE = RELEASE_FILE.replace('pyc', 'py')
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # handle case where the script is used as a git hook

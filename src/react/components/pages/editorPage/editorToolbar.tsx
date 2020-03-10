@@ -18,6 +18,7 @@ export interface IEditorToolbarProps {
     actions: IProjectActions;
     items: IToolbarItemRegistration[];
     onToolbarItemSelected: (toolbarItem: ToolbarItem) => void;
+    setImageNumber: (imageNumber: number) => void;
 }
 
 /**
@@ -26,6 +27,7 @@ export interface IEditorToolbarProps {
  */
 export interface IEditorToolbarState {
     selectedItem: ToolbarItemName;
+    imageNumber: number;
 }
 
 /**
@@ -33,9 +35,9 @@ export interface IEditorToolbarState {
  * @description - Collection of buttons that perform actions in toolbar on editor page
  */
 export class EditorToolbar extends React.Component<IEditorToolbarProps, IEditorToolbarState> {
-
     public state = {
         selectedItem: ToolbarItemName.SelectCanvas,
+        imageNumber: 20
     };
 
     public render() {
@@ -46,38 +48,60 @@ export class EditorToolbar extends React.Component<IEditorToolbarProps, IEditorT
 
         return (
             <div className="btn-toolbar" role="toolbar">
-                {groups.map((items, idx) =>
+                {groups.map((items, idx) => (
                     <div key={idx} className="btn-group mr-2" role="group">
-                        {items.map((registration) => {
+                        {items.map(registration => {
                             const toolbarItemProps: IToolbarItemProps = {
                                 ...registration.config,
                                 actions: this.props.actions,
                                 project: this.props.project,
                                 active: this.isComponentActive(this.state.selectedItem, registration),
-                                onClick: this.onToolbarItemSelected,
+                                onClick: this.onToolbarItemSelected
                             };
                             const ToolbarItem = registration.component;
 
                             return <ToolbarItem key={toolbarItemProps.name} {...toolbarItemProps} />;
                         })}
-                    </div>,
-                )}
+                    </div>
+                ))}
+                <div style={{ marginTop: 4 }}>
+                    <p style={{ fontSize: 11, marginBottom: 2 }}>Images number</p>
+                    <select
+                        style={{ marginLeft: 10, marginBottom: 10 }}
+                        value={this.state.imageNumber}
+                        onChange={this.handleImageNumberChange}
+                    >
+                        <option value={10}>10</option>
+                        <option value={20}>20</option>
+                        <option value={50}>50</option>
+                        <option value={100}>100</option>
+                    </select>
+                </div>
             </div>
         );
     }
 
     private onToolbarItemSelected = (toolbarItem: ToolbarItem) => {
-        this.setState({
-            selectedItem: toolbarItem.props.name,
-        }, () => {
-            this.props.onToolbarItemSelected(toolbarItem);
-        });
-    }
+        this.setState(
+            {
+                selectedItem: toolbarItem.props.name
+            },
+            () => {
+                this.props.onToolbarItemSelected(toolbarItem);
+            }
+        );
+    };
+
+    private handleImageNumberChange = (event: any) => {
+        const imageNumber: number = Number(event.target.value);
+        this.setState({ imageNumber });
+        this.props.setImageNumber(imageNumber);
+    };
 
     private isComponentActive(selected: ToolbarItemName, componentRegistration: IToolbarItemRegistration) {
         return selected
             ? selected === componentRegistration.config.name &&
-            componentRegistration.config.type === ToolbarItemType.State
+                  componentRegistration.config.type === ToolbarItemType.State
             : false;
     }
 }

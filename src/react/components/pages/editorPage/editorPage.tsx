@@ -46,6 +46,7 @@ import ITrackingActions, * as trackingActions from "../../../../redux/actions/tr
 import { MagnifierModalMessage } from "./MagnifierModalMessage";
 import apiService, { ILitter, IImageWithAction } from "../../../../services/apiService";
 import CanvasHelpers from "./canvasHelpers";
+import { mapTrackingActionToApiBody } from "../../../../services/ApiMapper";
 
 /**
  * Properties for Editor Page
@@ -104,6 +105,8 @@ export interface IEditorPageState {
     selectedAssetBase?: IAssetMetadata;
     litters: ILitter[];
     pressedKeys: number[];
+    images: IImageWithAction[];
+    imageNumber: number;
 }
 
 function mapStateToProps(state: IApplicationState) {
@@ -148,7 +151,9 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         showInvalidRegionWarning: false,
         magnifierModalIsOpen: false,
         litters: [],
-        pressedKeys: []
+        pressedKeys: [],
+        images: [],
+        imageNumber: 20
     };
 
     private activeLearningService: ActiveLearningService = null;
@@ -168,15 +173,19 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             await this.props.actions.loadProject(project);
         }
         this.activeLearningService = new ActiveLearningService(this.props.project.activeLearningSettings);
-        window.onbeforeunload = () => {
-            const { selectedAsset } = this.state;
-            this.props.trackingActions.trackingImgOut(
-                this.props.auth.userId,
-                selectedAsset.asset.id,
-                selectedAsset.regions,
-                this.isAssetModified()
-            );
-        };
+        try {
+            window.onbeforeunload = () => {
+                const { selectedAsset } = this.state;
+                this.props.trackingActions.trackingImgOut(
+                    this.props.auth.userId,
+                    selectedAsset.asset.id,
+                    selectedAsset.regions,
+                    this.isAssetModified()
+                );
+            };
+        } catch (e) {
+            console.warn(strings.consoleMessages.imgOutFailed);
+        }
         const litters = await apiService.getLitters();
         this.setState({
             litters: litters.data
@@ -269,6 +278,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                                     items={this.toolbarItems}
                                     actions={this.props.actions}
                                     onToolbarItemSelected={this.onToolbarItemSelected}
+                                    setImageNumber={this.onChangeImageNumber}
                                 />
                             </div>
                             <div className="editor-page-content-main-body">
@@ -641,6 +651,10 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         this.setState({ lockedTags });
     };
 
+    private onChangeImageNumber = (imageNumber: number) => {
+        this.setState({ imageNumber });
+    };
+
     private onToolbarItemSelected = async (toolbarItem: ToolbarItem): Promise<void> => {
         switch (toolbarItem.props.name) {
             case ToolbarItemName.DrawRectangle:
@@ -759,13 +773,32 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
          * Track user leaves the image
          */
         if (selectedAsset && selectedAsset.asset) {
-            await trackingActions.trackingImgOut(
-                auth.userId,
-                selectedAsset.asset.id,
-                selectedAsset.regions,
-                this.isAssetModified()
-            );
+            try {
+                const imgOut = await trackingActions.trackingImgOut(
+                    auth.userId,
+                    selectedAsset.asset.id,
+                    selectedAsset.regions,
+                    this.isAssetModified()
+                );
+
+                const id = parseInt(selectedAsset.asset.id, 10);
+                const images = [...this.state.images];
+                const changedImages = images.map(item => {
+                    const object = { ...item };
+                    if (object.id === id) {
+                        object.last_action = mapTrackingActionToApiBody(imgOut);
+                    }
+                    return object;
+                });
+                this.setState({
+                    images: changedImages
+                });
+                this.saveImages(changedImages);
+            } catch (e) {
+                console.warn(strings.consoleMessages.imgOutFailed);
+            }
         }
+
         const assetMetadata = await actions.loadAssetMetadata(project, asset);
 
         try {
@@ -790,7 +823,11 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         /**
          * Track user enters on the image
          */
-        await trackingActions.trackingImgIn(auth.userId, assetMetadata.asset.id, assetMetadata.regions);
+        try {
+            await trackingActions.trackingImgIn(auth.userId, assetMetadata.asset.id, assetMetadata.regions);
+        } catch (e) {
+            console.warn(strings.consoleMessages.imgInFailed);
+        }
     };
 
     private isAssetModified = (): boolean => {
@@ -824,8 +861,9 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         this.loadingProjectAssets = true;
 
         // Get all root assets from source asset provider
-        const images = await apiService.getImagesFromDispatcher();
-        this.props.actions.saveProjectImages(images.data);
+        const images = await apiService.getImagesFromDispatcher(this.state.imageNumber);
+        this.saveImages(images.data);
+        this.setState({ images: images.data });
         const sourceAssets = await this.props.actions.loadAssets(this.props.project);
 
         const lastVisited = sourceAssets.find(asset => asset.id === this.props.project.lastVisitedAssetId);
