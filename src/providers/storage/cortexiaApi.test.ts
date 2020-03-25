@@ -46,7 +46,11 @@ describe("Cortexia Api", () => {
             }
         };
         store.getState = () => mockState;
-        const apiResponeMock = [{ ...responseObject }, { ...responseObject, basename: "test1" }, { ...responseObject, basename: "test2" }];
+        const apiResponeMock = [
+            { ...responseObject },
+            { ...responseObject, basename: "test1" },
+            { ...responseObject, basename: "test2" }
+        ];
         AssetService.createAssetFromFilePath = jest.fn(() => ({ type: AssetType.Image }));
         const provider: CortexiaApi = new CortexiaApi();
         const content = await provider.readText("name");

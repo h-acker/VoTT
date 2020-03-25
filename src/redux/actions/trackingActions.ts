@@ -17,7 +17,12 @@ export default interface ITrackingActions {
     trackingSignIn(userId: number): Promise<void>;
     trackingSignOut(userId: number): Promise<void>;
     trackingImgIn(userId: number, imageBasename: string, regions: IRegion[]): Promise<void>;
-    trackingImgOut(userId: number, imageBasename: string, regions: IRegion[], isModified: boolean): Promise<TrackingAction>;
+    trackingImgOut(
+        userId: number,
+        imageBasename: string,
+        regions: IRegion[],
+        isModified: boolean
+    ): Promise<TrackingAction>;
     trackingImgDelete(userId: number, imageBasename: string): Promise<void>;
 }
 
@@ -83,7 +88,13 @@ export function trackingImgOut(
     isModified: boolean
 ): (dispatch: Dispatch) => Promise<TrackingAction> {
     return async (dispatch: Dispatch) => {
-        const trackingAction = createTrackingAction(TrackingActionType.ImgOut, userId, imageBasename, regions, isModified);
+        const trackingAction = createTrackingAction(
+            TrackingActionType.ImgOut,
+            userId,
+            imageBasename,
+            regions,
+            isModified
+        );
         try {
             await apiService.createAction(trackingAction);
             dispatch(trackingImgOutAction(trackingAction));
