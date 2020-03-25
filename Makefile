@@ -210,7 +210,7 @@ endif
 		NODE_ENV=development \
 		DOCKER_TAG=latest \
 		STACK_NAME=vott-local \
-		REACT_APP_API_URL=http://backend.local \
+		REACT_APP_API_URL=https://mocks.cortexia.io \
 		docker-compose \
 			-f docker-compose.deploy.yml \
 			-f docker-compose.networks.yml \
