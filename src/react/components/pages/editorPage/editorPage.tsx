@@ -178,7 +178,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                 const { selectedAsset } = this.state;
                 this.props.trackingActions.trackingImgOut(
                     this.props.auth.userId,
-                    selectedAsset.asset.id,
+                    selectedAsset.asset.name,
                     selectedAsset.regions,
                     this.isAssetModified()
                 );
@@ -776,16 +776,16 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             try {
                 const imgOut = await trackingActions.trackingImgOut(
                     auth.userId,
-                    selectedAsset.asset.id,
+                    selectedAsset.asset.name,
                     selectedAsset.regions,
                     this.isAssetModified()
                 );
 
-                const id = parseInt(selectedAsset.asset.id, 10);
+                const name = selectedAsset.asset.name;
                 const images = [...this.state.images];
                 const changedImages = images.map(item => {
                     const object = { ...item };
-                    if (object.id === id) {
+                    if (object.basename === name) {
                         object.last_action = mapTrackingActionToApiBody(imgOut);
                     }
                     return object;
@@ -824,7 +824,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
          * Track user enters on the image
          */
         try {
-            await trackingActions.trackingImgIn(auth.userId, assetMetadata.asset.id, assetMetadata.regions);
+            await trackingActions.trackingImgIn(auth.userId, assetMetadata.asset.name, assetMetadata.regions);
         } catch (e) {
             console.warn(strings.consoleMessages.imgInFailed);
         }
@@ -909,7 +909,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                 return asset.id === selectedAsset.asset.id;
             });
 
-            await trackingActions.trackingImgDelete(auth.userId, selectedAsset.asset.id);
+            await trackingActions.trackingImgDelete(auth.userId, selectedAsset.asset.name);
             newAssets.splice(indexAssetToRemove, 1);
             if (newAssets.length) {
                 const previousIndex = indexAssetToRemove - 1;

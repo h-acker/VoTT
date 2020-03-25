@@ -526,14 +526,14 @@ export default class MockFactory {
                 state: 1,
                 is_deleted: false,
                 tagger_id: 1,
-                id: 1,
+                basename: "",
                 last_action: {
                     type: "",
                     timestamp: "",
                     regions: null,
                     is_modified: false,
                     user_id: 1,
-                    image_id: 1
+                    image_basename: "basename"
                 }
             }
         ];

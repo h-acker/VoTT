@@ -8,6 +8,6 @@ export const mapTrackingActionToApiBody = (action: ITrackingAction): IActionRequ
         regions: action.regions,
         is_modified: action.isModified,
         user_id: action.userId,
-        image_id: parseInt(action.imageId, 10)
+        image_basename: action.imageBasename
     };
 };

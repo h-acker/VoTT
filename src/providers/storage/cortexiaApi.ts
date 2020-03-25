@@ -19,9 +19,8 @@ export class CortexiaApi implements IStorageProvider {
     public async readText(filePath: string): Promise<string> {
         const appStore = store.getState();
         const images = appStore.currentProject.images;
-        const lastAssetId = parseInt(filePath, 10);
         const imagesActionList = images.filter((item: IImageWithAction) => {
-            return item.id === lastAssetId;
+            return item.basename === filePath;
         });
         const lastImage = imagesActionList[imagesActionList.length - 1];
         const url = lastImage.path;
@@ -122,8 +121,7 @@ export class CortexiaApi implements IStorageProvider {
         const result: IAsset[] = [];
         images.map((image: IImageWithAction) => {
             const url = image.path;
-            const id = image.id;
-            const asset = AssetService.createAssetFromFilePath(url, this.getFileName(url), id);
+            const asset = AssetService.createAssetFromFilePath(url, image.basename);
             if (asset.type !== AssetType.Unknown) {
                 result.push(asset);
             }
