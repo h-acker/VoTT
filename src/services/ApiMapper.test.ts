@@ -11,7 +11,7 @@ describe("Api Mapper", () => {
             regions: trackingAction.regions,
             is_modified: trackingAction.isModified,
             user_id: trackingAction.userId,
-            image_id: parseInt(trackingAction.imageId, 10)
+            image_basename: trackingAction.imageBasename
         });
     });
 });

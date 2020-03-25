@@ -29,7 +29,7 @@ export interface IActionRequest {
     regions: IRegion[];
     is_modified: boolean;
     user_id: number;
-    image_id: number;
+    image_basename: string;
 }
 
 interface IActionResponse extends IActionRequest {
@@ -55,7 +55,7 @@ export interface IImage {
     state: number;
     is_deleted: boolean;
     tagger_id: number;
-    id: number;
+    basename: string;
 }
 
 export interface ILitter {
