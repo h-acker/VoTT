@@ -71,7 +71,7 @@ export interface IEditorPageProps extends RouteComponentProps, React.Props<Edito
 const EnpointType = {
     REGULAR: 0,
     ADMIN: 1
-}
+};
 
 /**
  * State for Editor Page
@@ -204,7 +204,10 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
     };
 
     public async componentDidUpdate(prevProps: Readonly<IEditorPageProps>, prevState: IEditorPageState) {
-        if (this.state.endpointType !== prevState.endpointType || (this.props.project && this.state.assets.length === 0)) {
+        if (
+            this.state.endpointType !== prevState.endpointType ||
+            (this.props.project && this.state.assets.length === 0)
+        ) {
             await this.loadProjectAssets(false, true);
         }
 
@@ -315,15 +318,15 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                                         />
                                     </Canvas>
                                 ) : (
-                                        <div className="asset-loading" style={styles.assetLoading}>
-                                            <div
-                                                className="asset-loading-spinner text-center"
-                                                style={styles.assetLoadingSpinner}
-                                            >
-                                                <i className="fas fa-circle-notch fa-spin" style={styles.icon} />
-                                            </div>
+                                    <div className="asset-loading" style={styles.assetLoading}>
+                                        <div
+                                            className="asset-loading-spinner text-center"
+                                            style={styles.assetLoadingSpinner}
+                                        >
+                                            <i className="fas fa-circle-notch fa-spin" style={styles.icon} />
                                         </div>
-                                    )}
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div className="editor-page-right-sidebar">
@@ -386,7 +389,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
     private handleEndpointTypeChange = (event: any) => {
         const endpointType: number = Number(event.target.value);
         this.setState({ endpointType });
-    }
+    };
 
     private closeNativeMagnifierModal = () => {
         this.setState({
@@ -868,7 +871,10 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         return selectedAssetBase.regions.length !== selectedAsset.regions.length || !!modifiedAssets.length;
     };
 
-    private loadProjectAssets = async (forceLoad: boolean = false, hasEnpointTypeChanged: boolean = false): Promise<void> => {
+    private loadProjectAssets = async (
+        forceLoad: boolean = false,
+        hasEnpointTypeChanged: boolean = false
+    ): Promise<void> => {
         if (this.loadingProjectAssets || (!forceLoad && this.state.assets.length > 0 && !hasEnpointTypeChanged)) {
             return;
         }

@@ -81,17 +81,19 @@ export class EditorToolbar extends React.Component<IEditorToolbarProps, IEditorT
                         <option value={100}>100</option>
                     </select>
                 </div>
-                {this.props.isAdmin && (<div style={{ marginTop: 4, marginLeft: 16 }}>
-                    <p style={{ fontSize: 11, marginBottom: 2 }}>{strings.editorPage.toolbar.chooseEndpoint}</p>
-                    <select
-                        style={{ marginBottom: 10 }}
-                        value={this.props.endpointType}
-                        onChange={this.props.onEndpointTypeChange}
-                    >
-                        <option value={0}>{strings.editorPage.toolbar.regular}</option>
-                        <option value={1}>{strings.editorPage.toolbar.admin}</option>
-                    </select>
-                </div>)}
+                {this.props.isAdmin && (
+                    <div style={{ marginTop: 4, marginLeft: 16 }}>
+                        <p style={{ fontSize: 11, marginBottom: 2 }}>{strings.editorPage.toolbar.chooseEndpoint}</p>
+                        <select
+                            style={{ marginBottom: 10 }}
+                            value={this.props.endpointType}
+                            onChange={this.props.onEndpointTypeChange}
+                        >
+                            <option value={0}>{strings.editorPage.toolbar.regular}</option>
+                            <option value={1}>{strings.editorPage.toolbar.admin}</option>
+                        </select>
+                    </div>
+                )}
             </div>
         );
     }
@@ -116,7 +118,7 @@ export class EditorToolbar extends React.Component<IEditorToolbarProps, IEditorT
     private isComponentActive(selected: ToolbarItemName, componentRegistration: IToolbarItemRegistration) {
         return selected
             ? selected === componentRegistration.config.name &&
-            componentRegistration.config.type === ToolbarItemType.State
+                  componentRegistration.config.type === ToolbarItemType.State
             : false;
     }
 }
