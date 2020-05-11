@@ -239,6 +239,9 @@ export interface IAppStrings {
             magnifier: string;
             deletePicture: string;
             reloadImages: string;
+            chooseEndpoint: string;
+            regular: string;
+            admin: string;
         };
         videoPlayer: {
             nextTaggedFrame: {
