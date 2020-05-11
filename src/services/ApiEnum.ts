@@ -5,6 +5,7 @@ export enum Api {
     LoginTestToken = "api/v1/login/test-token",
     LoginAccessToken = "api/v1/login/access-token",
     DispatcherImages = "/api/v1/dispatcher/images",
+    QualityControl = "/api/v1/dispatcher/quality_control",
     ImagesWithLastAction = "/api/v1/images/with_last_action",
     Litters = "/api/v1/litter/"
 }

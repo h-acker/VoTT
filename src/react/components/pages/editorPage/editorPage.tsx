@@ -886,7 +886,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         if (this.state.endpointType === EnpointType.REGULAR) {
             images = await apiService.getImagesFromDispatcher(this.state.imageNumber);
         } else if (this.state.endpointType === EnpointType.ADMIN) {
-            images = await apiService.getImagesFromDispatcher(this.state.imageNumber);
+            images = await apiService.getImagesForQualityControl(this.state.imageNumber);
         }
         this.saveImages(images.data);
         this.setState({ images: images.data });
