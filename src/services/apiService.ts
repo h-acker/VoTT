@@ -111,6 +111,11 @@ export class ApiService implements IApiService {
         return this.client.put(`${Api.DispatcherImages}?limit=${limit}`, { limit });
     };
 
+    public getImagesForQualityControl = (limit: number = 20, targetPath = null): AxiosPromise<IImageWithAction[]> => {
+        const targetPathParameter = targetPath? `&target_path=${targetPath}` : ''
+        return this.client.put(`${Api.QualityControl}?limit=${limit}${targetPathParameter}`, { limit });
+    };
+
     public getImageWithLastAction = (): AxiosPromise<IImageWithAction[]> => {
         return this.client.get(Api.ImagesWithLastAction);
     };

@@ -6,6 +6,7 @@ import { IProject } from "../../../../models/applicationState";
 import { IToolbarItemProps, ToolbarItem, ToolbarItemType } from "../../toolbar/toolbarItem";
 import "./editorToolbar.scss";
 import { ToolbarItemName } from "../../../../registerToolbar";
+import { strings } from "../../../../common/strings";
 
 /**
  * Properties for Editor Toolbar
@@ -19,6 +20,9 @@ export interface IEditorToolbarProps {
     items: IToolbarItemRegistration[];
     onToolbarItemSelected: (toolbarItem: ToolbarItem) => void;
     setImageNumber: (imageNumber: number) => void;
+    isAdmin: boolean;
+    endpointType: number;
+    onEndpointTypeChange: (event: any) => void;
 }
 
 /**
@@ -77,6 +81,19 @@ export class EditorToolbar extends React.Component<IEditorToolbarProps, IEditorT
                         <option value={100}>100</option>
                     </select>
                 </div>
+                {this.props.isAdmin && (
+                    <div style={{ marginTop: 4, marginLeft: 16 }}>
+                        <p style={{ fontSize: 11, marginBottom: 2 }}>{strings.editorPage.toolbar.chooseEndpoint}</p>
+                        <select
+                            style={{ marginBottom: 10 }}
+                            value={this.props.endpointType}
+                            onChange={this.props.onEndpointTypeChange}
+                        >
+                            <option value={0}>{strings.editorPage.toolbar.regular}</option>
+                            <option value={1}>{strings.editorPage.toolbar.admin}</option>
+                        </select>
+                    </div>
+                )}
             </div>
         );
     }

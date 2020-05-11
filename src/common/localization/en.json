@@ -230,7 +230,10 @@
             "activeLearning": "Active Learning",
             "magnifier": "Magnifier",
             "deletePicture": "Delete Picture",
-            "reloadImages": "Reload Images"
+            "reloadImages": "Reload Images",
+            "admin": "Admin",
+            "regular": "Regular",
+            "chooseEndpoint": "Choose endpoint"
         },
         "videoPlayer": {
             "previousTaggedFrame": {

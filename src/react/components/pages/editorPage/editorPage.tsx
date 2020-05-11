@@ -68,6 +68,11 @@ export interface IEditorPageProps extends RouteComponentProps, React.Props<Edito
     trackingActions: ITrackingActions;
 }
 
+const EnpointType = {
+    REGULAR: 0,
+    ADMIN: 1
+};
+
 /**
  * State for Editor Page
  */
@@ -107,6 +112,7 @@ export interface IEditorPageState {
     pressedKeys: number[];
     images: IImageWithAction[];
     imageNumber: number;
+    endpointType: number;
 }
 
 function mapStateToProps(state: IApplicationState) {
@@ -153,7 +159,8 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         litters: [],
         pressedKeys: [],
         images: [],
-        imageNumber: 20
+        imageNumber: 20,
+        endpointType: EnpointType.REGULAR
     };
 
     private activeLearningService: ActiveLearningService = null;
@@ -196,9 +203,12 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         this.props.actions.saveProjectImages(images);
     };
 
-    public async componentDidUpdate(prevProps: Readonly<IEditorPageProps>) {
-        if (this.props.project && this.state.assets.length === 0) {
-            await this.loadProjectAssets();
+    public async componentDidUpdate(prevProps: Readonly<IEditorPageProps>, prevState: IEditorPageState) {
+        if (
+            this.state.endpointType !== prevState.endpointType ||
+            (this.props.project && this.state.assets.length === 0)
+        ) {
+            await this.loadProjectAssets(false, true);
         }
 
         // Navigating directly to the page via URL (ie, http://vott/projects/a1b2c3dEf/edit) sets the default state
@@ -219,7 +229,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
 
     public render() {
         const { project } = this.props;
-        const { assets, selectedAsset } = this.state;
+        const { assets, selectedAsset, endpointType } = this.state;
         const rootAssets = assets.filter(asset => !asset.parent);
 
         if (!project) {
@@ -279,6 +289,9 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                                     actions={this.props.actions}
                                     onToolbarItemSelected={this.onToolbarItemSelected}
                                     setImageNumber={this.onChangeImageNumber}
+                                    isAdmin={this.props.auth.isAdmin}
+                                    onEndpointTypeChange={this.handleEndpointTypeChange}
+                                    endpointType={endpointType}
                                 />
                             </div>
                             <div className="editor-page-content-main-body">
@@ -372,6 +385,11 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             </div>
         );
     }
+
+    private handleEndpointTypeChange = (event: any) => {
+        const endpointType: number = Number(event.target.value);
+        this.setState({ endpointType });
+    };
 
     private closeNativeMagnifierModal = () => {
         this.setState({
@@ -853,15 +871,23 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         return selectedAssetBase.regions.length !== selectedAsset.regions.length || !!modifiedAssets.length;
     };
 
-    private loadProjectAssets = async (forceLoad: boolean = false): Promise<void> => {
-        if (this.loadingProjectAssets || (!forceLoad && this.state.assets.length > 0)) {
+    private loadProjectAssets = async (
+        forceLoad: boolean = false,
+        hasEnpointTypeChanged: boolean = false
+    ): Promise<void> => {
+        if (this.loadingProjectAssets || (!forceLoad && this.state.assets.length > 0 && !hasEnpointTypeChanged)) {
             return;
         }
 
         this.loadingProjectAssets = true;
+        let images;
 
         // Get all root assets from source asset provider
-        const images = await apiService.getImagesFromDispatcher(this.state.imageNumber);
+        if (this.state.endpointType === EnpointType.REGULAR) {
+            images = await apiService.getImagesFromDispatcher(this.state.imageNumber);
+        } else if (this.state.endpointType === EnpointType.ADMIN) {
+            images = await apiService.getImagesForQualityControl(this.state.imageNumber);
+        }
         this.saveImages(images.data);
         this.setState({ images: images.data });
         const sourceAssets = await this.props.actions.loadAssets(this.props.project);
