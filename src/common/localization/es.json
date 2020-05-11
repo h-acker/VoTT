@@ -233,7 +233,8 @@
             "reloadImages": "Recargar imágenes",
             "admin": "Admin",
             "regular": "Regular",
-            "chooseEndpoint": "Choose endpoint"
+            "chooseEndpoint": "Choose endpoint",
+            "buildIdl": "Crear IDL"
         },
         "videoPlayer": {
             "previousTaggedFrame": {

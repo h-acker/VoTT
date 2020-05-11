@@ -116,6 +116,10 @@ export class ApiService implements IApiService {
         return this.client.put(`${Api.QualityControl}?limit=${limit}${targetPathParameter}`, { limit });
     };
 
+    public buildIdl = (imageNames: string[]): AxiosPromise<IImageWithAction[]> => {
+        return this.client.put(`${Api.BuildIdl}`, imageNames);
+    };
+
     public getImageWithLastAction = (): AxiosPromise<IImageWithAction[]> => {
         return this.client.get(Api.ImagesWithLastAction);
     };

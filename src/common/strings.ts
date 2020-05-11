@@ -242,6 +242,7 @@ export interface IAppStrings {
             chooseEndpoint: string;
             regular: string;
             admin: string;
+            buildIdl: string;
         };
         videoPlayer: {
             nextTaggedFrame: {

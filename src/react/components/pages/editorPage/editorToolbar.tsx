@@ -7,6 +7,7 @@ import { IToolbarItemProps, ToolbarItem, ToolbarItemType } from "../../toolbar/t
 import "./editorToolbar.scss";
 import { ToolbarItemName } from "../../../../registerToolbar";
 import { strings } from "../../../../common/strings";
+import { Button } from 'reactstrap'
 
 /**
  * Properties for Editor Toolbar
@@ -23,6 +24,7 @@ export interface IEditorToolbarProps {
     isAdmin: boolean;
     endpointType: number;
     onEndpointTypeChange: (event: any) => void;
+    onBuildIdlButtonClick: () => void;
 }
 
 /**
@@ -92,6 +94,14 @@ export class EditorToolbar extends React.Component<IEditorToolbarProps, IEditorT
                             <option value={0}>{strings.editorPage.toolbar.regular}</option>
                             <option value={1}>{strings.editorPage.toolbar.admin}</option>
                         </select>
+                    </div>
+                )}
+                {this.props.isAdmin && (
+                    <div style={{ marginLeft: 10 }}>
+                        <Button
+                            color={"primary"}
+                            onClick={this.props.onBuildIdlButtonClick}>{strings.editorPage.toolbar.buildIdl}
+                        </Button>
                     </div>
                 )}
             </div>
