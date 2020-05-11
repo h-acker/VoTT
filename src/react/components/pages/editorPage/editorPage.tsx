@@ -416,8 +416,8 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             const object = { ...item };
             return object.basename;
         });
-        await apiService.buildIdl(imageNames)
-    }
+        await apiService.buildIdl(imageNames);
+    };
 
     /**
      * Called when the asset side bar is resized
