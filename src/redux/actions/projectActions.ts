@@ -45,7 +45,7 @@ export default interface IProjectActions {
  */
 export function loadProject(
     project: IProject,
-    buildTagsRequired: boolean = true,
+    buildTagsRequired: boolean = true
 ): (dispatch: Dispatch, getState: () => IApplicationState) => Promise<IProject> {
     return async (dispatch: Dispatch, getState: () => IApplicationState) => {
         const appState = getState();

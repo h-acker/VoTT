@@ -57,19 +57,23 @@ export default class ProjectService implements IProjectService {
      * @param securityToken The security token used to decrypt sensitive project settings
      * @param buildTagsRequired If project is loaded for the first time, tags need to be built
      */
-    public async load(project: IProject, securityToken: ISecurityToken, buildTagsRequired: boolean = true): Promise<IProject> {
+    public async load(
+        project: IProject,
+        securityToken: ISecurityToken,
+        buildTagsRequired: boolean = true
+    ): Promise<IProject> {
         Guard.null(project);
 
         try {
             const loadedProject = decryptProject(project, securityToken);
-            if(buildTagsRequired){
-               try {
-                const litters = await apiService.getLitters();
-                loadedProject.tags = buildTags(litters.data);
+            if (buildTagsRequired) {
+                try {
+                    const litters = await apiService.getLitters();
+                    loadedProject.tags = buildTags(litters.data);
                 } catch (e) {
                     console.warn(strings.consoleMessages.getLitterFailed);
                     return Promise.reject();
-                } 
+                }
             }
 
             // Initialize active learning settings if they don't exist
