@@ -622,7 +622,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             await this.props.actions.saveAssetMetadata(this.props.project, assetMetadata, tagsWithId);
         }
 
-        await this.props.actions.saveProject(this.props.project);
+        await this.props.actions.saveProject(this.props.project, false);
 
         const assetService = new AssetService(this.props.project);
         const childAssets = assetService.getChildAssets(rootAsset);
@@ -662,7 +662,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             tags
         };
 
-        await this.props.actions.saveProject(project);
+        await this.props.actions.saveProject(project, false);
     };
 
     private onLockedTagsChanged = (lockedTags: string[]) => {

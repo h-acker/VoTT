@@ -22,8 +22,8 @@ import { IImageWithAction } from "../../services/apiService";
  * Actions to be performed in relation to projects
  */
 export default interface IProjectActions {
-    loadProject(project: IProject): Promise<IProject>;
-    saveProject(project: IProject): Promise<IProject>;
+    loadProject(project: IProject, buildTagsRequired?: boolean): Promise<IProject>;
+    saveProject(project: IProject, buildTagsRequired?: boolean): Promise<IProject>;
     deleteProject(project: IProject): Promise<void>;
     closeProject(): void;
     exportProject(project: IProject): Promise<void> | Promise<IExportResults>;
@@ -44,7 +44,8 @@ export default interface IProjectActions {
  * @param project - Project to load
  */
 export function loadProject(
-    project: IProject
+    project: IProject,
+    buildTagsRequired: boolean = true,
 ): (dispatch: Dispatch, getState: () => IApplicationState) => Promise<IProject> {
     return async (dispatch: Dispatch, getState: () => IApplicationState) => {
         const appState = getState();
@@ -59,7 +60,7 @@ export function loadProject(
             throw new AppError(ErrorCode.SecurityTokenNotFound, "Security Token Not Found");
         }
 
-        const loadedProject = await projectService.load(project, projectToken);
+        const loadedProject = await projectService.load(project, projectToken, buildTagsRequired);
         dispatch(loadProjectAction(loadedProject));
         return loadedProject;
     };
@@ -70,7 +71,8 @@ export function loadProject(
  * @param project - Project to save
  */
 export function saveProject(
-    project: IProject
+    project: IProject,
+    buildTagsRequired: boolean = true
 ): (dispatch: Dispatch, getState: () => IApplicationState) => Promise<IProject> {
     return async (dispatch: Dispatch, getState: () => IApplicationState) => {
         const appState = getState();
@@ -97,7 +99,7 @@ export function saveProject(
 
         // Reload project after save actions
         try {
-            await loadProject(savedProject)(dispatch, getState);
+            await loadProject(savedProject, buildTagsRequired)(dispatch, getState);
         } catch (e) {
             console.warn("Could not load project (on save project)");
         }

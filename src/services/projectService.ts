@@ -26,7 +26,7 @@ import { strings } from "../common/strings";
  * @member delete - Delete a project
  */
 export interface IProjectService {
-    load(project: IProject, securityToken: ISecurityToken): Promise<IProject>;
+    load(project: IProject, securityToken: ISecurityToken, buildTagsRequired?: boolean): Promise<IProject>;
     save(project: IProject, securityToken: ISecurityToken): Promise<IProject>;
     delete(project: IProject): Promise<void>;
     isDuplicate(project: IProject, projectList: IProject[]): boolean;
@@ -55,19 +55,21 @@ export default class ProjectService implements IProjectService {
      * Loads a project
      * @param project The project JSON to load
      * @param securityToken The security token used to decrypt sensitive project settings
+     * @param buildTagsRequired If project is loaded for the first time, tags need to be built
      */
-    public async load(project: IProject, securityToken: ISecurityToken): Promise<IProject> {
+    public async load(project: IProject, securityToken: ISecurityToken, buildTagsRequired: boolean = true): Promise<IProject> {
         Guard.null(project);
 
         try {
             const loadedProject = decryptProject(project, securityToken);
-
-            try {
+            if(buildTagsRequired){
+               try {
                 const litters = await apiService.getLitters();
                 loadedProject.tags = buildTags(litters.data);
-            } catch (e) {
-                console.warn(strings.consoleMessages.getLitterFailed);
-                return Promise.reject();
+                } catch (e) {
+                    console.warn(strings.consoleMessages.getLitterFailed);
+                    return Promise.reject();
+                } 
             }
 
             // Initialize active learning settings if they don't exist
