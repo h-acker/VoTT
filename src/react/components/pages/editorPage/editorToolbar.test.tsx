@@ -29,7 +29,7 @@ describe("Editor Toolbar", () => {
             isAdmin: true,
             endpointType: 1,
             onEndpointTypeChange: (event: any) => null,
-            onBuildIdlButtonClick: () => null,
+            onBuildIdlButtonClick: () => null
         };
     }
 
