@@ -292,6 +292,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                                     isAdmin={this.props.auth.isAdmin}
                                     onEndpointTypeChange={this.handleEndpointTypeChange}
                                     endpointType={endpointType}
+                                    onBuildIdlButtonClick={this.onBuildIdlButtonClick}
                                 />
                             </div>
                             <div className="editor-page-content-main-body">
@@ -407,6 +408,15 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         this.setState({
             selectedRegions: []
         });
+    };
+
+    private onBuildIdlButtonClick = async () => {
+        const images = [...this.state.images];
+        const imageNames = images.map(item => {
+            const object = { ...item };
+            return object.basename;
+        });
+        await apiService.buildIdl(imageNames);
     };
 
     /**
