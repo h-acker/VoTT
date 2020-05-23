@@ -379,7 +379,7 @@ export enum AssetType {
 export enum AssetState {
     NotVisited = 0,
     Visited = 1,
-    Tagged = 2,
+    Tagged = 2
 }
 /**
  * @name - Image State
@@ -389,9 +389,8 @@ export enum AssetState {
  */
 export enum ImageState {
     Deleted = 0,
-    Validated = 1,
+    Validated = 1
 }
-
 
 /**
  * @name - Region Type
