@@ -290,6 +290,16 @@ canvas {
   text-shadow: 0px 0px 4px #000;
 }
 
+.badge-deleted,
+.badge-validated {
+    color: #fff;
+    position: absolute;
+    z-index: 2;
+    left: 0.5em;
+    top: 0.5em;
+    text-shadow: 0px 0px 4px #000;
+}
+
 .badge-tagged {
   background-color: rgba(green, 0.9);
   border: 1px solid $lighter-2;
@@ -298,6 +308,16 @@ canvas {
 .badge-visited {
   background-color: rgba(darkorange, 0.9);
   border: 1px solid $lighter-3;
+}
+
+.badge-deleted {
+  background-color: rgba(red, 0.9);
+  border: 1px solid $lighter-2;
+}
+
+.badge-validated {
+  background-color: rgba(blue, 0.9);
+  border: 1px solid $lighter-2;
 }
 
 .Resizer {

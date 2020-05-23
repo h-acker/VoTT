@@ -54,6 +54,7 @@ export interface IImage {
     type: number;
     state: number;
     is_deleted: boolean;
+    is_validated: boolean;
     tagger_id: number;
     basename: string;
 }

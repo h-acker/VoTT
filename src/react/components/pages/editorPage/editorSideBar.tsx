@@ -1,8 +1,10 @@
 import React from "react";
 import { AutoSizer, List } from "react-virtualized";
-import { IAsset, AssetState, ISize } from "../../../../models/applicationState";
+import { IAsset, AssetState, ImageState, ISize } from "../../../../models/applicationState";
 import { AssetPreview } from "../../common/assetPreview/assetPreview";
 import { strings } from "../../../../common/strings";
+import { IImageWithAction } from "../../../../services/apiService";
+import { EnpointType } from '../editorPage/editorPage'
 
 /**
  * Properties for Editor Side Bar
@@ -13,10 +15,12 @@ import { strings } from "../../../../common/strings";
  */
 export interface IEditorSideBarProps {
     assets: IAsset[];
+    images: IImageWithAction[];
     onAssetSelected: (asset: IAsset) => void;
     onBeforeAssetSelected?: () => boolean;
     selectedAsset?: IAsset;
     thumbnailSize?: ISize;
+    endpointType: number;
 }
 
 /**
@@ -104,6 +108,7 @@ export default class EditorSideBar extends React.Component<IEditorSideBarProps, 
 
     private rowRenderer = ({ key, index, style }): JSX.Element => {
         const asset = this.props.assets[index];
+        const image = this.props.images.filter(image => image.basename === asset.name)[0];
         const selectedAsset = this.props.selectedAsset;
 
         return (
@@ -112,6 +117,7 @@ export default class EditorSideBar extends React.Component<IEditorSideBarProps, 
                 onClick={() => this.onAssetClicked(asset)}>
                 <div className="asset-item-image">
                     {this.renderBadges(asset)}
+                    {image && this.props.endpointType === EnpointType.ADMIN && this.renderBadgesFromImageState(image)}
                     <AssetPreview asset={asset} />
                 </div>
                 <div className="asset-item-metadata">
@@ -146,6 +152,27 @@ export default class EditorSideBar extends React.Component<IEditorSideBarProps, 
                 return null;
         }
     }
+
+    private renderBadgesFromImageState = (image: IImageWithAction): JSX.Element => {
+       if(image.is_deleted){
+           return (
+                    <span title={strings.editorPage.visited}
+                        className="badge badge-deleted">
+                        <i className="far fa-trash-alt"></i>
+                    </span>
+                )
+       }else if(image.is_validated){
+           return (
+                    <span title={strings.editorPage.visited}
+                        className="badge badge-validated">
+                        <i className="far fa-check-circle"></i>
+                    </span>
+                );
+           }
+        else{
+            return null;
+        }
+        }
 
     private getAssetCssClassNames = (asset: IAsset, selectedAsset: IAsset = null): string => {
         const cssClasses = ["asset-item"];
