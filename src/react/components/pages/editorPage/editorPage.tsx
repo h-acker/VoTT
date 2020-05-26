@@ -292,6 +292,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                                     isAdmin={this.props.auth.isAdmin}
                                     onEndpointTypeChange={this.handleEndpointTypeChange}
                                     endpointType={endpointType}
+                                    onBuildIdlButtonClick={this.onBuildIdlButtonClick}
                                 />
                             </div>
                             <div className="editor-page-content-main-body">
@@ -407,6 +408,15 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         this.setState({
             selectedRegions: []
         });
+    };
+
+    private onBuildIdlButtonClick = async () => {
+        const images = [...this.state.images];
+        const imageNames = images.map(item => {
+            const object = { ...item };
+            return object.basename;
+        });
+        await apiService.buildIdl(imageNames);
     };
 
     /**
@@ -622,7 +632,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             await this.props.actions.saveAssetMetadata(this.props.project, assetMetadata, tagsWithId);
         }
 
-        await this.props.actions.saveProject(this.props.project);
+        await this.props.actions.saveProject(this.props.project, false);
 
         const assetService = new AssetService(this.props.project);
         const childAssets = assetService.getChildAssets(rootAsset);
@@ -662,7 +672,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             tags
         };
 
-        await this.props.actions.saveProject(project);
+        await this.props.actions.saveProject(project, false);
     };
 
     private onLockedTagsChanged = (lockedTags: string[]) => {
