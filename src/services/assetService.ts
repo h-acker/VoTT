@@ -189,9 +189,8 @@ export class AssetService {
     public async getAssetMetadata(asset: IAsset): Promise<IAssetMetadata> {
         Guard.null(asset);
 
-        const fileName = `${asset.id}${constants.assetMetadataFileExtension}`;
         try {
-            const json = await this.storageProvider.readText(fileName);
+            const json = await this.storageProvider.readText(asset.name);
             return JSON.parse(json) as IAssetMetadata;
         } catch (err) {
             if (asset.type === AssetType.TFRecord) {

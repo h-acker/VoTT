@@ -4,8 +4,6 @@ import { AssetService } from "../../services/assetService";
 import { IImageWithAction } from "../../services/apiService";
 import { appInfo } from "../../common/appInfo";
 import { store } from "../../redux/store/store";
-import MD5 from "md5.js";
-import { constants } from "../../common/constants";
 
 export class CortexiaApi implements IStorageProvider {
     /**
@@ -18,16 +16,12 @@ export class CortexiaApi implements IStorageProvider {
      * @description - Gets images with the provider and returns stringified asset metadata.
      * @param filePath
      */
-    public async readText(filePath: string): Promise<string> {
+    public async readText(basename: string): Promise<string> {
         const appStore = store.getState();
         const images = appStore.currentProject.images;
-        const imagesActionList = images.filter((item: IImageWithAction) => {
-            return `${new MD5().update(item.path).digest("hex")}${constants.assetMetadataFileExtension}` === filePath;
-        });
-        const lastImage = imagesActionList[imagesActionList.length - 1];
-        const url = lastImage.path;
-        const asset = AssetService.createAssetFromFilePath(url, this.getFileName(url));
-        return Promise.resolve(JSON.stringify(this.createAssetMetadata(lastImage.last_action.regions, asset)));
+        const currentImage = images.find((item: IImageWithAction) => item.basename === basename);
+        const asset = AssetService.createAssetFromFilePath(currentImage.path, this.getFileName(currentImage.path));
+        return Promise.resolve(JSON.stringify(this.createAssetMetadata(currentImage.last_action.regions, asset)));
     }
 
     /**
