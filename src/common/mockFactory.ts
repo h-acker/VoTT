@@ -525,6 +525,7 @@ export default class MockFactory {
                 type: 1,
                 state: 1,
                 is_deleted: false,
+                is_validated: false,
                 tagger_id: 1,
                 basename: "",
                 last_action: {
