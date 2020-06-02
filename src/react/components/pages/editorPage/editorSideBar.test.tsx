@@ -16,6 +16,8 @@ describe("Editor SideBar", () => {
         const props: IEditorSideBarProps = {
             assets: testAssets,
             onAssetSelected: onSelectAssetHandler,
+            images: [],
+            endpointType: 0,
         };
 
         const wrapper = createComponent(props);
@@ -28,6 +30,8 @@ describe("Editor SideBar", () => {
         const props: IEditorSideBarProps = {
             assets: testAssets,
             onAssetSelected: onSelectAssetHandler,
+            images: [],
+            endpointType: 0,
         };
 
         const wrapper = createComponent(props);
@@ -42,6 +46,8 @@ describe("Editor SideBar", () => {
             assets: testAssets,
             selectedAsset: testAssets[selectedAssetIndex],
             onAssetSelected: onSelectAssetHandler,
+            images: [],
+            endpointType: 0,
         };
 
         const wrapper = createComponent(props);
@@ -54,6 +60,8 @@ describe("Editor SideBar", () => {
             assets: testAssets,
             selectedAsset: null,
             onAssetSelected: onSelectAssetHandler,
+            images: [],
+            endpointType: 0,
         };
 
         const wrapper = createComponent(props);
@@ -77,6 +85,8 @@ describe("Editor SideBar", () => {
             assets: testAssets,
             selectedAsset: testAssets[0],
             onAssetSelected: onSelectAssetHandler,
+            images: [],
+            endpointType: 0,
         };
 
         const wrapper = createComponent(props);
@@ -114,6 +124,8 @@ describe("Editor SideBar", () => {
                 width: 175,
                 height: 155,
             },
+            images: [],
+            endpointType: 0,
         };
 
         const wrapper = createComponent(props);
