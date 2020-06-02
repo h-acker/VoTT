@@ -17,7 +17,7 @@ describe("Editor SideBar", () => {
             assets: testAssets,
             onAssetSelected: onSelectAssetHandler,
             images: [],
-            endpointType: 0,
+            endpointType: 0
         };
 
         const wrapper = createComponent(props);
@@ -31,7 +31,7 @@ describe("Editor SideBar", () => {
             assets: testAssets,
             onAssetSelected: onSelectAssetHandler,
             images: [],
-            endpointType: 0,
+            endpointType: 0
         };
 
         const wrapper = createComponent(props);
@@ -47,7 +47,7 @@ describe("Editor SideBar", () => {
             selectedAsset: testAssets[selectedAssetIndex],
             onAssetSelected: onSelectAssetHandler,
             images: [],
-            endpointType: 0,
+            endpointType: 0
         };
 
         const wrapper = createComponent(props);
@@ -55,20 +55,20 @@ describe("Editor SideBar", () => {
         expect(wrapper.state().scrollToIndex).toBe(selectedAssetIndex);
     });
 
-    it("Updates states after props have changed", (done) => {
+    it("Updates states after props have changed", done => {
         const props: IEditorSideBarProps = {
             assets: testAssets,
             selectedAsset: null,
             onAssetSelected: onSelectAssetHandler,
             images: [],
-            endpointType: 0,
+            endpointType: 0
         };
 
         const wrapper = createComponent(props);
 
         const selectedAssetIndex = 3;
         wrapper.setProps({
-            selectedAsset: testAssets[selectedAssetIndex],
+            selectedAsset: testAssets[selectedAssetIndex]
         });
 
         setImmediate(() => {
@@ -86,7 +86,7 @@ describe("Editor SideBar", () => {
             selectedAsset: testAssets[0],
             onAssetSelected: onSelectAssetHandler,
             images: [],
-            endpointType: 0,
+            endpointType: 0
         };
 
         const wrapper = createComponent(props);
@@ -94,7 +94,7 @@ describe("Editor SideBar", () => {
         // first props update
         const firstUpdate = testAssets[6];
         wrapper.setProps({
-            selectedAsset: firstUpdate,
+            selectedAsset: firstUpdate
         });
 
         await MockFactory.flushUi();
@@ -106,7 +106,7 @@ describe("Editor SideBar", () => {
         // second props update
         const secondUpdate = testAssets[3];
         wrapper.setProps({
-            selectedAsset: secondUpdate,
+            selectedAsset: secondUpdate
         });
 
         await MockFactory.flushUi();
@@ -122,10 +122,10 @@ describe("Editor SideBar", () => {
             onAssetSelected: onSelectAssetHandler,
             thumbnailSize: {
                 width: 175,
-                height: 155,
+                height: 155
             },
             images: [],
-            endpointType: 0,
+            endpointType: 0
         };
 
         const wrapper = createComponent(props);
@@ -135,8 +135,8 @@ describe("Editor SideBar", () => {
         wrapper.setProps({
             thumbnailSize: {
                 width: 300,
-                height: 200,
-            },
+                height: 200
+            }
         });
 
         expect(recomputeRowHeightsSpy).toBeCalled();
