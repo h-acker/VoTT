@@ -68,7 +68,7 @@ export interface IEditorPageProps extends RouteComponentProps, React.Props<Edito
     trackingActions: ITrackingActions;
 }
 
-const EnpointType = {
+export const EnpointType = {
     REGULAR: 0,
     ADMIN: 1
 };
@@ -274,6 +274,8 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                     <div className="editor-page-sidebar bg-lighter-1">
                         <EditorSideBar
                             assets={rootAssets}
+                            images={this.state.images}
+                            endpointType={endpointType}
                             selectedAsset={selectedAsset ? selectedAsset.asset : null}
                             onBeforeAssetSelected={this.onBeforeAssetSelected}
                             onAssetSelected={this.selectAsset}
