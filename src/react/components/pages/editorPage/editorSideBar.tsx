@@ -21,6 +21,7 @@ export interface IEditorSideBarProps {
     selectedAsset?: IAsset;
     thumbnailSize?: ISize;
     endpointType: number;
+    isAdmin: boolean;
 }
 
 /**
@@ -125,7 +126,7 @@ export default class EditorSideBar extends React.Component<IEditorSideBarProps, 
             >
                 <div className="asset-item-image">
                     {this.renderBadges(asset)}
-                    {image && this.props.endpointType === EnpointType.ADMIN && this.renderBadgesFromImageState(image)}
+                    {image && this.props.isAdmin === true && this.renderBadgesFromImageState(image)}
                     <AssetPreview asset={asset} />
                 </div>
                 <div className="asset-item-metadata">

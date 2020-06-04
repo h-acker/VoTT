@@ -285,7 +285,8 @@
             "reload": {
                 "title": "Comenzando nueva sesión",
                 "confirmation": "Confirma que desea iniciar una nueva sesión"
-            }
+            },
+            "buildIdlSuccess": "IDL construido correctamente"
         },
         "deletePictureError": "Se produjo un error al eliminar la imagen. Es posible que no tenga la autorización para eliminarlo."
     },

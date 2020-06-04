@@ -276,6 +276,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                             assets={rootAssets}
                             images={this.state.images}
                             endpointType={endpointType}
+                            isAdmin={this.props.auth.isAdmin}
                             selectedAsset={selectedAsset ? selectedAsset.asset : null}
                             onBeforeAssetSelected={this.onBeforeAssetSelected}
                             onAssetSelected={this.selectAsset}
@@ -294,7 +295,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                                     isAdmin={this.props.auth.isAdmin}
                                     onEndpointTypeChange={this.handleEndpointTypeChange}
                                     endpointType={endpointType}
-                                    onBuildIdlButtonClick={this.onBuildIdlButtonClick}
+                                    onBuildIdlButtonClick={this.onConfirmBuildIdl}
                                 />
                             </div>
                             <div className="editor-page-content-main-body">
@@ -412,15 +413,20 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         });
     };
 
-    private onBuildIdlButtonClick = async () => {
+    private onConfirmBuildIdl = async () => {
         const images = [...this.state.images];
         const imageNames = images.map(item => {
             const object = { ...item };
             return object.basename;
         });
         await apiService.buildIdl(imageNames);
-    };
+        await this.loadProjectAssets(true).then(() => {
+            this.forceUpdate();
+            toast.success("Successfully built IDL!", { position: toast.POSITION.TOP_CENTER });
+        });
+    }
 
+    
     /**
      * Called when the asset side bar is resized
      * @param newWidth The new sidebar width

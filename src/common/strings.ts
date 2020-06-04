@@ -294,6 +294,7 @@ export interface IAppStrings {
                 title: string;
                 confirmation: string;
             };
+            buildIdlSuccess: string;
         };
         deletePictureError: string;
     };

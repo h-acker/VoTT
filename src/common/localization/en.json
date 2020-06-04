@@ -285,7 +285,8 @@
             "reload": {
                 "title": "Starting new session",
                 "confirmation": "Please confirm that you want to start a new session"
-            }
+            },
+            "buildIdlSuccess": "Successfully built IDL"
         },
         "deletePictureError": "There was an error while deleting the image. You might not have the authorization to delete it."
     },
