@@ -424,9 +424,8 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             this.forceUpdate();
             toast.success("Successfully built IDL!", { position: toast.POSITION.TOP_CENTER });
         });
-    }
+    };
 
-    
     /**
      * Called when the asset side bar is resized
      * @param newWidth The new sidebar width
