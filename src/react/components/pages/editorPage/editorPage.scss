@@ -290,12 +290,24 @@ canvas {
   text-shadow: 0px 0px 4px #000;
 }
 
-.badge-deleted,
-.badge-validated {
+.badge-deleted {
     color: #fff;
     position: absolute;
     z-index: 2;
     left: 0.5em;
+    top: 0.5em;
+    text-shadow: 0px 0px 4px #000;
+}
+
+.badge-off {
+    opacity: 30%;
+}
+
+.badge-validated {
+    color: #fff;
+    position: absolute;
+    z-index: 2;
+    left: 3em;
     top: 0.5em;
     text-shadow: 0px 0px 4px #000;
 }

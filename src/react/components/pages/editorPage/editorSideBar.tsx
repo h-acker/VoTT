@@ -160,24 +160,19 @@ export default class EditorSideBar extends React.Component<IEditorSideBarProps, 
             default:
                 return null;
         }
-    };
+    }
 
     private renderBadgesFromImageState = (image: IImageWithAction): JSX.Element => {
-        if (image.is_deleted) {
-            return (
-                <span title={strings.editorPage.visited} className="badge badge-deleted">
+        return (
+            <>
+                <span title={strings.editorPage.visited} className={image.is_deleted?"badge badge-deleted":"badge badge-deleted badge-off"}>
                     <i className="far fa-trash-alt"></i>
                 </span>
-            );
-        } else if (image.is_validated) {
-            return (
-                <span title={strings.editorPage.visited} className="badge badge-validated">
+                <span title={strings.editorPage.visited} className={image.is_validated?"badge badge-validated":"badge badge-validated badge-off"}>
                     <i className="far fa-check-circle"></i>
                 </span>
-            );
-        } else {
-            return null;
-        }
+            </>
+        )
     };
 
     private getAssetCssClassNames = (asset: IAsset, selectedAsset: IAsset = null): string => {
