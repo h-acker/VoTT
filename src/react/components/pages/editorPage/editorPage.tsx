@@ -269,7 +269,8 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                             onBeforeAssetSelected={this.onBeforeAssetSelected}
                             onAssetSelected={this.selectAsset}
                             onSendButtonPressed={this.onSendButtonPressed}
-                            onDelButtonPressed={this.handleDeletePictureClick}
+                            onDelButtonPressed={this.onDelete}
+                            onValidateButtonPressed={this.onValidate}
                             thumbnailSize={this.state.thumbnailSize}
                         />
                     </div>
@@ -716,7 +717,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                 this.showNativeMagnifierModal();
                 break;
             case ToolbarItemName.DeletePicture:
-                this.handleDeletePictureClick();
+                this.handleDeletePictureClick(true);
                 break;
             case ToolbarItemName.ReloadImages:
                 this.handleReloadImagesClick();
@@ -810,6 +811,33 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         }
     }
 
+
+    /**
+     * Calls validate image api and update image list
+     */ 
+    private onValidate = async (isValidated: boolean): Promise<void> => {
+        const { selectedAsset } = this.state;
+        if (selectedAsset && selectedAsset.asset) {
+            if (selectedAsset && selectedAsset.asset) {
+                const name = selectedAsset.asset.name;
+                const image = await apiService.validateImage(isValidated, name)
+                const images = [...this.state.images];
+                const changedImages = images.map(item => {
+                    const object = { ...item };
+                    if (object.basename === name) {
+                        return image.data;
+                    }
+                    return object;
+                });
+                this.setState({
+                    images: changedImages
+                });
+                this.saveImages(changedImages);
+                this.forceUpdate();
+            }
+        }
+    };
+
     private onSendButtonPressed = async (): Promise<void> => {
         // if all regions have been tagged
         if (this.onBeforeAssetSelected) {
@@ -825,22 +853,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                     );
                     // if admin we update the bagdes, else we juste remove the image
                     if (this.props.auth.isAdmin) {
-                        if (selectedAsset && selectedAsset.asset) {
-                            const name = selectedAsset.asset.name;
-                            const images = [...this.state.images];
-                            const changedImages = images.map(item => {
-                                const object = { ...item };
-                                if (object.basename === name) {
-                                    object.is_validated = true;
-                                }
-                                return object;
-                            });
-                            this.setState({
-                                images: changedImages
-                            });
-                            this.saveImages(changedImages);
-                            this.forceUpdate();
-                        }
+                        this.onValidate(true)
                     } else {
                         this.deletePicture();
                     }
@@ -991,27 +1004,36 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         this.reloadImagesConfirm.current.open();
     }
 
-    private handleDeletePictureClick = async () => {
+    /**
+     * Calls delete image api and update image list
+     */ 
+    private onDelete = async (isDeleted?: boolean) => {
+        const { selectedAsset } = this.state;
+        const image = await apiService.deleteImage(isDeleted, selectedAsset.asset.name)
+        if (selectedAsset && selectedAsset.asset) {
+            const name = selectedAsset.asset.name;
+            const images = [...this.state.images];
+            const changedImages = images.map(item => {
+                const object = { ...item };
+                if (object.basename === name) {
+                    return image.data
+                }
+                return object;
+            });
+            this.setState({
+                images: changedImages
+            });
+            this.saveImages(changedImages);
+            this.forceUpdate();
+        }
+    }
+
+    private handleDeletePictureClick = async (isDeleted?: boolean) => {
         const { selectedAsset } = this.state;
         const { auth, trackingActions } = this.props;
         await trackingActions.trackingImgDelete(auth.userId, selectedAsset.asset.name);
         if (this.props.auth.isAdmin) {
-            if (selectedAsset && selectedAsset.asset) {
-                const name = selectedAsset.asset.name;
-                const images = [...this.state.images];
-                const changedImages = images.map(item => {
-                    const object = { ...item };
-                    if (object.basename === name) {
-                        object.is_deleted = true;
-                    }
-                    return object;
-                });
-                this.setState({
-                    images: changedImages
-                });
-                this.saveImages(changedImages);
-                this.forceUpdate();
-            }
+            this.onDelete(true)
         } else {
             this.deletePicture();
         }

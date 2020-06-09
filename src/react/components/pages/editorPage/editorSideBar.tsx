@@ -18,7 +18,8 @@ export interface IEditorSideBarProps {
     onAssetSelected: (asset: IAsset) => void;
     onBeforeAssetSelected?: () => boolean;
     onSendButtonPressed: () => void;
-    onDelButtonPressed: () => void;
+    onDelButtonPressed: (isDeleted: boolean) => void;
+    onValidateButtonPressed: (isValidated: boolean) => void;
     selectedAsset?: IAsset;
     thumbnailSize?: ISize;
     endpointType: number;
@@ -167,13 +168,14 @@ export default class EditorSideBar extends React.Component<IEditorSideBarProps, 
     private renderBadgesFromImageState = (image: IImageWithAction): JSX.Element => {
         return (
             <>
-                <button className={image.is_deleted ? "badge badge-deleted" : "badge badge-deleted badge-off"}
-                    onClick={this.props.onDelButtonPressed}>
+                <button
+                    className={image.is_deleted ? "badge badge-deleted" : "badge badge-deleted badge-off"}
+                    onClick={() => this.props.onDelButtonPressed(!image.is_deleted)}
+                >
                     <i className="far fa-trash-alt"></i>
                 </button>
-                <button className={image.is_validated ? "badge badge-validated" : "badge badge-validated badge-off"}
-                    >
-                    <i className="far fa-check-circle"></i>
+                <button className={image.is_validated ? "badge badge-validated" : "badge badge-validated badge-off"}>
+                    <i className="far fa-check-circle" onClick={() => this.props.onValidateButtonPressed(!image.is_validated)}></i>
                 </button>
             </>
         );

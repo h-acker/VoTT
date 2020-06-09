@@ -19,7 +19,7 @@ export interface ITrackingAction {
  */
 export enum TrackingActionType {
     ImgIn = "img_in",
-    ImgOut = "img_out",
+    ImgOut = "img_validate",
     ImgDelete = "img_delete",
     SignOut = "logout",
     SignIn = "login"
