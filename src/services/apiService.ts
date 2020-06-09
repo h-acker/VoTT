@@ -128,7 +128,6 @@ export class ApiService implements IApiService {
         return this.client.put(`${Api.DeleteImage}${imageBasename}?is_deleted=${isDeleted}`);
     };
 
-
     public getImageWithLastAction = (): AxiosPromise<IImageWithAction[]> => {
         return this.client.get(Api.ImagesWithLastAction);
     };

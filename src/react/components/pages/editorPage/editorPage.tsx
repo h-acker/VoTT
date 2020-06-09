@@ -811,16 +811,16 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         }
     }
 
-
     /**
      * Calls validate image api and update image list
-     */ 
+     */
+
     private onValidate = async (isValidated: boolean): Promise<void> => {
         const { selectedAsset } = this.state;
         if (selectedAsset && selectedAsset.asset) {
             if (selectedAsset && selectedAsset.asset) {
                 const name = selectedAsset.asset.name;
-                const image = await apiService.validateImage(isValidated, name)
+                const image = await apiService.validateImage(isValidated, name);
                 const images = [...this.state.images];
                 const changedImages = images.map(item => {
                     const object = { ...item };
@@ -853,7 +853,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                     );
                     // if admin we update the bagdes, else we juste remove the image
                     if (this.props.auth.isAdmin) {
-                        this.onValidate(true)
+                        this.onValidate(true);
                     } else {
                         this.deletePicture();
                     }
@@ -1006,17 +1006,18 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
 
     /**
      * Calls delete image api and update image list
-     */ 
+     */
+
     private onDelete = async (isDeleted?: boolean) => {
         const { selectedAsset } = this.state;
-        const image = await apiService.deleteImage(isDeleted, selectedAsset.asset.name)
+        const image = await apiService.deleteImage(isDeleted, selectedAsset.asset.name);
         if (selectedAsset && selectedAsset.asset) {
             const name = selectedAsset.asset.name;
             const images = [...this.state.images];
             const changedImages = images.map(item => {
                 const object = { ...item };
                 if (object.basename === name) {
-                    return image.data
+                    return image.data;
                 }
                 return object;
             });
@@ -1026,14 +1027,14 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             this.saveImages(changedImages);
             this.forceUpdate();
         }
-    }
+    };
 
     private handleDeletePictureClick = async (isDeleted?: boolean) => {
         const { selectedAsset } = this.state;
         const { auth, trackingActions } = this.props;
         await trackingActions.trackingImgDelete(auth.userId, selectedAsset.asset.name);
         if (this.props.auth.isAdmin) {
-            this.onDelete(true)
+            this.onDelete(true);
         } else {
             this.deletePicture();
         }

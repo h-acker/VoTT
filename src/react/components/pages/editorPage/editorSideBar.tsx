@@ -175,7 +175,10 @@ export default class EditorSideBar extends React.Component<IEditorSideBarProps, 
                     <i className="far fa-trash-alt"></i>
                 </button>
                 <button className={image.is_validated ? "badge badge-validated" : "badge badge-validated badge-off"}>
-                    <i className="far fa-check-circle" onClick={() => this.props.onValidateButtonPressed(!image.is_validated)}></i>
+                    <i
+                        className="far fa-check-circle"
+                        onClick={() => this.props.onValidateButtonPressed(!image.is_validated)}
+                    ></i>
                 </button>
             </>
         );
