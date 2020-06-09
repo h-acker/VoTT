@@ -771,7 +771,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         } else {
             await this.selectAsset(this.state.assets[Math.max(0, currentIndex - 1)]);
         }
-    }; 
+    };
 
     private onBeforeAssetSelected = (): boolean => {
         if (!this.state.isValid) {
@@ -789,7 +789,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                 return asset.id === selectedAsset.asset.id;
             });
 
-            
             newAssets.splice(indexAssetToRemove, 1);
             if (newAssets.length) {
                 const previousIndex = indexAssetToRemove - 1;
@@ -813,7 +812,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
 
     private onSendButtonPressed = async (): Promise<void> => {
         // if all regions have been tagged
-        if (this.onBeforeAssetSelected){
+        if (this.onBeforeAssetSelected) {
             const { selectedAsset } = this.state;
             const { auth, trackingActions } = this.props;
             if (selectedAsset && selectedAsset.asset) {
@@ -825,8 +824,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                         this.isAssetModified()
                     );
                     // if admin we update the bagdes, else we juste remove the image
-                    if(this.props.auth.isAdmin){
-
+                    if (this.props.auth.isAdmin) {
                         if (selectedAsset && selectedAsset.asset) {
                             const name = selectedAsset.asset.name;
                             const images = [...this.state.images];
@@ -841,17 +839,17 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                                 images: changedImages
                             });
                             this.saveImages(changedImages);
-                            this.forceUpdate()
+                            this.forceUpdate();
                         }
                     } else {
-                        this.deletePicture()
+                        this.deletePicture();
                     }
                 } catch (e) {
                     console.warn(strings.consoleMessages.imgOutFailed);
                 }
             }
         }
-    }
+    };
 
     private selectAsset = async (asset: IAsset): Promise<void> => {
         const { selectedAsset, isValid } = this.state;
@@ -870,27 +868,27 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
          * Track user leaves the image
          */
         if (selectedAsset && selectedAsset.asset) {
-                const imgOut: IActionRequest = {
-                    user_id: auth.userId,
-                    image_basename: selectedAsset.asset.name,
-                    regions: selectedAsset.regions,
-                    is_modified: this.isAssetModified(),
-                    type: TrackingActionType.ImgOut,
-                }
+            const imgOut: IActionRequest = {
+                user_id: auth.userId,
+                image_basename: selectedAsset.asset.name,
+                regions: selectedAsset.regions,
+                is_modified: this.isAssetModified(),
+                type: TrackingActionType.ImgOut
+            };
 
-                const name = selectedAsset.asset.name;
-                const images = [...this.state.images];
-                const changedImages = images.map(item => {
-                    const object = { ...item };
-                    if (object.basename === name) {
-                        object.last_action = imgOut;
-                    }
-                    return object;
-                });
-                this.setState({
-                    images: changedImages
-                });
-                this.saveImages(changedImages);
+            const name = selectedAsset.asset.name;
+            const images = [...this.state.images];
+            const changedImages = images.map(item => {
+                const object = { ...item };
+                if (object.basename === name) {
+                    object.last_action = imgOut;
+                }
+                return object;
+            });
+            this.setState({
+                images: changedImages
+            });
+            this.saveImages(changedImages);
         }
 
         const assetMetadata = await actions.loadAssetMetadata(project, asset);
@@ -997,7 +995,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         const { selectedAsset } = this.state;
         const { auth, trackingActions } = this.props;
         await trackingActions.trackingImgDelete(auth.userId, selectedAsset.asset.name);
-        if(this.props.auth.isAdmin) {
+        if (this.props.auth.isAdmin) {
             if (selectedAsset && selectedAsset.asset) {
                 const name = selectedAsset.asset.name;
                 const images = [...this.state.images];
@@ -1012,12 +1010,12 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                     images: changedImages
                 });
                 this.saveImages(changedImages);
-                this.forceUpdate()
+                this.forceUpdate();
             }
         } else {
             this.deletePicture();
         }
-    }
+    };
 }
 
 const styles = {

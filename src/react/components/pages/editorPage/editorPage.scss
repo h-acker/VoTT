@@ -322,15 +322,6 @@ canvas {
     text-shadow: 0px 0px 4px #000;
 }
 
-.badge-button-delete {
-    color: #fff;
-    position: absolute;
-    z-index: 2;
-    left: 0.5em;
-    bottom: 0.5em;
-    text-shadow: 0px 0px 4px #000;
-}
-
 .badge-off {
     opacity: 30%;
 }
@@ -360,12 +351,10 @@ canvas {
 
 .badge-deleted {
   background-color: rgba(red, 0.9);
-  border: 1px solid $lighter-2;
 }
 
 .badge-validated {
   background-color: rgba(blue, 0.9);
-  border: 1px solid $lighter-2;
 }
 
 .Resizer {

@@ -167,18 +167,14 @@ export default class EditorSideBar extends React.Component<IEditorSideBarProps, 
     private renderBadgesFromImageState = (image: IImageWithAction): JSX.Element => {
         return (
             <>
-                <span
-                    title={strings.editorPage.visited}
-                    className={image.is_deleted ? "badge badge-deleted" : "badge badge-deleted badge-off"}
-                >
+                <button className={image.is_deleted ? "badge badge-deleted" : "badge badge-deleted badge-off"}
+                    onClick={this.props.onDelButtonPressed}>
                     <i className="far fa-trash-alt"></i>
-                </span>
-                <span
-                    title={strings.editorPage.visited}
-                    className={image.is_validated ? "badge badge-validated" : "badge badge-validated badge-off"}
-                >
+                </button>
+                <button className={image.is_validated ? "badge badge-validated" : "badge badge-validated badge-off"}
+                    >
                     <i className="far fa-check-circle"></i>
-                </span>
+                </button>
             </>
         );
     };
@@ -186,18 +182,9 @@ export default class EditorSideBar extends React.Component<IEditorSideBarProps, 
     private renderButtons = (asset: IAsset): JSX.Element => {
         return (
             <>
-            <button
-                className={"badge badge-button-send"}
-                onClick={this.props.onSendButtonPressed}>
-                send
-            </button>
-            {this.props.isAdmin &&
-                <button
-                    className={"badge badge-button-delete"}
-                    onClick={this.props.onDelButtonPressed}>
-                    del
+                <button className={"badge badge-button-send"} onClick={this.props.onSendButtonPressed}>
+                    send
                 </button>
-            }
             </>
         );
     };
