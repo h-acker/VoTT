@@ -1,10 +1,9 @@
 import React from "react";
 import { AutoSizer, List } from "react-virtualized";
-import { IAsset, AssetState, ImageState, ISize } from "../../../../models/applicationState";
+import { IAsset, AssetState, ISize } from "../../../../models/applicationState";
 import { AssetPreview } from "../../common/assetPreview/assetPreview";
 import { strings } from "../../../../common/strings";
 import { IImageWithAction } from "../../../../services/apiService";
-import { EnpointType } from "../editorPage/editorPage";
 
 /**
  * Properties for Editor Side Bar
@@ -18,6 +17,8 @@ export interface IEditorSideBarProps {
     images: IImageWithAction[];
     onAssetSelected: (asset: IAsset) => void;
     onBeforeAssetSelected?: () => boolean;
+    onSendButtonPressed: () => void;
+    onDelButtonPressed: () => void;
     selectedAsset?: IAsset;
     thumbnailSize?: ISize;
     endpointType: number;
@@ -128,6 +129,7 @@ export default class EditorSideBar extends React.Component<IEditorSideBarProps, 
                     {this.renderBadges(asset)}
                     {image && this.props.isAdmin === true && this.renderBadgesFromImageState(image)}
                     <AssetPreview asset={asset} />
+                    {image && this.renderButtons(asset)}
                 </div>
                 <div className="asset-item-metadata">
                     <span className="asset-filename" title={asset.name}>
@@ -160,19 +162,44 @@ export default class EditorSideBar extends React.Component<IEditorSideBarProps, 
             default:
                 return null;
         }
-    }
+    };
 
     private renderBadgesFromImageState = (image: IImageWithAction): JSX.Element => {
         return (
             <>
-                <span title={strings.editorPage.visited} className={image.is_deleted?"badge badge-deleted":"badge badge-deleted badge-off"}>
+                <span
+                    title={strings.editorPage.visited}
+                    className={image.is_deleted ? "badge badge-deleted" : "badge badge-deleted badge-off"}
+                >
                     <i className="far fa-trash-alt"></i>
                 </span>
-                <span title={strings.editorPage.visited} className={image.is_validated?"badge badge-validated":"badge badge-validated badge-off"}>
+                <span
+                    title={strings.editorPage.visited}
+                    className={image.is_validated ? "badge badge-validated" : "badge badge-validated badge-off"}
+                >
                     <i className="far fa-check-circle"></i>
                 </span>
             </>
-        )
+        );
+    };
+
+    private renderButtons = (asset: IAsset): JSX.Element => {
+        return (
+            <>
+            <button
+                className={"badge badge-button-send"}
+                onClick={this.props.onSendButtonPressed}>
+                send
+            </button>
+            {this.props.isAdmin &&
+                <button
+                    className={"badge badge-button-delete"}
+                    onClick={this.props.onDelButtonPressed}>
+                    del
+                </button>
+            }
+            </>
+        );
     };
 
     private getAssetCssClassNames = (asset: IAsset, selectedAsset: IAsset = null): string => {

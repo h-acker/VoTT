@@ -290,6 +290,20 @@ canvas {
   text-shadow: 0px 0px 4px #000;
 }
 
+.badge-send {
+  color: #fff;
+  position: absolute;
+  z-index: 2;
+  right: 0.5em;
+  bottom: 0.5em;
+  text-shadow: 0px 0px 4px #000;
+}
+
+.badge-send {
+  background-color: rgba(white, 0.9);
+  border: 1px solid $lighter-2;
+}
+
 .badge-deleted {
     color: #fff;
     position: absolute;
@@ -299,8 +313,30 @@ canvas {
     text-shadow: 0px 0px 4px #000;
 }
 
+.badge-button-send {
+    color: #fff;
+    position: absolute;
+    z-index: 2;
+    right: 0.5em;
+    bottom: 0.5em;
+    text-shadow: 0px 0px 4px #000;
+}
+
+.badge-button-delete {
+    color: #fff;
+    position: absolute;
+    z-index: 2;
+    left: 0.5em;
+    bottom: 0.5em;
+    text-shadow: 0px 0px 4px #000;
+}
+
 .badge-off {
     opacity: 30%;
+}
+
+.green-icon {
+  color: lightskyblue;
 }
 
 .badge-validated {

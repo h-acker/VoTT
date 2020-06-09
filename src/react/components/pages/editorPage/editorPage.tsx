@@ -42,9 +42,10 @@ import Alert from "../../common/alert/alert";
 import Confirm from "../../common/confirm/confirm";
 import { ActiveLearningService } from "../../../../services/activeLearningService";
 import { toast } from "react-toastify";
+import { TrackingActionType } from "../../../../models/trackingAction";
 import ITrackingActions, * as trackingActions from "../../../../redux/actions/trackingActions";
 import { MagnifierModalMessage } from "./MagnifierModalMessage";
-import apiService, { ILitter, IImageWithAction } from "../../../../services/apiService";
+import apiService, { IActionRequest, ILitter, IImageWithAction } from "../../../../services/apiService";
 import CanvasHelpers from "./canvasHelpers";
 import { mapTrackingActionToApiBody } from "../../../../services/ApiMapper";
 
@@ -180,19 +181,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             await this.props.actions.loadProject(project);
         }
         this.activeLearningService = new ActiveLearningService(this.props.project.activeLearningSettings);
-        try {
-            window.onbeforeunload = () => {
-                const { selectedAsset } = this.state;
-                this.props.trackingActions.trackingImgOut(
-                    this.props.auth.userId,
-                    selectedAsset.asset.name,
-                    selectedAsset.regions,
-                    this.isAssetModified()
-                );
-            };
-        } catch (e) {
-            console.warn(strings.consoleMessages.imgOutFailed);
-        }
         const litters = await apiService.getLitters();
         this.setState({
             litters: litters.data
@@ -280,6 +268,8 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                             selectedAsset={selectedAsset ? selectedAsset.asset : null}
                             onBeforeAssetSelected={this.onBeforeAssetSelected}
                             onAssetSelected={this.selectAsset}
+                            onSendButtonPressed={this.onSendButtonPressed}
+                            onDelButtonPressed={this.handleDeletePictureClick}
                             thumbnailSize={this.state.thumbnailSize}
                         />
                     </div>
@@ -781,7 +771,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         } else {
             await this.selectAsset(this.state.assets[Math.max(0, currentIndex - 1)]);
         }
-    };
+    }; 
 
     private onBeforeAssetSelected = (): boolean => {
         if (!this.state.isValid) {
@@ -791,9 +781,81 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         return this.state.isValid;
     };
 
+    private async deletePicture() {
+        try {
+            const { selectedAsset, assets } = this.state;
+            const newAssets = [...assets];
+            const indexAssetToRemove = newAssets.findIndex((asset: IAsset) => {
+                return asset.id === selectedAsset.asset.id;
+            });
+
+            
+            newAssets.splice(indexAssetToRemove, 1);
+            if (newAssets.length) {
+                const previousIndex = indexAssetToRemove - 1;
+                const assetToSelect =
+                    newAssets[previousIndex] !== undefined ? newAssets[previousIndex] : newAssets[indexAssetToRemove];
+                if (assetToSelect !== undefined) {
+                    this.selectAsset(assetToSelect);
+                } else if (newAssets.length > 0) {
+                    this.selectAsset(newAssets[0]);
+                }
+            }
+            this.setState({
+                assets: newAssets
+            });
+        } catch (error) {
+            toast.error(strings.editorPage.deletePictureError);
+        } finally {
+            this.forceUpdate();
+        }
+    }
+
+    private onSendButtonPressed = async (): Promise<void> => {
+        // if all regions have been tagged
+        if (this.onBeforeAssetSelected){
+            const { selectedAsset } = this.state;
+            const { auth, trackingActions } = this.props;
+            if (selectedAsset && selectedAsset.asset) {
+                try {
+                    await trackingActions.trackingImgOut(
+                        auth.userId,
+                        selectedAsset.asset.name,
+                        selectedAsset.regions,
+                        this.isAssetModified()
+                    );
+                    // if admin we update the bagdes, else we juste remove the image
+                    if(this.props.auth.isAdmin){
+
+                        if (selectedAsset && selectedAsset.asset) {
+                            const name = selectedAsset.asset.name;
+                            const images = [...this.state.images];
+                            const changedImages = images.map(item => {
+                                const object = { ...item };
+                                if (object.basename === name) {
+                                    object.is_validated = true;
+                                }
+                                return object;
+                            });
+                            this.setState({
+                                images: changedImages
+                            });
+                            this.saveImages(changedImages);
+                            this.forceUpdate()
+                        }
+                    } else {
+                        this.deletePicture()
+                    }
+                } catch (e) {
+                    console.warn(strings.consoleMessages.imgOutFailed);
+                }
+            }
+        }
+    }
+
     private selectAsset = async (asset: IAsset): Promise<void> => {
-        const { selectedAsset, isValid, selectedAssetBase } = this.state;
-        const { auth, trackingActions, actions, project } = this.props;
+        const { selectedAsset, isValid } = this.state;
+        const { auth, actions, project } = this.props;
         // Nothing to do if we are already on the same asset.
         if (selectedAsset && selectedAsset.asset.id === asset.id) {
             return;
@@ -808,20 +870,20 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
          * Track user leaves the image
          */
         if (selectedAsset && selectedAsset.asset) {
-            try {
-                const imgOut = await trackingActions.trackingImgOut(
-                    auth.userId,
-                    selectedAsset.asset.name,
-                    selectedAsset.regions,
-                    this.isAssetModified()
-                );
+                const imgOut: IActionRequest = {
+                    user_id: auth.userId,
+                    image_basename: selectedAsset.asset.name,
+                    regions: selectedAsset.regions,
+                    is_modified: this.isAssetModified(),
+                    type: TrackingActionType.ImgOut,
+                }
 
                 const name = selectedAsset.asset.name;
                 const images = [...this.state.images];
                 const changedImages = images.map(item => {
                     const object = { ...item };
                     if (object.basename === name) {
-                        object.last_action = mapTrackingActionToApiBody(imgOut);
+                        object.last_action = imgOut;
                     }
                     return object;
                 });
@@ -829,9 +891,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                     images: changedImages
                 });
                 this.saveImages(changedImages);
-            } catch (e) {
-                console.warn(strings.consoleMessages.imgOutFailed);
-            }
         }
 
         const assetMetadata = await actions.loadAssetMetadata(project, asset);
@@ -854,15 +913,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                 await this.onAssetMetadataChanged(assetMetadata);
             }
         );
-
-        /**
-         * Track user enters on the image
-         */
-        try {
-            await trackingActions.trackingImgIn(auth.userId, assetMetadata.asset.name, assetMetadata.regions);
-        } catch (e) {
-            console.warn(strings.consoleMessages.imgInFailed);
-        }
     };
 
     private isAssetModified = (): boolean => {
@@ -943,34 +993,29 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         this.reloadImagesConfirm.current.open();
     }
 
-    private async handleDeletePictureClick() {
-        try {
-            const { auth, trackingActions } = this.props;
-            const { selectedAsset, assets } = this.state;
-            const newAssets = [...assets];
-            const indexAssetToRemove = newAssets.findIndex((asset: IAsset) => {
-                return asset.id === selectedAsset.asset.id;
-            });
-
-            await trackingActions.trackingImgDelete(auth.userId, selectedAsset.asset.name);
-            newAssets.splice(indexAssetToRemove, 1);
-            if (newAssets.length) {
-                const previousIndex = indexAssetToRemove - 1;
-                const assetToSelect =
-                    newAssets[previousIndex] !== undefined ? newAssets[previousIndex] : newAssets[indexAssetToRemove];
-                if (assetToSelect !== undefined) {
-                    this.selectAsset(assetToSelect);
-                } else if (newAssets.length > 0) {
-                    this.selectAsset(newAssets[0]);
-                }
+    private handleDeletePictureClick = async () => {
+        const { selectedAsset } = this.state;
+        const { auth, trackingActions } = this.props;
+        await trackingActions.trackingImgDelete(auth.userId, selectedAsset.asset.name);
+        if(this.props.auth.isAdmin) {
+            if (selectedAsset && selectedAsset.asset) {
+                const name = selectedAsset.asset.name;
+                const images = [...this.state.images];
+                const changedImages = images.map(item => {
+                    const object = { ...item };
+                    if (object.basename === name) {
+                        object.is_deleted = true;
+                    }
+                    return object;
+                });
+                this.setState({
+                    images: changedImages
+                });
+                this.saveImages(changedImages);
+                this.forceUpdate()
             }
-            this.setState({
-                assets: newAssets
-            });
-        } catch (error) {
-            toast.error(strings.editorPage.deletePictureError);
-        } finally {
-            this.forceUpdate();
+        } else {
+            this.deletePicture();
         }
     }
 }
