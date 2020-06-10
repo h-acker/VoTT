@@ -24,7 +24,7 @@ describe("Editor SideBar", () => {
             onValidateButtonPressed: onValidateButtonPressedHandler,
             images: [],
             endpointType: 0,
-            isAdmin: false,
+            isAdmin: false
         };
 
         const wrapper = createComponent(props);
@@ -42,7 +42,7 @@ describe("Editor SideBar", () => {
             onValidateButtonPressed: onValidateButtonPressedHandler,
             images: [],
             endpointType: 0,
-            isAdmin: false,
+            isAdmin: false
         };
 
         const wrapper = createComponent(props);
@@ -62,7 +62,7 @@ describe("Editor SideBar", () => {
             onValidateButtonPressed: onValidateButtonPressedHandler,
             images: [],
             endpointType: 0,
-            isAdmin: false,
+            isAdmin: false
         };
 
         const wrapper = createComponent(props);
@@ -80,7 +80,7 @@ describe("Editor SideBar", () => {
             onValidateButtonPressed: onValidateButtonPressedHandler,
             images: [],
             endpointType: 0,
-            isAdmin: false,
+            isAdmin: false
         };
 
         const wrapper = createComponent(props);
@@ -109,7 +109,7 @@ describe("Editor SideBar", () => {
             onValidateButtonPressed: onValidateButtonPressedHandler,
             images: [],
             endpointType: 0,
-            isAdmin: false,
+            isAdmin: false
         };
 
         const wrapper = createComponent(props);
@@ -152,7 +152,7 @@ describe("Editor SideBar", () => {
             },
             images: [],
             endpointType: 0,
-            isAdmin: false,
+            isAdmin: false
         };
 
         const wrapper = createComponent(props);
