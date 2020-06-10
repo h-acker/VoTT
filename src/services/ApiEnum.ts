@@ -8,5 +8,7 @@ export enum Api {
     BuildIdl = "/api/v1/dispatcher/build_idl",
     QualityControl = "/api/v1/dispatcher/quality_control",
     ImagesWithLastAction = "/api/v1/images/with_last_action",
-    Litters = "/api/v1/litter/"
+    Litters = "/api/v1/litter/",
+    ValidateImage = "/api/v1/images/validate/",
+    DeleteImage = "/api/v1/images/flag_delete/"
 }

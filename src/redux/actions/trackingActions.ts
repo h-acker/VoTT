@@ -10,14 +10,14 @@ import apiService from "../../services/apiService";
  * @member trackingSignIn - Tracks user signs in to the app
  * @member trackingSignOut - Tracks user signs out from the app
  * @member trackingImgIn - Tracks user enters on the image
- * @member trackingImgOut - Tracks user leaves the image
+ * @member trackingImgValidate - Tracks user leaves the image
  * @member trackingImgDelete - Tracks user deletes the image
  */
 export default interface ITrackingActions {
     trackingSignIn(userId: number): Promise<void>;
     trackingSignOut(userId: number): Promise<void>;
     trackingImgIn(userId: number, imageBasename: string, regions: IRegion[]): Promise<void>;
-    trackingImgOut(
+    trackingImgValidate(
         userId: number,
         imageBasename: string,
         regions: IRegion[],
@@ -81,7 +81,7 @@ export function trackingImgIn(
 /**
  * Tracks user leaves the image
  */
-export function trackingImgOut(
+export function trackingImgValidate(
     userId: number,
     imageBasename: string,
     regions: IRegion[],
@@ -89,7 +89,7 @@ export function trackingImgOut(
 ): (dispatch: Dispatch) => Promise<TrackingAction> {
     return async (dispatch: Dispatch) => {
         const trackingAction = createTrackingAction(
-            TrackingActionType.ImgOut,
+            TrackingActionType.ImgValidate,
             userId,
             imageBasename,
             regions,
@@ -97,7 +97,7 @@ export function trackingImgOut(
         );
         try {
             await apiService.createAction(trackingAction);
-            dispatch(trackingImgOutAction(trackingAction));
+            dispatch(trackingImgValidateAction(trackingAction));
             return Promise.resolve(trackingAction);
         } catch {
             return Promise.reject();
@@ -110,7 +110,7 @@ export function trackingImgOut(
  */
 export function trackingImgDelete(userId: number, imageBasename: string): (dispatch: Dispatch) => Promise<void> {
     return async (dispatch: Dispatch) => {
-        const trackingAction = createTrackingAction(TrackingActionType.ImgDelete, userId, imageBasename);
+        const trackingAction = createTrackingAction(TrackingActionType.ImgDelete, userId, imageBasename, [], true);
         try {
             await apiService.createAction(trackingAction);
             dispatch(trackingImgDeleteAction(trackingAction));
@@ -133,8 +133,8 @@ export interface ITrackingImgInAction extends IPayloadAction<string, ITrackingAc
     type: ActionTypes.TRACK_IMG_IN_SUCCESS;
 }
 
-export interface ITrackingImgOutAction extends IPayloadAction<string, ITrackingAction> {
-    type: ActionTypes.TRACK_IMG_OUT_SUCCESS;
+export interface ITrackingImgValidateAction extends IPayloadAction<string, ITrackingAction> {
+    type: ActionTypes.TRACK_IMG_VALIDATE_SUCCESS;
 }
 
 export interface ITrackingImgDeleteAction extends IPayloadAction<string, ITrackingAction> {
@@ -144,7 +144,9 @@ export interface ITrackingImgDeleteAction extends IPayloadAction<string, ITracki
 export const trackingSignInAction = createPayloadAction<ITrackingSignInAction>(ActionTypes.TRACK_SIGN_IN_SUCCESS);
 export const trackingSignOutAction = createPayloadAction<ITrackingSignOutAction>(ActionTypes.TRACK_SIGN_OUT_SUCCESS);
 export const trackingImgInAction = createPayloadAction<ITrackingImgInAction>(ActionTypes.TRACK_IMG_IN_SUCCESS);
-export const trackingImgOutAction = createPayloadAction<ITrackingImgOutAction>(ActionTypes.TRACK_IMG_OUT_SUCCESS);
+export const trackingImgValidateAction = createPayloadAction<ITrackingImgValidateAction>(
+    ActionTypes.TRACK_IMG_VALIDATE_SUCCESS
+);
 export const trackingImgDeleteAction = createPayloadAction<ITrackingImgDeleteAction>(
     ActionTypes.TRACK_IMG_DELETE_SUCCESS
 );

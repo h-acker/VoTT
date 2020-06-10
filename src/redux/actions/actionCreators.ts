@@ -24,7 +24,7 @@ import {
     ITrackingSignInAction,
     ITrackingSignOutAction,
     ITrackingImgInAction,
-    ITrackingImgOutAction,
+    ITrackingImgValidateAction,
     ITrackingImgDeleteAction
 } from "./trackingActions";
 
@@ -101,7 +101,7 @@ export type AnyAction =
     | ITrackingSignInAction
     | ITrackingSignOutAction
     | ITrackingImgInAction
-    | ITrackingImgOutAction
+    | ITrackingImgValidateAction
     | ITrackingImgDeleteAction
     | ISaveUserInfoAction
     | ISaveProjectImages;

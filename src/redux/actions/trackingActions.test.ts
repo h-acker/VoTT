@@ -59,20 +59,20 @@ describe("Tracking Redux Actions", () => {
     });
 
     it("Img out tracking action dispatches redux action", async () => {
-        await trackingActions.trackingImgOut(1, "1", [], false)(store.dispatch);
-        const trackingObject: ITrackingAction = createTrackingAction(TrackingActionType.ImgOut, 1, "1");
+        await trackingActions.trackingImgValidate(1, "1", [], false)(store.dispatch);
+        const trackingObject: ITrackingAction = createTrackingAction(TrackingActionType.ImgValidate, 1, "1");
         const actions = store.getActions();
 
         expect(actions.length).toEqual(1);
         expect(actions[0]).toEqual({
-            type: ActionTypes.TRACK_IMG_OUT_SUCCESS,
+            type: ActionTypes.TRACK_IMG_VALIDATE_SUCCESS,
             payload: trackingObject
         });
     });
 
     it("Img delete tracking action dispatches redux action", async () => {
         await trackingActions.trackingImgDelete(1, "1")(store.dispatch);
-        const trackingObject: ITrackingAction = createTrackingAction(TrackingActionType.ImgDelete, 1, "1");
+        const trackingObject: ITrackingAction = createTrackingAction(TrackingActionType.ImgDelete, 1, "1", [], true);
         const actions = store.getActions();
 
         expect(actions.length).toEqual(1);

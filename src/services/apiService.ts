@@ -25,7 +25,7 @@ interface IUserCredentials {
 
 export interface IActionRequest {
     type: string;
-    timestamp: string;
+    timestamp?: string;
     regions: IRegion[];
     is_modified: boolean;
     user_id: number;
@@ -118,6 +118,14 @@ export class ApiService implements IApiService {
 
     public buildIdl = (imageNames: string[]): AxiosPromise<IImageWithAction[]> => {
         return this.client.put(`${Api.BuildIdl}`, imageNames);
+    };
+
+    public validateImage = (isValidated: boolean, imageBasename: string): AxiosPromise<IImageWithAction> => {
+        return this.client.put(`${Api.ValidateImage}${imageBasename}?is_validated=${isValidated}`);
+    };
+
+    public deleteImage = (isDeleted: boolean, imageBasename: string): AxiosPromise<IImageWithAction> => {
+        return this.client.put(`${Api.DeleteImage}${imageBasename}?is_deleted=${isDeleted}`);
     };
 
     public getImageWithLastAction = (): AxiosPromise<IImageWithAction[]> => {

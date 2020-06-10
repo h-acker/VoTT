@@ -294,6 +294,7 @@ export interface IAppStrings {
                 title: string;
                 confirmation: string;
             };
+            buildIdlSuccess: string;
         };
         deletePictureError: string;
     };
@@ -462,7 +463,7 @@ export interface IAppStrings {
     };
     consoleMessages: {
         getLitterFailed: string;
-        imgOutFailed: string;
+        imgValidateFailed: string;
         imgInFailed: string;
         loadProjectFailed: string;
     };

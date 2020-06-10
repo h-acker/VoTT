@@ -5,7 +5,7 @@ import {
     trackingImgInAction,
     trackingSignInAction,
     trackingSignOutAction,
-    trackingImgOutAction,
+    trackingImgValidateAction
 } from "../actions/trackingActions";
 
 describe("Tracking Reducer", () => {
@@ -34,7 +34,7 @@ describe("Tracking Reducer", () => {
     });
 
     it("Adds new tracking action by track img in action", () => {
-        const testTracking: ITrackingAction = createTrackingAction(TrackingActionType.ImgOut, 2);
+        const testTracking: ITrackingAction = createTrackingAction(TrackingActionType.ImgValidate, 2);
         const newTracking: ITrackingAction = createTrackingAction(TrackingActionType.ImgIn, 2);
         const trackings: ITrackingAction[] = [testTracking];
         const action = trackingImgInAction(newTracking);
@@ -45,9 +45,9 @@ describe("Tracking Reducer", () => {
 
     it("Adds new tracking action by track img out action", () => {
         const testTracking: ITrackingAction = createTrackingAction(TrackingActionType.ImgIn, 2);
-        const newTracking: ITrackingAction = createTrackingAction(TrackingActionType.ImgOut, 2);
+        const newTracking: ITrackingAction = createTrackingAction(TrackingActionType.ImgValidate, 2);
         const trackings: ITrackingAction[] = [testTracking];
-        const action = trackingImgOutAction(newTracking);
+        const action = trackingImgValidateAction(newTracking);
 
         const result = reducer(trackings, action);
         expect(result).toEqual([testTracking, newTracking]);

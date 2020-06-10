@@ -285,7 +285,8 @@
             "reload": {
                 "title": "Starting new session",
                 "confirmation": "Please confirm that you want to start a new session"
-            }
+            },
+            "buildIdlSuccess": "Successfully built IDL"
         },
         "deletePictureError": "There was an error while deleting the image. You might not have the authorization to delete it."
     },
@@ -490,7 +491,7 @@
     },
     "consoleMessages": {
         "getLitterFailed": "Failed to get the list of litters",
-        "imgOutFailed": "Failed to send img_out action",
+        "imgValidateFailed": "Failed to send img_validate action",
         "imgInFailed": "Failed to send img_in action",
         "loadProjectFailed": "Could not load project"
     },

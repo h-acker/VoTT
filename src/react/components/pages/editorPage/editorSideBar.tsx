@@ -1,10 +1,9 @@
 import React from "react";
 import { AutoSizer, List } from "react-virtualized";
-import { IAsset, AssetState, ImageState, ISize } from "../../../../models/applicationState";
+import { IAsset, AssetState, ISize } from "../../../../models/applicationState";
 import { AssetPreview } from "../../common/assetPreview/assetPreview";
 import { strings } from "../../../../common/strings";
 import { IImageWithAction } from "../../../../services/apiService";
-import { EnpointType } from "../editorPage/editorPage";
 
 /**
  * Properties for Editor Side Bar
@@ -18,9 +17,13 @@ export interface IEditorSideBarProps {
     images: IImageWithAction[];
     onAssetSelected: (asset: IAsset) => void;
     onBeforeAssetSelected?: () => boolean;
+    onSendButtonPressed: () => void;
+    onDelButtonPressed: (isDeleted: boolean) => void;
+    onValidateButtonPressed: (isValidated: boolean) => void;
     selectedAsset?: IAsset;
     thumbnailSize?: ISize;
     endpointType: number;
+    isAdmin: boolean;
 }
 
 /**
@@ -125,8 +128,9 @@ export default class EditorSideBar extends React.Component<IEditorSideBarProps, 
             >
                 <div className="asset-item-image">
                     {this.renderBadges(asset)}
-                    {image && this.props.endpointType === EnpointType.ADMIN && this.renderBadgesFromImageState(image)}
+                    {image && this.props.isAdmin === true && this.renderBadgesFromImageState(image)}
                     <AssetPreview asset={asset} />
+                    {image && this.renderButtons(asset)}
                 </div>
                 <div className="asset-item-metadata">
                     <span className="asset-filename" title={asset.name}>
@@ -162,21 +166,32 @@ export default class EditorSideBar extends React.Component<IEditorSideBarProps, 
     };
 
     private renderBadgesFromImageState = (image: IImageWithAction): JSX.Element => {
-        if (image.is_deleted) {
-            return (
-                <span title={strings.editorPage.visited} className="badge badge-deleted">
+        return (
+            <>
+                <button
+                    className={image.is_deleted ? "badge badge-deleted" : "badge badge-deleted badge-off"}
+                    onClick={() => this.props.onDelButtonPressed(!image.is_deleted)}
+                >
                     <i className="far fa-trash-alt"></i>
-                </span>
-            );
-        } else if (image.is_validated) {
-            return (
-                <span title={strings.editorPage.visited} className="badge badge-validated">
-                    <i className="far fa-check-circle"></i>
-                </span>
-            );
-        } else {
-            return null;
-        }
+                </button>
+                <button className={image.is_validated ? "badge badge-validated" : "badge badge-validated badge-off"}>
+                    <i
+                        className="far fa-check-circle"
+                        onClick={() => this.props.onValidateButtonPressed(!image.is_validated)}
+                    ></i>
+                </button>
+            </>
+        );
+    };
+
+    private renderButtons = (asset: IAsset): JSX.Element => {
+        return (
+            <>
+                <button className={"badge badge-button-send"} onClick={this.props.onSendButtonPressed}>
+                    send
+                </button>
+            </>
+        );
     };
 
     private getAssetCssClassNames = (asset: IAsset, selectedAsset: IAsset = null): string => {
