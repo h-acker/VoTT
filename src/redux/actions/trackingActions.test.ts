@@ -72,7 +72,7 @@ describe("Tracking Redux Actions", () => {
 
     it("Img delete tracking action dispatches redux action", async () => {
         await trackingActions.trackingImgDelete(1, "1")(store.dispatch);
-        const trackingObject: ITrackingAction = createTrackingAction(TrackingActionType.ImgDelete, 1, "1");
+        const trackingObject: ITrackingAction = createTrackingAction(TrackingActionType.ImgDelete, 1, "1", [], true);
         const actions = store.getActions();
 
         expect(actions.length).toEqual(1);

@@ -110,7 +110,7 @@ export function trackingImgOut(
  */
 export function trackingImgDelete(userId: number, imageBasename: string): (dispatch: Dispatch) => Promise<void> {
     return async (dispatch: Dispatch) => {
-        const trackingAction = createTrackingAction(TrackingActionType.ImgDelete, userId, imageBasename);
+        const trackingAction = createTrackingAction(TrackingActionType.ImgDelete, userId, imageBasename, [], true);
         try {
             await apiService.createAction(trackingAction);
             dispatch(trackingImgDeleteAction(trackingAction));
