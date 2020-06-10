@@ -6,6 +6,9 @@ import MockFactory from "../../../../common/mockFactory";
 
 describe("Editor SideBar", () => {
     const onSelectAssetHandler = jest.fn();
+    const onDelButtonPressedHandler = jest.fn();
+    const onValidateButtonPressedHandler = jest.fn();
+    const onSendButtonPressedHandler = jest.fn();
     const testAssets = MockFactory.createTestAssets();
 
     function createComponent(props: IEditorSideBarProps): ReactWrapper<IEditorSideBarProps, IEditorSideBarState> {
@@ -16,6 +19,9 @@ describe("Editor SideBar", () => {
         const props: IEditorSideBarProps = {
             assets: testAssets,
             onAssetSelected: onSelectAssetHandler,
+            onDelButtonPressed: onDelButtonPressedHandler,
+            onSendButtonPressed: onSendButtonPressedHandler,
+            onValidateButtonPressed: onValidateButtonPressedHandler,
             images: [],
             endpointType: 0,
             isAdmin: false,
@@ -31,6 +37,9 @@ describe("Editor SideBar", () => {
         const props: IEditorSideBarProps = {
             assets: testAssets,
             onAssetSelected: onSelectAssetHandler,
+            onDelButtonPressed: onDelButtonPressedHandler,
+            onSendButtonPressed: onSendButtonPressedHandler,
+            onValidateButtonPressed: onValidateButtonPressedHandler,
             images: [],
             endpointType: 0,
             isAdmin: false,
@@ -48,6 +57,9 @@ describe("Editor SideBar", () => {
             assets: testAssets,
             selectedAsset: testAssets[selectedAssetIndex],
             onAssetSelected: onSelectAssetHandler,
+            onDelButtonPressed: onDelButtonPressedHandler,
+            onSendButtonPressed: onSendButtonPressedHandler,
+            onValidateButtonPressed: onValidateButtonPressedHandler,
             images: [],
             endpointType: 0,
             isAdmin: false,
@@ -58,11 +70,14 @@ describe("Editor SideBar", () => {
         expect(wrapper.state().scrollToIndex).toBe(selectedAssetIndex);
     });
 
-    it("Updates states after props have changed", (done) => {
+    it("Updates states after props have changed", done => {
         const props: IEditorSideBarProps = {
             assets: testAssets,
             selectedAsset: null,
             onAssetSelected: onSelectAssetHandler,
+            onDelButtonPressed: onDelButtonPressedHandler,
+            onSendButtonPressed: onSendButtonPressedHandler,
+            onValidateButtonPressed: onValidateButtonPressedHandler,
             images: [],
             endpointType: 0,
             isAdmin: false,
@@ -72,7 +87,7 @@ describe("Editor SideBar", () => {
 
         const selectedAssetIndex = 3;
         wrapper.setProps({
-            selectedAsset: testAssets[selectedAssetIndex],
+            selectedAsset: testAssets[selectedAssetIndex]
         });
 
         setImmediate(() => {
@@ -89,6 +104,9 @@ describe("Editor SideBar", () => {
             assets: testAssets,
             selectedAsset: testAssets[0],
             onAssetSelected: onSelectAssetHandler,
+            onDelButtonPressed: onDelButtonPressedHandler,
+            onSendButtonPressed: onSendButtonPressedHandler,
+            onValidateButtonPressed: onValidateButtonPressedHandler,
             images: [],
             endpointType: 0,
             isAdmin: false,
@@ -99,7 +117,7 @@ describe("Editor SideBar", () => {
         // first props update
         const firstUpdate = testAssets[6];
         wrapper.setProps({
-            selectedAsset: firstUpdate,
+            selectedAsset: firstUpdate
         });
 
         await MockFactory.flushUi();
@@ -111,7 +129,7 @@ describe("Editor SideBar", () => {
         // second props update
         const secondUpdate = testAssets[3];
         wrapper.setProps({
-            selectedAsset: secondUpdate,
+            selectedAsset: secondUpdate
         });
 
         await MockFactory.flushUi();
@@ -125,9 +143,12 @@ describe("Editor SideBar", () => {
         const props: IEditorSideBarProps = {
             assets: testAssets,
             onAssetSelected: onSelectAssetHandler,
+            onDelButtonPressed: onDelButtonPressedHandler,
+            onSendButtonPressed: onSendButtonPressedHandler,
+            onValidateButtonPressed: onValidateButtonPressedHandler,
             thumbnailSize: {
                 width: 175,
-                height: 155,
+                height: 155
             },
             images: [],
             endpointType: 0,
@@ -141,8 +162,8 @@ describe("Editor SideBar", () => {
         wrapper.setProps({
             thumbnailSize: {
                 width: 300,
-                height: 200,
-            },
+                height: 200
+            }
         });
 
         expect(recomputeRowHeightsSpy).toBeCalled();

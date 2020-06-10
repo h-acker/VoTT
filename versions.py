@@ -3,7 +3,7 @@
 
 # the release comes from git and should not be modified
 # => read-only
-_release = '2020.5.3-6-g2c71925'
+_release = '2020.5.3-6-ge26223a'
 
 # you can set the next version number manually
 # if you do not, the system will make sure that version > release
