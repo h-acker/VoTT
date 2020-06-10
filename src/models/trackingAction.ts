@@ -12,14 +12,14 @@ export interface ITrackingAction {
 /**
  * Actions which are tracked
  * @enum ImgIn - Enters on the image
- * @enum ImgOut - Leaves the image
+ * @enum ImgValidate - Leaves the image
  * @enum ImgDelete - Deletes the image
  * @enum SignOut - Sign out from the account
  * @enum SignIn - Sign in to the account
  */
 export enum TrackingActionType {
     ImgIn = "img_in",
-    ImgOut = "img_validate",
+    ImgValidate = "img_validate",
     ImgDelete = "img_delete",
     SignOut = "logout",
     SignIn = "login"

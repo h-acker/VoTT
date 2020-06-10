@@ -491,7 +491,7 @@
     },
     "consoleMessages": {
         "getLitterFailed": "Failed to get the list of litters",
-        "imgOutFailed": "Failed to send img_out action",
+        "imgValidateFailed": "Failed to send img_validate action",
         "imgInFailed": "Failed to send img_in action",
         "loadProjectFailed": "Could not load project"
     },

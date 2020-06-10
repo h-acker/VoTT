@@ -717,7 +717,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                 this.showNativeMagnifierModal();
                 break;
             case ToolbarItemName.DeletePicture:
-                this.handleDeletePictureClick(true);
+                this.handleDeletePictureClick();
                 break;
             case ToolbarItemName.ReloadImages:
                 this.handleReloadImagesClick();
@@ -845,7 +845,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             const { auth, trackingActions } = this.props;
             if (selectedAsset && selectedAsset.asset) {
                 try {
-                    await trackingActions.trackingImgOut(
+                    await trackingActions.trackingImgValidate(
                         auth.userId,
                         selectedAsset.asset.name,
                         selectedAsset.regions,
@@ -858,7 +858,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                         this.deletePicture();
                     }
                 } catch (e) {
-                    console.warn(strings.consoleMessages.imgOutFailed);
+                    console.warn(strings.consoleMessages.imgValidateFailed);
                 }
             }
         }
@@ -881,12 +881,12 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
          * Track user leaves the image
          */
         if (selectedAsset && selectedAsset.asset) {
-            const imgOut: IActionRequest = {
+            const imgValidate: IActionRequest = {
                 user_id: auth.userId,
                 image_basename: selectedAsset.asset.name,
                 regions: selectedAsset.regions,
                 is_modified: this.isAssetModified(),
-                type: TrackingActionType.ImgOut
+                type: TrackingActionType.ImgValidate
             };
 
             const name = selectedAsset.asset.name;
@@ -894,7 +894,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             const changedImages = images.map(item => {
                 const object = { ...item };
                 if (object.basename === name) {
-                    object.last_action = imgOut;
+                    object.last_action = imgValidate;
                 }
                 return object;
             });
@@ -1029,13 +1029,16 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         }
     };
 
-    private handleDeletePictureClick = async (isDeleted?: boolean) => {
+    /**
+     * Called when user or admin click on trashbin in toolbar (not del button)
+     */
+    private handleDeletePictureClick = async () => {
         const { selectedAsset } = this.state;
         const { auth, trackingActions } = this.props;
-        await trackingActions.trackingImgDelete(auth.userId, selectedAsset.asset.name);
         if (this.props.auth.isAdmin) {
             this.onDelete(true);
         } else {
+            await trackingActions.trackingImgDelete(auth.userId, selectedAsset.asset.name);
             this.deletePicture();
         }
     };
