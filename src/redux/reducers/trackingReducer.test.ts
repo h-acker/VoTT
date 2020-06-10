@@ -5,7 +5,7 @@ import {
     trackingImgInAction,
     trackingSignInAction,
     trackingSignOutAction,
-    trackingImgValidateAction,
+    trackingImgValidateAction
 } from "../actions/trackingActions";
 
 describe("Tracking Reducer", () => {

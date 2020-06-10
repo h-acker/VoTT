@@ -144,7 +144,9 @@ export interface ITrackingImgDeleteAction extends IPayloadAction<string, ITracki
 export const trackingSignInAction = createPayloadAction<ITrackingSignInAction>(ActionTypes.TRACK_SIGN_IN_SUCCESS);
 export const trackingSignOutAction = createPayloadAction<ITrackingSignOutAction>(ActionTypes.TRACK_SIGN_OUT_SUCCESS);
 export const trackingImgInAction = createPayloadAction<ITrackingImgInAction>(ActionTypes.TRACK_IMG_IN_SUCCESS);
-export const trackingImgValidateAction = createPayloadAction<ITrackingImgValidateAction>(ActionTypes.TRACK_IMG_VALIDATE_SUCCESS);
+export const trackingImgValidateAction = createPayloadAction<ITrackingImgValidateAction>(
+    ActionTypes.TRACK_IMG_VALIDATE_SUCCESS
+);
 export const trackingImgDeleteAction = createPayloadAction<ITrackingImgDeleteAction>(
     ActionTypes.TRACK_IMG_DELETE_SUCCESS
 );
