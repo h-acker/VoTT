@@ -231,9 +231,9 @@
             "magnifier": "Magnifier",
             "deletePicture": "Delete Picture",
             "reloadImages": "Reload Images",
-            "admin": "Admin",
-            "regular": "Regular",
-            "chooseEndpoint": "Choose endpoint",
+            "admin": "Del/Validated",
+            "regular": "All",
+            "chooseEndpoint": "Choose filter",
             "buildIdl": "Build IDL"
         },
         "videoPlayer": {

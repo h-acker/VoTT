@@ -231,9 +231,9 @@
             "magnifier": "Lupa",
             "deletePicture": "Eliminar",
             "reloadImages": "Recargar imágenes",
-            "admin": "Admin",
-            "regular": "Regular",
-            "chooseEndpoint": "Choose endpoint",
+            "admin": "Del/Validated",
+            "regular": "All",
+            "chooseEndpoint": "Choose filter",
             "buildIdl": "Crear IDL"
         },
         "videoPlayer": {
