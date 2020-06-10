@@ -52,7 +52,7 @@ describe("Project Redux Actions", () => {
             payload: project
         });
         expect(result).toEqual(project);
-        expect(projectServiceMock.prototype.load).toBeCalledWith(project, projectToken);
+        expect(projectServiceMock.prototype.load).toBeCalledWith(project, projectToken, true);
     });
 
     it("Save Project action calls project service and dispatches redux action", async () => {
@@ -77,7 +77,7 @@ describe("Project Redux Actions", () => {
         });
         expect(result).toEqual(project);
         expect(projectServiceMock.prototype.save).toBeCalledWith(project, projectToken);
-        expect(projectServiceMock.prototype.load).toBeCalledWith(project, projectToken);
+        expect(projectServiceMock.prototype.load).toBeCalledWith(project, projectToken, true);
     });
 
     it("Save Project action correctly add project version", async () => {

@@ -206,7 +206,7 @@ describe("Editor Page Component", () => {
             }),
             []
         );
-        expect(saveProjectSpy).toBeCalledWith(expect.objectContaining(partialProject));
+        expect(saveProjectSpy).toBeCalledWith(expect.objectContaining(partialProject), false);
     });
 
     it("sets page state to invalid when edited asset includes un-tagged regions", async () => {
@@ -355,7 +355,7 @@ describe("Editor Page Component", () => {
             }),
             []
         );
-        expect(saveProjectSpy).toBeCalledWith(expect.objectContaining(partialProject));
+        expect(saveProjectSpy).toBeCalledWith(expect.objectContaining(partialProject), false);
     });
 
     it("When an image is updated the asset metadata is updated", async () => {
