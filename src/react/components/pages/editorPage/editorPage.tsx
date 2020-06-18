@@ -817,17 +817,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         return this.state.isValid;
     };
 
-    private maskRegions = (): void => {
-        const tmpRegions = this.state.selectedAsset.regions;
-        this.setState({
-            selectedAsset: {
-                regions: [],
-                asset: this.state.selectedAsset.asset,
-                version: this.state.selectedAsset.version
-            }
-        });
-    };
-
     private async deletePicture() {
         try {
             const { selectedAsset, assets } = this.state;
