@@ -297,6 +297,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                                         onAssetMetadataChanged={this.onAssetMetadataChanged}
                                         onCanvasRendered={this.onCanvasRendered}
                                         onSelectedRegionsChanged={this.onSelectedRegionsChanged}
+                                        onValidate={this.onValidate}
                                         editorMode={this.state.editorMode}
                                         selectionMode={this.state.selectionMode}
                                         project={this.props.project}
@@ -674,6 +675,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
     };
 
     private onLockedTagsChanged = (lockedTags: string[]) => {
+        console.log('poup')
         this.setState({ lockedTags });
     };
 
@@ -853,7 +855,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                     );
                     // if admin we update the bagdes, else we juste remove the image
                     if (this.props.auth.isAdmin) {
-                        this.onValidate(true);
+                        await this.onValidate(true);
                     } else {
                         this.deletePicture();
                     }
@@ -1036,8 +1038,8 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         const { selectedAsset } = this.state;
         const { auth, trackingActions } = this.props;
         if (this.props.auth.isAdmin) {
-            this.onDelete(true);
-            this.onValidate(false);
+            await this.onDelete(true);
+            await this.onValidate(false);
         } else {
             await trackingActions.trackingImgDelete(auth.userId, selectedAsset.asset.name);
             this.deletePicture();
