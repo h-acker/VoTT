@@ -1037,6 +1037,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         const { auth, trackingActions } = this.props;
         if (this.props.auth.isAdmin) {
             this.onDelete(true);
+            this.onValidate(false)
         } else {
             await trackingActions.trackingImgDelete(auth.userId, selectedAsset.asset.name);
             this.deletePicture();
