@@ -242,15 +242,27 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                         />
                     );
                 })}
+                {[...project.tags.keys()].map(index => {
+                    return (
+                        <KeyboardBinding
+                            displayName={strings.editorPage.tags.hotKey.lock}
+                            key={index}
+                            keyEventType={KeyEventType.KeyDown}
+                            accelerators={[`CmdOrCtrl+${index}`]}
+                            icon={"fa-lock"}
+                            handler={this.handleCtrlTagHotKey}
+                        />
+                    );
+                })}
                 <KeyboardBinding
-                    displayName={"ouaaa"}
+                    displayName={strings.editorPage.tags.hotKey.hide}
                     keyEventType={KeyEventType.KeyDown}
                     accelerators={["h", "H"]}
                     icon={"fa-tag"}
                     handler={this.hideRegions}
                 />
                 <KeyboardBinding
-                    displayName={"ou"}
+                    displayName={strings.editorPage.tags.hotKey.show}
                     keyEventType={KeyEventType.KeyUp}
                     accelerators={["h", "H"]}
                     icon={"fa-tag"}
@@ -546,6 +558,13 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             }
             this.setState({ pressedKeys: [] });
         }, 500)();
+    };
+    
+    private handleCtrlTagHotKey = (event: KeyboardEvent): void => {
+        const tag = this.getTagFromKeyboardEvent(event);
+        if (tag) {
+            this.onCtrlTagClicked(tag);
+        }
     };
 
     private onCtrlTagClicked = (tag: ITag): void => {
