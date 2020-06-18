@@ -243,18 +243,18 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                     );
                 })}
                 <KeyboardBinding
-                        displayName={'ouaaa'}
-                        keyEventType={KeyEventType.KeyDown}
-                        accelerators={['h', 'H']}
-                        icon={"fa-tag"}
-                        handler={this.hideRegions}
+                    displayName={"ouaaa"}
+                    keyEventType={KeyEventType.KeyDown}
+                    accelerators={["h", "H"]}
+                    icon={"fa-tag"}
+                    handler={this.hideRegions}
                 />
                 <KeyboardBinding
-                        displayName={'ou'}
-                        keyEventType={KeyEventType.KeyUp}
-                        accelerators={['h', 'H']}
-                        icon={"fa-tag"}
-                        handler={this.showRegions}
+                    displayName={"ou"}
+                    keyEventType={KeyEventType.KeyUp}
+                    accelerators={["h", "H"]}
+                    icon={"fa-tag"}
+                    handler={this.showRegions}
                 />
                 <SplitPane
                     split="vertical"
@@ -388,21 +388,21 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
     }
 
     private hideRegions = () => {
-        if(!this.state.pressingHideImage){
-            this.setState({ pressingHideImage: true })
+        if (!this.state.pressingHideImage) {
+            this.setState({ pressingHideImage: true });
             const tmpRegions = this.state.selectedAsset.regions;
-            const hiddenRegionsAsset = {...this.state.selectedAsset, regions: []}
-            this.setState({selectedAsset: hiddenRegionsAsset, currentRegions: tmpRegions})
+            const hiddenRegionsAsset = { ...this.state.selectedAsset, regions: [] };
+            this.setState({ selectedAsset: hiddenRegionsAsset, currentRegions: tmpRegions });
         }
-    }
+    };
 
     private showRegions = () => {
-        if(this.state.pressingHideImage){
-            this.setState({ pressingHideImage: false })
-            const previousAsset = {...this.state.selectedAsset, regions: this.state.currentRegions}
-            this.setState({selectedAsset: previousAsset,})
+        if (this.state.pressingHideImage) {
+            this.setState({ pressingHideImage: false });
+            const previousAsset = { ...this.state.selectedAsset, regions: this.state.currentRegions };
+            this.setState({ selectedAsset: previousAsset });
         }
-    }
+    };
 
     private handleEndpointTypeChange = (event: any) => {
         const endpointType: number = Number(event.target.value);
@@ -800,16 +800,14 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
 
     private maskRegions = (): void => {
         const tmpRegions = this.state.selectedAsset.regions;
-        this.setState(
-            {
-                selectedAsset:{
-                    regions: [],
-                    asset: this.state.selectedAsset.asset,
-                    version: this.state.selectedAsset.version
-                }
+        this.setState({
+            selectedAsset: {
+                regions: [],
+                asset: this.state.selectedAsset.asset,
+                version: this.state.selectedAsset.version
             }
-        )
-    }
+        });
+    };
 
     private async deletePicture() {
         try {
