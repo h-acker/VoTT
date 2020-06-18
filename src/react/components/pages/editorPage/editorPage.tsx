@@ -559,7 +559,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             this.setState({ pressedKeys: [] });
         }, 500)();
     };
-    
+
     private handleCtrlTagHotKey = (event: KeyboardEvent): void => {
         const tag = this.getTagFromKeyboardEvent(event);
         if (tag) {
