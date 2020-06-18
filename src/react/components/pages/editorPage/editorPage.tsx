@@ -114,6 +114,8 @@ export interface IEditorPageState {
     images: IImageWithAction[];
     imageNumber: number;
     endpointType: number;
+    pressingHideImage: boolean;
+    currentRegions: IRegion[];
 }
 
 function mapStateToProps(state: IApplicationState) {
@@ -161,7 +163,9 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         pressedKeys: [],
         images: [],
         imageNumber: 20,
-        endpointType: EnpointType.REGULAR
+        endpointType: EnpointType.REGULAR,
+        pressingHideImage: false,
+        currentRegions: []
     };
 
     private activeLearningService: ActiveLearningService = null;
@@ -238,18 +242,20 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                         />
                     );
                 })}
-                {[...project.tags.keys()].map(index => {
-                    return (
-                        <KeyboardBinding
-                            displayName={strings.editorPage.tags.hotKey.lock}
-                            key={index}
-                            keyEventType={KeyEventType.KeyDown}
-                            accelerators={[`CmdOrCtrl+${index}`]}
-                            icon={"fa-lock"}
-                            handler={this.handleCtrlTagHotKey}
-                        />
-                    );
-                })}
+                <KeyboardBinding
+                        displayName={'ouaaa'}
+                        keyEventType={KeyEventType.KeyDown}
+                        accelerators={['h', 'H']}
+                        icon={"fa-tag"}
+                        handler={this.hideRegions}
+                />
+                <KeyboardBinding
+                        displayName={'ou'}
+                        keyEventType={KeyEventType.KeyUp}
+                        accelerators={['h', 'H']}
+                        icon={"fa-tag"}
+                        handler={this.showRegions}
+                />
                 <SplitPane
                     split="vertical"
                     defaultSize={this.state.thumbnailSize.width}
@@ -379,6 +385,23 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                 />
             </div>
         );
+    }
+
+    private hideRegions = () => {
+        if(!this.state.pressingHideImage){
+            this.setState({ pressingHideImage: true })
+            const tmpRegions = this.state.selectedAsset.regions;
+            const hiddenRegionsAsset = {...this.state.selectedAsset, regions: []}
+            this.setState({selectedAsset: hiddenRegionsAsset, currentRegions: tmpRegions})
+        }
+    }
+
+    private showRegions = () => {
+        if(this.state.pressingHideImage){
+            this.setState({ pressingHideImage: false })
+            const previousAsset = {...this.state.selectedAsset, regions: this.state.currentRegions}
+            this.setState({selectedAsset: previousAsset,})
+        }
     }
 
     private handleEndpointTypeChange = (event: any) => {
@@ -523,13 +546,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             }
             this.setState({ pressedKeys: [] });
         }, 500)();
-    };
-
-    private handleCtrlTagHotKey = (event: KeyboardEvent): void => {
-        const tag = this.getTagFromKeyboardEvent(event);
-        if (tag) {
-            this.onCtrlTagClicked(tag);
-        }
     };
 
     private onCtrlTagClicked = (tag: ITag): void => {
@@ -781,6 +797,19 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
 
         return this.state.isValid;
     };
+
+    private maskRegions = (): void => {
+        const tmpRegions = this.state.selectedAsset.regions;
+        this.setState(
+            {
+                selectedAsset:{
+                    regions: [],
+                    asset: this.state.selectedAsset.asset,
+                    version: this.state.selectedAsset.version
+                }
+            }
+        )
+    }
 
     private async deletePicture() {
         try {
