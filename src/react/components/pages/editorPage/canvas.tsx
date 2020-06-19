@@ -323,7 +323,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
                 this.props.onAssetMetadataChanged(currentAsset);
             }
         );
-        this.props.onValidate(false)
+        this.props.onValidate(false);
     };
 
     /**
@@ -513,7 +513,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
         };
         this.props.onAssetMetadataChanged(currentAsset);
         this.updateCanvasToolsRegionTags();
-        this.props.onValidate(false)
+        this.props.onValidate(false);
     };
 
     /**
