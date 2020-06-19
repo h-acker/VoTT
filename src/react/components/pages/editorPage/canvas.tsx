@@ -310,7 +310,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
      * @param regions
      * @param selectedRegions
      */
-    private updateAssetRegions = async (regions: IRegion[]) => {
+    private updateAssetRegions = (regions: IRegion[]) => {
         const currentAsset: IAssetMetadata = {
             ...this.state.currentAsset,
             regions
@@ -323,7 +323,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
                 this.props.onAssetMetadataChanged(currentAsset);
             }
         );
-        await this.props.onValidate(false);
+        this.props.onValidate(false)
     };
 
     /**
@@ -501,7 +501,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
      * @param updates Regions to be updated
      * @param updatedSelectedRegions Selected regions with any changes already applied
      */
-    private updateRegions = async (updates: IRegion[]) => {
+    private updateRegions = (updates: IRegion[]) => {
         const updatedRegions = CanvasHelpers.updateRegions(this.state.currentAsset.regions, updates);
         for (const update of updates) {
             this.editor.RM.updateTagsById(update.id, CanvasHelpers.getTagsDescriptor(this.props.project.tags, update));
@@ -513,7 +513,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
         };
         this.props.onAssetMetadataChanged(currentAsset);
         this.updateCanvasToolsRegionTags();
-        await this.props.onValidate(false);
+        this.props.onValidate(false)
     };
 
     /**

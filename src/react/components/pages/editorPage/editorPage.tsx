@@ -856,6 +856,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                     // if admin we update the bagdes, else we juste remove the image
                     if (this.props.auth.isAdmin) {
                         await this.onValidate(true);
+                        await this.onDelete(false);
                     } else {
                         this.deletePicture();
                     }
