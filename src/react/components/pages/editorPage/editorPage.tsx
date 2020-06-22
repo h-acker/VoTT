@@ -837,7 +837,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
     };
 
     private updateMetadata = async (asset: IAsset) => {
-
         const { actions, project } = this.props;
         const assetMetadata = await actions.loadAssetMetadata(project, asset);
 
@@ -859,7 +858,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                 await this.onAssetMetadataChanged(assetMetadata);
             }
         );
-    }
+    };
 
     private onSendButtonPressed = async () => {
         // if all regions have been tagged
