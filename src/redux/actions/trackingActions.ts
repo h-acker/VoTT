@@ -22,7 +22,7 @@ export default interface ITrackingActions {
         imageBasename: string,
         regions: IRegion[],
         isModified: boolean
-    ): Promise<ITrackingAction>;
+    ): Promise<TrackingAction>;
     trackingImgDelete(userId: number, imageBasename: string): Promise<void>;
 }
 
@@ -86,7 +86,7 @@ export function trackingImgValidate(
     imageBasename: string,
     regions: IRegion[],
     isModified: boolean
-): (dispatch: Dispatch) => Promise<ITrackingAction> {
+): (dispatch: Dispatch) => Promise<TrackingAction> {
     return async (dispatch: Dispatch) => {
         const trackingAction = createTrackingAction(
             TrackingActionType.ImgValidate,
@@ -100,8 +100,7 @@ export function trackingImgValidate(
             dispatch(trackingImgValidateAction(trackingAction));
             return Promise.resolve(trackingAction);
         } catch {
-            console.log("fioabnwoifncaoefocinawroifnsoernfonserogfnsoerntgoserntge");
-            return Promise.reject(trackingAction);
+            return Promise.reject();
         }
     };
 }
