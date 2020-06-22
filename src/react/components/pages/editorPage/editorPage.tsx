@@ -818,31 +818,29 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
     private onValidate = async (isValidated: boolean): Promise<void> => {
         const { selectedAsset } = this.state;
         if (selectedAsset && selectedAsset.asset) {
-            if (selectedAsset && selectedAsset.asset) {
-                const name = selectedAsset.asset.name;
-                const image = await apiService.validateImage(isValidated, name);
-                const images = [...this.state.images];
-                const changedImages = images.map(item => {
-                    const object = { ...item };
-                    if (object.basename === name) {
-                        return image.data;
-                    }
-                    return object;
-                });
-                this.setState({
-                    images: changedImages
-                });
-                this.saveImages(changedImages);
-                this.forceUpdate();
-            }
+            const name = selectedAsset.asset.name;
+            const image = await apiService.validateImage(isValidated, name);
+            const images = [...this.state.images];
+            const changedImages = images.map(item => {
+                const object = { ...item };
+                if (object.basename === name) {
+                    return image.data;
+                }
+                return object;
+            });
+            this.setState({
+                images: changedImages
+            });
+            this.saveImages(changedImages);
+            this.forceUpdate();
         }
     };
 
-    private onSendButtonPressed = async (): Promise<void> => {
+    private onSendButtonPressed = async () => {
         // if all regions have been tagged
         if (this.onBeforeAssetSelected) {
             const { selectedAsset } = this.state;
-            const { auth, trackingActions } = this.props;
+            const { actions, auth, project, trackingActions } = this.props;
             if (selectedAsset && selectedAsset.asset) {
                 try {
                     await trackingActions.trackingImgValidate(
@@ -853,7 +851,28 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                     );
                     // if admin we update the bagdes, else we juste remove the image
                     if (this.props.auth.isAdmin) {
-                        this.onValidate(true);
+                        await this.onValidate(true);
+
+                        const assetMetadata = await actions.loadAssetMetadata(project, selectedAsset.asset);
+
+                        try {
+                            if (!assetMetadata.asset.size) {
+                                const assetProps = await HtmlFileReader.readAssetAttributes( selectedAsset.asset);
+                                assetMetadata.asset.size = { width: assetProps.width, height: assetProps.height };
+                            }
+                        } catch (err) {
+                            console.warn("Error computing asset size");
+                        }
+
+                        this.setState(
+                            {
+                                selectedAsset: assetMetadata,
+                                selectedAssetBase: assetMetadata
+                            },
+                            async () => {
+                                await this.onAssetMetadataChanged(assetMetadata);
+                            }
+                    );
                     } else {
                         this.deletePicture();
                     }
@@ -866,7 +885,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
 
     private selectAsset = async (asset: IAsset): Promise<void> => {
         const { selectedAsset, isValid } = this.state;
-        const { auth, actions, project } = this.props;
+        const { actions, auth, project } = this.props;
         // Nothing to do if we are already on the same asset.
         if (selectedAsset && selectedAsset.asset.id === asset.id) {
             return;
