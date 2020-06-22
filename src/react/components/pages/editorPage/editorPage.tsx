@@ -675,7 +675,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
     };
 
     private onLockedTagsChanged = (lockedTags: string[]) => {
-        console.log("poup");
         this.setState({ lockedTags });
     };
 
