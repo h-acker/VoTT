@@ -100,7 +100,7 @@ export function trackingImgValidate(
             dispatch(trackingImgValidateAction(trackingAction));
             return Promise.resolve(trackingAction);
         } catch {
-            console.log('fioabnwoifncaoefocinawroifnsoernfonserogfnsoerntgoserntge')
+            console.log("fioabnwoifncaoefocinawroifnsoernfonserogfnsoerntgoserntge");
             return Promise.reject(trackingAction);
         }
     };

@@ -836,6 +836,31 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         }
     };
 
+    private updateMetadata = async (asset: IAsset) => {
+
+        const { actions, project } = this.props;
+        const assetMetadata = await actions.loadAssetMetadata(project, asset);
+
+        try {
+            if (!assetMetadata.asset.size) {
+                const assetProps = await HtmlFileReader.readAssetAttributes(asset);
+                assetMetadata.asset.size = { width: assetProps.width, height: assetProps.height };
+            }
+        } catch (err) {
+            console.warn("Error computing asset size");
+        }
+
+        this.setState(
+            {
+                selectedAsset: assetMetadata,
+                selectedAssetBase: assetMetadata
+            },
+            async () => {
+                await this.onAssetMetadataChanged(assetMetadata);
+            }
+        );
+    }
+
     private onSendButtonPressed = async () => {
         // if all regions have been tagged
         if (this.onBeforeAssetSelected) {
@@ -852,27 +877,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                     // if admin we update the bagdes, else we juste remove the image
                     if (this.props.auth.isAdmin) {
                         await this.onValidate(true);
-
-                        const assetMetadata = await actions.loadAssetMetadata(project, selectedAsset.asset);
-
-                        try {
-                            if (!assetMetadata.asset.size) {
-                                const assetProps = await HtmlFileReader.readAssetAttributes( selectedAsset.asset);
-                                assetMetadata.asset.size = { width: assetProps.width, height: assetProps.height };
-                            }
-                        } catch (err) {
-                            console.warn("Error computing asset size");
-                        }
-
-                        this.setState(
-                            {
-                                selectedAsset: assetMetadata,
-                                selectedAssetBase: assetMetadata
-                            },
-                            async () => {
-                                await this.onAssetMetadataChanged(assetMetadata);
-                            }
-                    );
+                        this.updateMetadata(selectedAsset.asset);
                     } else {
                         this.deletePicture();
                     }
@@ -897,7 +902,8 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         }
 
         /**
-         * Track user leaves the image
+         * Saves the current regions in last action
+         * Does not send any action
          */
         if (selectedAsset && selectedAsset.asset) {
             const imgValidate: IActionRequest = {
@@ -923,26 +929,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             this.saveImages(changedImages);
         }
 
-        const assetMetadata = await actions.loadAssetMetadata(project, asset);
-
-        try {
-            if (!assetMetadata.asset.size) {
-                const assetProps = await HtmlFileReader.readAssetAttributes(asset);
-                assetMetadata.asset.size = { width: assetProps.width, height: assetProps.height };
-            }
-        } catch (err) {
-            console.warn("Error computing asset size");
-        }
-
-        this.setState(
-            {
-                selectedAsset: assetMetadata,
-                selectedAssetBase: assetMetadata
-            },
-            async () => {
-                await this.onAssetMetadataChanged(assetMetadata);
-            }
-        );
+        this.updateMetadata(asset);
     };
 
     private isAssetModified = (): boolean => {
