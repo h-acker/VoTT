@@ -267,6 +267,8 @@ export interface IAppStrings {
             hotKey: {
                 apply: string;
                 lock: string;
+                hide: string;
+                show: string;
             };
             rename: {
                 title: string;

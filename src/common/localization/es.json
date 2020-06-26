@@ -258,7 +258,9 @@
         "tags": {
             "hotKey": {
                 "apply": "Aplicar etiqueta con tecla de acceso rápido",
-                "lock": "Bloquear etiqueta con tecla de acceso rápido"
+                "lock": "Bloquear etiqueta con tecla de acceso rápido",
+                "hide": "Ocultar regiones con tecla de acceso rápido",
+                "show": "Mostrar regiones con tecla de acceso rápido"
             },
             "rename": {
                 "title": "Cambiar el nombre de la etiqueta",

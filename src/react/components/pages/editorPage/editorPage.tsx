@@ -114,6 +114,8 @@ export interface IEditorPageState {
     images: IImageWithAction[];
     imageNumber: number;
     endpointType: number;
+    pressingHideImage: boolean;
+    currentRegions: IRegion[];
 }
 
 function mapStateToProps(state: IApplicationState) {
@@ -161,7 +163,9 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         pressedKeys: [],
         images: [],
         imageNumber: 20,
-        endpointType: EnpointType.REGULAR
+        endpointType: EnpointType.REGULAR,
+        pressingHideImage: false,
+        currentRegions: []
     };
 
     private activeLearningService: ActiveLearningService = null;
@@ -250,6 +254,20 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                         />
                     );
                 })}
+                <KeyboardBinding
+                    displayName={strings.editorPage.tags.hotKey.hide}
+                    keyEventType={KeyEventType.KeyDown}
+                    accelerators={["h", "H"]}
+                    icon={"fa-tag"}
+                    handler={this.hideRegions}
+                />
+                <KeyboardBinding
+                    displayName={strings.editorPage.tags.hotKey.show}
+                    keyEventType={KeyEventType.KeyUp}
+                    accelerators={["h", "H"]}
+                    icon={"fa-tag"}
+                    handler={this.showRegions}
+                />
                 <SplitPane
                     split="vertical"
                     defaultSize={this.state.thumbnailSize.width}
@@ -380,6 +398,23 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             </div>
         );
     }
+
+    private hideRegions = () => {
+        if (!this.state.pressingHideImage) {
+            this.setState({ pressingHideImage: true });
+            const tmpRegions = this.state.selectedAsset.regions;
+            const hiddenRegionsAsset = { ...this.state.selectedAsset, regions: [] };
+            this.setState({ selectedAsset: hiddenRegionsAsset, currentRegions: tmpRegions });
+        }
+    };
+
+    private showRegions = () => {
+        if (this.state.pressingHideImage) {
+            this.setState({ pressingHideImage: false });
+            const previousAsset = { ...this.state.selectedAsset, regions: this.state.currentRegions };
+            this.setState({ selectedAsset: previousAsset });
+        }
+    };
 
     private handleEndpointTypeChange = (event: any) => {
         const endpointType: number = Number(event.target.value);

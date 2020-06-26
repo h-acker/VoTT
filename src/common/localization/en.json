@@ -258,7 +258,9 @@
         "tags": {
             "hotKey": {
                 "apply": "Apply Tag with Hot Key",
-                "lock": "Lock Tag with Hot Key"
+                "lock": "Lock Tag with Hot Key",
+                "hide": "Hide regions with Hot Key",
+                "show": "Show regions with Hot Key"
             },
             "rename": {
                 "title": "Rename Tag",
