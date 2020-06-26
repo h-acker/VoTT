@@ -23,6 +23,7 @@ export interface ICanvasProps extends React.Props<Canvas> {
     onAssetMetadataChanged?: (assetMetadata: IAssetMetadata) => void;
     onSelectedRegionsChanged?: (regions: IRegion[]) => void;
     onCanvasRendered?: (canvas: HTMLCanvasElement) => void;
+    onValidate?: (isValidated: boolean) => void;
 }
 
 export interface ICanvasState {
@@ -322,6 +323,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
                 this.props.onAssetMetadataChanged(currentAsset);
             }
         );
+        this.props.onValidate(false);
     };
 
     /**
@@ -511,6 +513,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
         };
         this.props.onAssetMetadataChanged(currentAsset);
         this.updateCanvasToolsRegionTags();
+        this.props.onValidate(false);
     };
 
     /**
