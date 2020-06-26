@@ -779,7 +779,6 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
         if (!this.state.isValid) {
             this.setState({ showInvalidRegionWarning: true });
         }
-
         return this.state.isValid;
     };
 
@@ -863,9 +862,9 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
 
     private onSendButtonPressed = async () => {
         // if all regions have been tagged
-        if (this.onBeforeAssetSelected) {
+        if (this.onBeforeAssetSelected()) {
             const { selectedAsset } = this.state;
-            const { actions, auth, project, trackingActions } = this.props;
+            const { auth, trackingActions } = this.props;
             if (selectedAsset && selectedAsset.asset) {
                 try {
                     await trackingActions.trackingImgValidate(
