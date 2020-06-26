@@ -170,14 +170,28 @@ export default class EditorSideBar extends React.Component<IEditorSideBarProps, 
             <>
                 <button
                     className={image.is_deleted ? "badge badge-deleted" : "badge badge-deleted badge-off"}
-                    onClick={() => this.props.onDelButtonPressed(!image.is_deleted)}
+                    onClick={async () => {
+                        if (!image.is_deleted && image.is_validated) {
+                            await this.props.onDelButtonPressed(true);
+                            await this.props.onValidateButtonPressed(false);
+                        } else {
+                            await this.props.onDelButtonPressed(!image.is_deleted);
+                        }
+                    }}
                 >
                     <i className="far fa-trash-alt"></i>
                 </button>
                 <button className={image.is_validated ? "badge badge-validated" : "badge badge-validated badge-off"}>
                     <i
                         className="far fa-check-circle"
-                        onClick={() => this.props.onValidateButtonPressed(!image.is_validated)}
+                        onClick={async () => {
+                            if (!image.is_validated && image.is_deleted) {
+                                await this.props.onDelButtonPressed(false);
+                                await this.props.onValidateButtonPressed(true);
+                            } else {
+                                await this.props.onValidateButtonPressed(!image.is_validated);
+                            }
+                        }}
                     ></i>
                 </button>
             </>
