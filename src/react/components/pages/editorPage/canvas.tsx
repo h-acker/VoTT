@@ -20,6 +20,7 @@ export interface ICanvasProps extends React.Props<Canvas> {
     project: IProject;
     lockedTags: string[];
     children?: ReactElement<AssetPreview>;
+    isAdmin?: boolean;
     onAssetMetadataChanged?: (assetMetadata: IAssetMetadata) => void;
     onSelectedRegionsChanged?: (regions: IRegion[]) => void;
     onCanvasRendered?: (canvas: HTMLCanvasElement) => void;
@@ -38,7 +39,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
         editorMode: EditorMode.Select,
         selectedAsset: null,
         project: null,
-        lockedTags: []
+        lockedTags: [],
     };
 
     public editor: Editor;
@@ -323,7 +324,9 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
                 this.props.onAssetMetadataChanged(currentAsset);
             }
         );
-        this.props.onValidate(false);
+        if(this.props.isAdmin){
+            this.props.onValidate(false);
+        }
     };
 
     /**
@@ -513,7 +516,9 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
         };
         this.props.onAssetMetadataChanged(currentAsset);
         this.updateCanvasToolsRegionTags();
-        this.props.onValidate(false);
+        if(this.props.isAdmin){
+            this.props.onValidate(false);
+        }
     };
 
     /**

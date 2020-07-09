@@ -320,6 +320,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
                                         selectionMode={this.state.selectionMode}
                                         project={this.props.project}
                                         lockedTags={this.state.lockedTags}
+                                        isAdmin={this.props.auth.isAdmin}
                                     >
                                         <AssetPreview
                                             additionalSettings={this.state.additionalSettings}
