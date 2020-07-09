@@ -39,7 +39,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
         editorMode: EditorMode.Select,
         selectedAsset: null,
         project: null,
-        lockedTags: [],
+        lockedTags: []
     };
 
     public editor: Editor;
@@ -324,7 +324,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
                 this.props.onAssetMetadataChanged(currentAsset);
             }
         );
-        if(this.props.isAdmin){
+        if (this.props.isAdmin) {
             this.props.onValidate(false);
         }
     };
@@ -516,7 +516,7 @@ export default class Canvas extends React.Component<ICanvasProps, ICanvasState> 
         };
         this.props.onAssetMetadataChanged(currentAsset);
         this.updateCanvasToolsRegionTags();
-        if(this.props.isAdmin){
+        if (this.props.isAdmin) {
             this.props.onValidate(false);
         }
     };
