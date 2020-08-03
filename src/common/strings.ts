@@ -529,6 +529,7 @@ export interface IAppStrings {
         59: string;
         60: string;
         61: string;
+        62: string;
     };
 }
 
