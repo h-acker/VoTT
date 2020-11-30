@@ -5,6 +5,7 @@ import { strings } from "./common/strings";
 export enum ToolbarItemName {
     SelectCanvas = "selectCanvas",
     DrawRectangle = "drawRectangle",
+    DrawPolygon = "drawPolygon",
     CopyRegions = "copyRegions",
     CutRegions = "cutRegions",
     PasteRegions = "pasteRegions",
@@ -44,6 +45,15 @@ export default function registerToolbar() {
         group: ToolbarItemGroup.Canvas,
         type: ToolbarItemType.State,
         accelerators: ["R", "r"]
+    });
+
+    ToolbarItemFactory.register({
+        name: ToolbarItemName.DrawPolygon,
+        tooltip: strings.editorPage.toolbar.drawPolygon,
+        icon: "fa-draw-polygon",
+        group: ToolbarItemGroup.Canvas,
+        type: ToolbarItemType.State,
+        accelerators: ["P", "p"]
     });
 
     ToolbarItemFactory.register({
