@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ISignIn, IAuth } from "../../../../models/applicationState";
+import { ISignIn, IAuth, PlatformMode } from "../../../../models/applicationState";
 import { SignInForm } from "./signInForm";
 import { Route } from "react-router-dom";
 import apiService, { ILoginRequestPayload, IApiService } from "../../../../services/apiService";
@@ -86,15 +86,18 @@ export default class SignInPage extends React.Component<ISignInPageProps, ISignI
                     fullName: null,
                     rememberUser,
                     userId: null,
-                    isAdmin: false
+                    isAdmin: false,
+                    platformMode: PlatformMode.tagging
                 }
             });
             await this.props.actions.signIn(this.state.auth);
             const userInfo = await apiService.getCurrentUser();
+            const userSettings = await apiService.getUserSettings();
             await this.props.actions.saveUserInfo({
                 fullName: userInfo.data.full_name,
                 userId: userInfo.data.id,
-                isAdmin: userInfo.data.is_superuser
+                isAdmin: userInfo.data.is_superuser,
+                platformMode: userSettings.data.vott_mode,
             });
             await this.props.trackingActions.trackingSignIn(userInfo.data.id);
             history.push("/");

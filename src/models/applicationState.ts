@@ -417,6 +417,11 @@ export enum EditorMode {
     None = "NONE"
 }
 
+export enum PlatformMode {
+    tagging = "tagging",
+    segmentation = "segmentation"
+}
+
 export interface ISecureString {
     encrypted: string;
 }
@@ -451,4 +456,5 @@ export interface IAuth {
     userId?: number;
     rememberUser?: boolean;
     isAdmin?: boolean;
+    platformMode?: PlatformMode;
 }

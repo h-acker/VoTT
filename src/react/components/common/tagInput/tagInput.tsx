@@ -1,7 +1,7 @@
 import React, { KeyboardEvent } from "react";
 import ReactDOM from "react-dom";
 import Align from "rc-align";
-import { IRegion, ITag } from "../../../../models/applicationState";
+import { IRegion, ITag, PlatformMode } from "../../../../models/applicationState";
 import { ColorPicker } from "../colorPicker";
 import "./tagInput.scss";
 import "../condensedList/condensedList.scss";
@@ -59,19 +59,25 @@ function defaultDOMNode(): Element {
     return document.createElement("div");
 }
 
-export const buildTags = (litters: ILitter[]): ITag[] => {
+export const buildTags = (litters: ILitter[], platformMode: PlatformMode): ITag[] => {
     return litters.map(item => {
         return {
-            name: strings.wasteTypes[item.id],
+            name:
+                platformMode === PlatformMode.segmentation
+                    ? strings.segmentationCategories[item.id]
+                    : strings.wasteTypes[item.id],
             color: item.color
         };
     });
 };
 
-export const buildTagsWithId = (litters: ILitter[]): ITagWithId[] => {
+export const buildTagsWithId = (litters: ILitter[], platformMode: PlatformMode): ITagWithId[] => {
     return litters.map(item => {
         return {
-            name: strings.wasteTypes[item.id],
+            name:
+                platformMode === PlatformMode.segmentation
+                    ? strings.segmentationCategories[item.id]
+                    : strings.wasteTypes[item.id],
             color: item.color,
             id: item.id
         };

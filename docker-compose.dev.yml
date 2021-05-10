@@ -14,11 +14,11 @@ services:
       - REACT_APP_INSTRUMENTATION_KEY=${REACT_APP_INSTRUMENTATION_KEY}
       - TRAEFIK_PUBLIC_NETWORK=${TRAEFIK_PUBLIC_NETWORK}
       - DOMAIN=local
-      - SUBDOMAIN=vott
+      - SUBDOMAIN=vott x
       - ENVIRONMENT=dev
       - NODE_ENV=development
       - DOCKER_TAG=latest
-      - REACT_APP_API_URL=https://mocks.cortexia.io
+      - REACT_APP_API_URL=http://backend.local
     volumes:
       - ./src:/app/src
     ports:

@@ -1,12 +1,13 @@
 import { ActionTypes } from "./actionTypes";
 import { IPayloadAction, createPayloadAction, createAction } from "./actionCreators";
-import { IAuth } from "../../models/applicationState";
+import { IAuth, PlatformMode } from "../../models/applicationState";
 import { Dispatch, Action } from "redux";
 
 export interface IUserInfo {
     fullName: string;
     userId: number;
     isAdmin: boolean;
+    platformMode: PlatformMode;
 }
 
 /**

@@ -7,7 +7,8 @@ import {
     AppError,
     ErrorCode,
     ModelPathType,
-    IActiveLearningSettings
+    IActiveLearningSettings,
+    PlatformMode
 } from "../models/applicationState";
 import Guard from "../common/guard";
 import { constants } from "../common/constants";
@@ -26,7 +27,12 @@ import { strings } from "../common/strings";
  * @member delete - Delete a project
  */
 export interface IProjectService {
-    load(project: IProject, securityToken: ISecurityToken, buildTagsRequired?: boolean): Promise<IProject>;
+    load(
+        project: IProject,
+        securityToken: ISecurityToken,
+        platformMode: PlatformMode,
+        buildTagsRequired?: boolean
+    ): Promise<IProject>;
     save(project: IProject, securityToken: ISecurityToken): Promise<IProject>;
     delete(project: IProject): Promise<void>;
     isDuplicate(project: IProject, projectList: IProject[]): boolean;
@@ -56,10 +62,12 @@ export default class ProjectService implements IProjectService {
      * @param project The project JSON to load
      * @param securityToken The security token used to decrypt sensitive project settings
      * @param buildTagsRequired If project is loaded for the first time, tags need to be built
+     * @param platformMode If vott is in segmentation or tagging mode
      */
     public async load(
         project: IProject,
         securityToken: ISecurityToken,
+        platformMode: PlatformMode,
         buildTagsRequired: boolean = true
     ): Promise<IProject> {
         Guard.null(project);
@@ -69,7 +77,7 @@ export default class ProjectService implements IProjectService {
             if (buildTagsRequired) {
                 try {
                     const litters = await apiService.getLitters();
-                    loadedProject.tags = buildTags(litters.data);
+                    loadedProject.tags = buildTags(litters.data, platformMode);
                 } catch (e) {
                     console.warn(strings.consoleMessages.getLitterFailed);
                     return Promise.reject();

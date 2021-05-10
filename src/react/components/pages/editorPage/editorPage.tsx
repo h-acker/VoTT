@@ -143,7 +143,7 @@ function mapDispatchToProps(dispatch) {
     mapStateToProps,
     mapDispatchToProps
 )
-export default class EditorPage extends React.Component<IEditorPageProps, IEditorPageState> {
+class EditorPage extends React.Component<IEditorPageProps, IEditorPageState> {
     public state: IEditorPageState = {
         selectedTag: null,
         lockedTags: [],
@@ -644,7 +644,7 @@ export default class EditorPage extends React.Component<IEditorPageProps, IEdito
             assetMetadata.asset.state = AssetState.Visited;
         }
 
-        const tagsWithId = buildTagsWithId(this.state.litters);
+        const tagsWithId = buildTagsWithId(this.state.litters, this.props.auth.platformMode);
 
         // Update root asset if not already in the "Tagged" state
         // This is primarily used in the case where a Video Frame is being edited.
@@ -1106,3 +1106,5 @@ const styles = {
         top: "45%"
     }
 } as any;
+
+export default EditorPage;
