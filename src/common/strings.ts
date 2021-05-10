@@ -542,7 +542,7 @@ export interface IAppStrings {
         7: string;
         8: string;
         9: string;
-    }
+    };
 }
 
 interface IErrorMetadata {

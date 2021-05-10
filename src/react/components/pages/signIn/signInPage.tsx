@@ -97,7 +97,7 @@ export default class SignInPage extends React.Component<ISignInPageProps, ISignI
                 fullName: userInfo.data.full_name,
                 userId: userInfo.data.id,
                 isAdmin: userInfo.data.is_superuser,
-                platformMode: userSettings.data.vott_mode,
+                platformMode: userSettings.data.vott_mode
             });
             await this.props.trackingActions.trackingSignIn(userInfo.data.id);
             history.push("/");
