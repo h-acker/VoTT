@@ -534,7 +534,6 @@
         "36": "Plástico transparente",
         "37": "Plástico opaco",
         "38": "Tejido",
-        "39": "Propreté générale",
         "40": "Botella / cápsulas de lata",
         "41": "Canal",
         "42": "Muebles",
@@ -557,7 +556,19 @@
         "59": "Feuille mouillée",
         "60": "Poubelles responde",
         "61": "Robydog",
-        "62": "Wooden or plastic crate",
-        "63": "Mask"
+        "62": "Caja de plástico/madera ",
+        "63": "Mascarilla",
+        "79": "Diverso"
+    },
+    "segmentationCategories": {
+        "1": "Carretera principal",
+        "2": "Acera",
+        "3": "Personas/peatones",
+        "4": "Vehículo",
+        "5": "Arboles/plantas",
+        "6": "Vegetación (césped)",
+        "7": "Edicicios/casas/...",
+        "8": "Cielo",
+        "9": "Diverso"
     }
 }

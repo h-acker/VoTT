@@ -4,7 +4,7 @@ import { Env } from "../common/environment";
 import { ITrackingAction } from "../models/trackingAction";
 import { mapTrackingActionToApiBody } from "./ApiMapper";
 import { Api } from "./ApiEnum";
-import { IRegion, ISize } from "../models/applicationState";
+import { IRegion, ISize, PlatformMode } from "../models/applicationState";
 
 export interface ILoginRequestPayload {
     username: string;
@@ -45,6 +45,13 @@ interface IUser {
     id: number;
     created_at: string;
     updated_at: string;
+}
+
+interface IUserttings {
+    id: number;
+    filter_path: string;
+    user_id: number;
+    vott_mode: PlatformMode;
 }
 
 export interface IImage {
@@ -102,6 +109,10 @@ export class ApiService implements IApiService {
 
     public getCurrentUser = (): AxiosPromise<IUser> => {
         return this.client.get(Api.UsersMe);
+    };
+
+    public getUserSettings = (): AxiosPromise<IUserttings> => {
+        return this.client.get(Api.UsersSettings);
     };
 
     public createAction = (action: ITrackingAction): AxiosPromise<IActionResponse> => {

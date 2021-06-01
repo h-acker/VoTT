@@ -60,7 +60,12 @@ export function loadProject(
             throw new AppError(ErrorCode.SecurityTokenNotFound, "Security Token Not Found");
         }
 
-        const loadedProject = await projectService.load(project, projectToken, buildTagsRequired);
+        const loadedProject = await projectService.load(
+            project,
+            projectToken,
+            appState.auth.platformMode,
+            buildTagsRequired
+        );
         dispatch(loadProjectAction(loadedProject));
         return loadedProject;
     };
@@ -128,7 +133,7 @@ export function deleteProject(
             throw new AppError(ErrorCode.SecurityTokenNotFound, "Security Token Not Found");
         }
 
-        const decryptedProject = await projectService.load(project, projectToken);
+        const decryptedProject = await projectService.load(project, projectToken, appState.auth.platformMode);
         await projectService.delete(decryptedProject);
         dispatch(deleteProjectAction(decryptedProject));
     };
