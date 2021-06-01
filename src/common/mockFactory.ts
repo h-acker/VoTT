@@ -20,7 +20,8 @@ import {
     IRegion,
     RegionType,
     ModelPathType,
-    IAuth
+    IAuth,
+    PlatformMode
 } from "../models/applicationState";
 import { IV1Project, IV1Region } from "../models/v1Models";
 import { ExportAssetState } from "../providers/export/exportProvider";
@@ -1127,6 +1128,7 @@ export default class MockFactory {
         fullName?: string,
         rememberUser?: boolean,
         userId?: number,
+        platformMode?: PlatformMode,
         isAdmin = false
     ): IAuth {
         return {
@@ -1134,7 +1136,8 @@ export default class MockFactory {
             fullName,
             rememberUser,
             userId,
-            isAdmin
+            isAdmin,
+            platformMode
         };
     }
 

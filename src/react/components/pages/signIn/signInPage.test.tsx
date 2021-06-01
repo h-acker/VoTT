@@ -3,7 +3,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
 import MockFactory from "../../../../common/mockFactory";
 import createReduxStore from "../../../../redux/store/store";
-import { IApplicationState } from "../../../../models/applicationState";
+import { IApplicationState, PlatformMode } from "../../../../models/applicationState";
 import { SignInForm } from "./signInForm";
 import SignInPage, { ISignInPageProps } from "./signInPage";
 import { ReactWrapper, mount } from "enzyme";
@@ -36,10 +36,10 @@ describe("Sign In Page", () => {
     });
 
     it("saves the auth values when the form is submitted and redirect to home", async () => {
-        const auth = MockFactory.createTestAuth("access_token", null, false, null);
+        const auth = MockFactory.createTestAuth("access_token", null, false, null, PlatformMode.tagging);
         const store = createStore(auth);
         const props = createProps();
-        const userInfo: authActions.IUserInfo = { fullName: "John Doe", userId: 2, isAdmin: false };
+        const userInfo: authActions.IUserInfo = { fullName: "John Doe", userId: 2, isAdmin: false, platformMode: PlatformMode.tagging };
         const signInAction = jest.spyOn(props.actions, "signIn");
         const saveUserInfoAction = jest.spyOn(props.actions, "saveUserInfo");
         const trackingSignInAction = jest.spyOn(props.trackingActions, "trackingSignIn");
@@ -95,5 +95,13 @@ describe("Sign In Page", () => {
                 }
             })
         );
+        jest.spyOn(ApiService, "getUserSettings").mockImplementationOnce(() =>
+            Promise.resolve({
+                data: {
+                    vott_mode: userInfo.platformMode
+                }
+            })
+        );
     }
+    
 });

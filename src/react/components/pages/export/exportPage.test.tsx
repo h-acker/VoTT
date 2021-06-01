@@ -4,7 +4,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { mount, ReactWrapper } from "enzyme";
 import { AnyAction, Store } from "redux";
 import ExportPage, { IExportPageProps } from "./exportPage";
-import { IApplicationState, IProject } from "../../../../models/applicationState";
+import { IApplicationState, IProject, PlatformMode } from "../../../../models/applicationState";
 import IProjectActions, * as projectActions from "../../../../redux/actions/projectActions";
 import createReduxStore from "../../../../redux/store/store";
 import MockFactory from "../../../../common/mockFactory";
@@ -145,7 +145,7 @@ function createStore(project: IProject, setCurrentProject: boolean = false): Sto
         appSettings: MockFactory.appSettings(),
         connections: [],
         recentProjects: [project],
-        auth: null,
+        auth: MockFactory.createTestAuth(null, null, false, null, PlatformMode.tagging),
     };
 
     return createReduxStore(initialState);
