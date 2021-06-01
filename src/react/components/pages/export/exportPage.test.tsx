@@ -4,7 +4,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { mount, ReactWrapper } from "enzyme";
 import { AnyAction, Store } from "redux";
 import ExportPage, { IExportPageProps } from "./exportPage";
-import { IApplicationState, IProject } from "../../../../models/applicationState";
+import { IApplicationState, IProject, PlatformMode } from "../../../../models/applicationState";
 import IProjectActions, * as projectActions from "../../../../redux/actions/projectActions";
 import createReduxStore from "../../../../redux/store/store";
 import MockFactory from "../../../../common/mockFactory";
@@ -25,22 +25,22 @@ describe("Export Page", () => {
                 <Router>
                     <ExportPage {...props} />
                 </Router>
-            </Provider>,
+            </Provider>
         );
     }
 
     beforeAll(() => {
         Object.defineProperty(ExportProviderFactory, "providers", {
-            get: jest.fn(() => exportProviderRegistrations),
+            get: jest.fn(() => exportProviderRegistrations)
         });
         Object.defineProperty(ExportProviderFactory, "defaultProvider", {
-            get: jest.fn(() => exportProviderRegistrations[0]),
+            get: jest.fn(() => exportProviderRegistrations[0])
         });
     });
 
     beforeEach(() => {
         projectServiceMock = ProjectService as jest.Mocked<typeof ProjectService>;
-        projectServiceMock.prototype.load = jest.fn((project) => Promise.resolve(project));
+        projectServiceMock.prototype.load = jest.fn(project => Promise.resolve(project));
     });
 
     it("Sets project state from redux store", () => {
@@ -56,7 +56,7 @@ describe("Export Page", () => {
         expect(exportPage.prop("project")).toEqual(testProject);
     });
 
-    it("Sets project state from route params", async (done) => {
+    it("Sets project state from route params", async done => {
         const testProject = MockFactory.createTestProject("TestProject");
         const store = createStore(testProject, false);
         const props = createProps(testProject.id);
@@ -65,14 +65,17 @@ describe("Export Page", () => {
         const wrapper = createComponent(store, props);
 
         setImmediate(() => {
-            const exportPage = wrapper.find(ExportPage).childAt(0).instance() as ExportPage;
+            const exportPage = wrapper
+                .find(ExportPage)
+                .childAt(0)
+                .instance() as ExportPage;
             expect(exportPage.props.project).toEqual(testProject);
             expect(loadProjectSpy).toHaveBeenCalledWith(testProject);
             done();
         });
     });
 
-    it("Calls save project actions on form submit", (done) => {
+    it("Calls save project actions on form submit", done => {
         const testProject = MockFactory.createTestProject("TestProject");
         const store = createStore(testProject, true);
         const props = createProps(testProject.id);
@@ -82,11 +85,11 @@ describe("Export Page", () => {
 
         ExportProviderFactory.create = jest.fn(() => {
             return {
-                export: jest.fn(() => Promise.resolve()),
+                export: jest.fn(() => Promise.resolve())
             };
         });
 
-        projectServiceMock.prototype.save = jest.fn((project) => Promise.resolve(project));
+        projectServiceMock.prototype.save = jest.fn(project => Promise.resolve(project));
 
         const wrapper = createComponent(store, props);
         wrapper.find("form").simulate("submit");
@@ -119,23 +122,23 @@ function createProps(projectId: string): IExportPageProps {
             goForward: jest.fn(),
             block: jest.fn(),
             listen: jest.fn(),
-            createHref: jest.fn(),
+            createHref: jest.fn()
         },
         location: {
             hash: null,
             pathname: null,
             search: null,
-            state: null,
+            state: null
         },
         actions: (projectActions as any) as IProjectActions,
         match: {
             params: {
-                projectId,
+                projectId
             },
             isExact: true,
             path: `https://localhost:3000/projects/${projectId}/export`,
-            url: `https://localhost:3000/projects/${projectId}/export`,
-        },
+            url: `https://localhost:3000/projects/${projectId}/export`
+        }
     };
 }
 
@@ -145,7 +148,7 @@ function createStore(project: IProject, setCurrentProject: boolean = false): Sto
         appSettings: MockFactory.appSettings(),
         connections: [],
         recentProjects: [project],
-        auth: null,
+        auth: MockFactory.createTestAuth(null, null, false, null, PlatformMode.tagging)
     };
 
     return createReduxStore(initialState);

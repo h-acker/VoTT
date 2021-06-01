@@ -12,7 +12,7 @@ jest.mock("../../services/assetService");
 import { AssetService } from "../../services/assetService";
 import { ExportProviderFactory } from "../../providers/export/exportProviderFactory";
 import { IExportProvider } from "../../providers/export/exportProvider";
-import { IApplicationState, IProject } from "../../models/applicationState";
+import { IApplicationState, IProject, PlatformMode } from "../../models/applicationState";
 import initialState from "../store/initialState";
 import { appInfo } from "../../common/appInfo";
 import registerMixins from "../../registerMixins";
@@ -52,7 +52,7 @@ describe("Project Redux Actions", () => {
             payload: project
         });
         expect(result).toEqual(project);
-        expect(projectServiceMock.prototype.load).toBeCalledWith(project, projectToken, true);
+        expect(projectServiceMock.prototype.load).toBeCalledWith(project, projectToken, undefined, true);
     });
 
     it("Save Project action calls project service and dispatches redux action", async () => {
@@ -77,7 +77,7 @@ describe("Project Redux Actions", () => {
         });
         expect(result).toEqual(project);
         expect(projectServiceMock.prototype.save).toBeCalledWith(project, projectToken);
-        expect(projectServiceMock.prototype.load).toBeCalledWith(project, projectToken, true);
+        expect(projectServiceMock.prototype.load).toBeCalledWith(project, projectToken, undefined, true);
     });
 
     it("Save Project action correctly add project version", async () => {
