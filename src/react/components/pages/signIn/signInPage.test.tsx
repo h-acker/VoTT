@@ -39,7 +39,12 @@ describe("Sign In Page", () => {
         const auth = MockFactory.createTestAuth("access_token", null, false, null, PlatformMode.tagging);
         const store = createStore(auth);
         const props = createProps();
-        const userInfo: authActions.IUserInfo = { fullName: "John Doe", userId: 2, isAdmin: false, platformMode: PlatformMode.tagging };
+        const userInfo: authActions.IUserInfo = {
+            fullName: "John Doe",
+            userId: 2,
+            isAdmin: false,
+            platformMode: PlatformMode.tagging
+        };
         const signInAction = jest.spyOn(props.actions, "signIn");
         const saveUserInfoAction = jest.spyOn(props.actions, "saveUserInfo");
         const trackingSignInAction = jest.spyOn(props.trackingActions, "trackingSignIn");
@@ -103,5 +108,4 @@ describe("Sign In Page", () => {
             })
         );
     }
-    
 });
