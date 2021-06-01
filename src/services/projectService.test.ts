@@ -9,7 +9,8 @@ import {
     AssetState,
     IActiveLearningSettings,
     ModelPathType,
-    ITag
+    ITag,
+    PlatformMode
 } from "../models/applicationState";
 import { constants } from "../common/constants";
 import { ExportProviderFactory } from "../providers/export/exportProviderFactory";
@@ -60,7 +61,7 @@ describe("Project Service", () => {
 
     it("Load decrypts any project settings using the specified key", async () => {
         const encryptedProject = encryptProject(testProject, securityToken);
-        const decryptedProject = await projectSerivce.load(encryptedProject, securityToken);
+        const decryptedProject = await projectSerivce.load(encryptedProject, securityToken, PlatformMode.tagging);
         const litter: ILitter = MockFactory.createTestLitter(1);
         expect(decryptedProject).toEqual({
             ...testProject,
@@ -236,7 +237,7 @@ describe("Project Service", () => {
         };
 
         const encryptedProject = encryptProject(testProject, securityToken);
-        const decryptedProject = await projectSerivce.load(encryptedProject, securityToken);
+        const decryptedProject = await projectSerivce.load(encryptedProject, securityToken, PlatformMode.tagging);
 
         expect(decryptedProject.exportFormat.providerType).toEqual("pascalVOC");
         expect(decryptedProject.exportFormat.providerOptions).toEqual(testProject.exportFormat.providerOptions);
