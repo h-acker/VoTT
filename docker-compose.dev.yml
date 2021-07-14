@@ -14,7 +14,7 @@ services:
       - REACT_APP_INSTRUMENTATION_KEY=${REACT_APP_INSTRUMENTATION_KEY}
       - TRAEFIK_PUBLIC_NETWORK=${TRAEFIK_PUBLIC_NETWORK}
       - DOMAIN=local
-      - SUBDOMAIN=vott x
+      - SUBDOMAIN=vott
       - ENVIRONMENT=dev
       - NODE_ENV=development
       - DOCKER_TAG=latest
