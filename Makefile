@@ -204,13 +204,14 @@ endif
 		CORTEXIA_VERSION=$(VERSION) \
 		REACT_APP_INSTRUMENTATION_KEY=$(REACT_APP_INSTRUMENTATION_KEY) \
 		TRAEFIK_PUBLIC_NETWORK=$(TRAEFIK_PUBLIC_NETWORK) \
-		DOMAIN=local \
-		SUBDOMAIN=vott \
-		ENVIRONMENT=dev \
-		NODE_ENV=development \
+		DOMAIN=${DOMAIN} \
+		SUBDOMAIN={SUBDOMAIN} \
+		ENVIRONMENT=${ENVIRONMENT} \
+		NODE_ENV=${NODE_ENV} \
+		PUBLIC_URL=${PUBLIC_URL} \
 		DOCKER_TAG=latest \
 		STACK_NAME=vott-local \
-		REACT_APP_API_URL=http://backend.local \
+		REACT_APP_API_URL=${REACT_APP_API_URL} \
 		docker-compose \
 			-f docker-compose.deploy.yml \
 			-f docker-compose.networks.yml \

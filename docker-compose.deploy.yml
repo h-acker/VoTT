@@ -10,6 +10,7 @@ services:
         - REACT_APP_API_URL=${REACT_APP_API_URL}
         - REACT_APP_INSTRUMENTATION_KEY=${REACT_APP_INSTRUMENTATION_KEY}
         - NODE_ENV=${NODE_ENV}
+        - PUBLIC_URL=${PUBLIC_URL}
     image: cortexia/vott:${DOCKER_TAG}
     deploy:
       labels:

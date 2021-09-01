@@ -18,7 +18,7 @@ services:
       - ENVIRONMENT=dev
       - NODE_ENV=development
       - DOCKER_TAG=latest
-      - REACT_APP_API_URL=http://backend.local
+      - REACT_APP_API_URL=${REACT_APP_API_URL}
     volumes:
       - ./src:/app/src
     ports:
