@@ -223,11 +223,4 @@ build-local: config-local
 deploy-local: build-local kill-local
 	DOMAIN=$(DOMAIN) \
 	SUBDOMAIN=$(SUBDOMAIN) \
-	docker run -d --name vott-local --rm \
-		--network=$(TRAEFIK_PUBLIC_NETWORK) \
-		--label "traefik.enable=true" \
-		--label "traefik.docker.network=$(TRAEFIK_PUBLIC_NETWORK)" \
-		--label "traefik.http.routers.vott-local.entrypoints=websecure" \
-		--label "traefik.http.routers.vott-local.tls.certresolver=cloudflare" \
-		--label "traefik.http.routers.vott-local.rule=Host(\`$(SUBDOMAIN).$(DOMAIN)\`)" \
-	cortexia/vott:latest
+	docker-compose -f docker-stack.yml up -d

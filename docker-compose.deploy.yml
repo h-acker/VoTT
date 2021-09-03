@@ -6,11 +6,9 @@ services:
       context: .
       args:
         - BUILDTIME_CORTEXIA_VERSION=${CORTEXIA_VERSION}
-        - NODE_ENV=${NODE_ENV}
-        - ENVIRONMENT=${ENVIRONMENT}
-        - REACT_APP_API_URL=${REACT_APP_API_URL}
-        - REACT_APP_INSTRUMENTATION_KEY=${REACT_APP_INSTRUMENTATION_KEY}
+    env_file : .env
     image: cortexia/vott:${DOCKER_TAG}
+    container_name: vott
     deploy:
       labels:
         - "traefik.enable=true"
