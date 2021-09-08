@@ -10,6 +10,8 @@
 // To learn more about the benefits of this model and instructions on how to
 // opt-in, read http://bit.ly/CRA-PWA
 
+import { Env } from "./common/environment";
+
 const isLocalhost = Boolean(
   window.location.hostname === "localhost" ||
     // [::1] is the IPv6 localhost address.
@@ -26,7 +28,7 @@ interface IConfig {
 }
 
 export function register(config?: IConfig) {
-  if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator) {
+  if (Env.get() === "production" && "serviceWorker" in navigator) {
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(
       (process as { env: { [key: string]: string } }).env.PUBLIC_URL,
