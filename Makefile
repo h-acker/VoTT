@@ -33,7 +33,7 @@ endif
 		ENVIRONMENT=dev \
 		NODE_ENV=development \
 		DOCKER_TAG=latest \
-		REACT_APP_API_URL=https://backend-dev.cortexia.io \
+		REACT_APP_API_URL=${REACT_APP_API_URL} \
 		docker-compose \
 			-f docker-compose.deploy.yml \
 			-f docker-compose.networks.yml \
@@ -55,7 +55,7 @@ endif
 		ENVIRONMENT=dev \
 		NODE_ENV=development \
 		DOCKER_TAG=qa \
-		REACT_APP_API_URL=https://backend-qa.cortexia.io \
+		REACT_APP_API_URL=${REACT_APP_API_URL} \
 		docker-compose \
 			-f docker-compose.deploy.yml \
 			-f docker-compose.networks.yml \
@@ -77,7 +77,7 @@ endif
 		ENVIRONMENT=prod \
 		NODE_ENV=production \
 		DOCKER_TAG=prod \
-		REACT_APP_API_URL=https://backend.cortexia.io \
+		REACT_APP_API_URL=${REACT_APP_API_URL} \
 		docker-compose \
 			-f docker-compose.deploy.yml \
 			-f docker-compose.networks.yml \

@@ -1,12 +1,12 @@
 declare global {
     interface Window {
-        env: any
+        env: any;
     }
 }
 
 window.env = {
-    REACT_APP_API_URL: 'REACT_APP_API_URL_PLACEHOLDER',
-    NODE_ENV: 'NODE_ENV_PLACEHOLDER',
+    REACT_APP_API_URL: "REACT_APP_API_URL_PLACEHOLDER",
+    NODE_ENV: "NODE_ENV_PLACEHOLDER"
 };
 
 export class Env {
