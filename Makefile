@@ -33,7 +33,7 @@ endif
 		ENVIRONMENT=dev \
 		NODE_ENV=development \
 		DOCKER_TAG=latest \
-		REACT_APP_API_URL=https://backend-dev.cortexia.io \
+		REACT_APP_API_URL=${REACT_APP_API_URL} \
 		docker-compose \
 			-f docker-compose.deploy.yml \
 			-f docker-compose.networks.yml \
@@ -55,7 +55,7 @@ endif
 		ENVIRONMENT=dev \
 		NODE_ENV=development \
 		DOCKER_TAG=qa \
-		REACT_APP_API_URL=https://backend-qa.cortexia.io \
+		REACT_APP_API_URL=${REACT_APP_API_URL} \
 		docker-compose \
 			-f docker-compose.deploy.yml \
 			-f docker-compose.networks.yml \
@@ -77,7 +77,7 @@ endif
 		ENVIRONMENT=prod \
 		NODE_ENV=production \
 		DOCKER_TAG=prod \
-		REACT_APP_API_URL=https://backend.cortexia.io \
+		REACT_APP_API_URL=${REACT_APP_API_URL} \
 		docker-compose \
 			-f docker-compose.deploy.yml \
 			-f docker-compose.networks.yml \
@@ -204,13 +204,14 @@ endif
 		CORTEXIA_VERSION=$(VERSION) \
 		REACT_APP_INSTRUMENTATION_KEY=$(REACT_APP_INSTRUMENTATION_KEY) \
 		TRAEFIK_PUBLIC_NETWORK=$(TRAEFIK_PUBLIC_NETWORK) \
-		DOMAIN=local \
-		SUBDOMAIN=vott \
-		ENVIRONMENT=dev \
-		NODE_ENV=development \
+		DOMAIN=${DOMAIN} \
+		SUBDOMAIN=${SUBDOMAIN} \
+		ENVIRONMENT=${ENVIRONMENT} \
+		NODE_ENV=${NODE_ENV} \
+		PUBLIC_URL=${PUBLIC_URL} \
 		DOCKER_TAG=latest \
 		STACK_NAME=vott-local \
-		REACT_APP_API_URL=http://backend.local \
+		REACT_APP_API_URL=${REACT_APP_API_URL} \
 		docker-compose \
 			-f docker-compose.deploy.yml \
 			-f docker-compose.networks.yml \
@@ -222,11 +223,4 @@ build-local: config-local
 deploy-local: build-local kill-local
 	DOMAIN=$(DOMAIN) \
 	SUBDOMAIN=$(SUBDOMAIN) \
-	docker run -d --name vott-local --rm \
-		--network=$(TRAEFIK_PUBLIC_NETWORK) \
-		--label "traefik.enable=true" \
-		--label "traefik.docker.network=$(TRAEFIK_PUBLIC_NETWORK)" \
-		--label "traefik.http.routers.vott-local.entrypoints=websecure" \
-		--label "traefik.http.routers.vott-local.tls.certresolver=cloudflare" \
-		--label "traefik.http.routers.vott-local.rule=Host(\`$(SUBDOMAIN).$(DOMAIN)\`)" \
-	cortexia/vott:latest
+	docker-compose -f docker-stack.yml up -d
