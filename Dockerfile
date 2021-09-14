@@ -13,6 +13,8 @@ RUN npm run webpack:prod
 RUN mv /tmp/build /app
 WORKDIR /app
 
+ENV REACT_APP_CORTEXIA_VERSION=$BUILDTIME_CORTEXIA_VERSION
+
 COPY ./setup_env.sh .
 RUN chmod +x ./setup_env.sh
 
