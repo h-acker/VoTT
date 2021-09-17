@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+  vott:
+    build:
+      context: .
+      args:
+        - BUILDTIME_CORTEXIA_VERSION=${BUILDTIME_CORTEXIA_VERSION}
+    image: cortexia/vott:${TAG}

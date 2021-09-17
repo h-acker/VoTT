@@ -2,13 +2,8 @@ version: '3.7'
 
 services:
   vott:
-    build:
-      context: .
-      args:
-        - BUILDTIME_CORTEXIA_VERSION=${CORTEXIA_VERSION}
     env_file : .env
-    image: cortexia/vott:${DOCKER_TAG}
-    container_name: vott
+    image: cortexia/vott:${TAG}
     deploy:
       labels:
         - "traefik.enable=true"

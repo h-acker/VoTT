@@ -1,25 +1,22 @@
 version: '3.7'
 
 services:
-  vott-dev:
+  vott:
     build: 
       context: ./
       dockerfile: Dockerfile-dev
       args:
-        - BUILDTIME_CORTEXIA_VERSION=${CORTEXIA_VERSION}
-    env_file:
-      - ./.env
-    environment:
-      - STACK_NAME=vott
-      - REACT_APP_INSTRUMENTATION_KEY=${REACT_APP_INSTRUMENTATION_KEY}
-      - TRAEFIK_PUBLIC_NETWORK=${TRAEFIK_PUBLIC_NETWORK}
-      - DOMAIN=local
-      - SUBDOMAIN=vott
-      - ENVIRONMENT=dev
-      - NODE_ENV=development
-      - DOCKER_TAG=latest
-      - REACT_APP_API_URL=${REACT_APP_API_URL}
+        - BUILDTIME_CORTEXIA_VERSION=${BUILDTIME_CORTEXIA_VERSION}
+    env_file : .env
+    container_name: vott
     volumes:
       - ./src:/app/src
     ports:
       - "3000:3000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=${TRAEFIK_PUBLIC_NETWORK}"
+      - "traefik.http.routers.${STACK_NAME}.entrypoints=websecure"
+      - "traefik.http.routers.${STACK_NAME}.tls.certresolver=cloudflare"
+      - "traefik.http.routers.${STACK_NAME}.rule=Host(`${SUBDOMAIN}.${DOMAIN}`)"
+      - "traefik.http.services.${STACK_NAME}.loadbalancer.server.port=5000"

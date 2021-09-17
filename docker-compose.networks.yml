@@ -9,10 +9,3 @@ services:
   vott:
     networks:
       - traefik
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=${TRAEFIK_PUBLIC_NETWORK}"
-      - "traefik.http.routers.${STACK_NAME}.entrypoints=websecure"
-      - "traefik.http.routers.${STACK_NAME}.tls.certresolver=cloudflare"
-      - "traefik.http.routers.${STACK_NAME}.rule=Host(`${SUBDOMAIN}.${DOMAIN}`)"
-      - "traefik.http.services.${STACK_NAME}.loadbalancer.server.port=5000"
