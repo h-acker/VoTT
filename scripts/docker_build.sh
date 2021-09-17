@@ -12,4 +12,4 @@ docker-compose \
 -f docker-compose.build.yml \
 config > docker-stack.yml
 
-docker-compose -f docker-stack.yml build
+docker-compose -f docker-stack.yml build --pull
