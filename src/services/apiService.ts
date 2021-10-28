@@ -132,11 +132,11 @@ export class ApiService implements IApiService {
     };
 
     public validateImage = (isValidated: boolean, imageBasename: string): AxiosPromise<IImageWithAction> => {
-        return this.client.put(`${Api.ValidateImage}${imageBasename}?is_validated=${isValidated}`);
+        return this.client.put(`${Api.ValidateImage}/${imageBasename}?is_validated=${isValidated}`);
     };
 
     public deleteImage = (isDeleted: boolean, imageBasename: string): AxiosPromise<IImageWithAction> => {
-        return this.client.put(`${Api.DeleteImage}${imageBasename}?is_deleted=${isDeleted}`);
+        return this.client.put(`${Api.DeleteImage}/${imageBasename}?is_deleted=${isDeleted}`);
     };
 
     public getImageWithLastAction = (): AxiosPromise<IImageWithAction[]> => {
