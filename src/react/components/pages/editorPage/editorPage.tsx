@@ -48,7 +48,6 @@ import ITrackingActions, * as trackingActions from "../../../../redux/actions/tr
 import { MagnifierModalMessage } from "./MagnifierModalMessage";
 import apiService, { IActionRequest, ILitter, IImageWithAction } from "../../../../services/apiService";
 import CanvasHelpers from "./canvasHelpers";
-import { getListOfLitters } from "../../../../services/listOfLitters";
 
 /**
  * Properties for Editor Page
@@ -186,9 +185,9 @@ class EditorPage extends React.Component<IEditorPageProps, IEditorPageState> {
             await this.props.actions.loadProject(project);
         }
         this.activeLearningService = new ActiveLearningService(this.props.project.activeLearningSettings);
-        const litters = (await apiService.getLitters()).data
+        const litters = await apiService.getLitters()
         this.setState({
-            litters: litters
+            litters: litters.data
         });
     }
 
