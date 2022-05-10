@@ -419,7 +419,8 @@ export enum EditorMode {
 
 export enum PlatformMode {
     tagging = "tagging",
-    segmentation = "segmentation"
+    segmentation = "segmentation",
+    ewaste = "ewaste"
 }
 
 export interface ISecureString {

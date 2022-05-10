@@ -65,7 +65,7 @@ export const buildTags = (litters: ILitter[], platformMode: PlatformMode): ITag[
             name:
                 platformMode === PlatformMode.segmentation
                     ? strings.segmentationCategories[item.id]
-                    : strings.wasteTypes[item.id],
+                    : platformMode === PlatformMode.ewaste ? strings.eWasteCategories[item.id] : strings.wasteTypes[item.id],
             color: item.color
         };
     });
@@ -77,7 +77,7 @@ export const buildTagsWithId = (litters: ILitter[], platformMode: PlatformMode):
             name:
                 platformMode === PlatformMode.segmentation
                     ? strings.segmentationCategories[item.id]
-                    : strings.wasteTypes[item.id],
+                    : platformMode === PlatformMode.ewaste ? strings.eWasteCategories[item.id] : strings.wasteTypes[item.id],
             color: item.color,
             id: item.id
         };

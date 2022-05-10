@@ -20,6 +20,7 @@ import { IExportFormat } from "vott-react";
 import apiService from "./apiService";
 import { buildTags } from "../react/components/common/tagInput/tagInput";
 import { strings } from "../common/strings";
+import { getListOfLitters } from "../services/listOfLitters"
 
 /**
  * Functions required for a project service
@@ -76,8 +77,8 @@ export default class ProjectService implements IProjectService {
             const loadedProject = decryptProject(project, securityToken);
             if (buildTagsRequired) {
                 try {
-                    const litters = await apiService.getLitters();
-                    loadedProject.tags = buildTags(litters.data, platformMode);
+                    const litters = (await apiService.getLitters()).data
+                    loadedProject.tags = buildTags(litters, platformMode);
                 } catch (e) {
                     console.warn(strings.consoleMessages.getLitterFailed);
                     return Promise.reject();

@@ -570,5 +570,15 @@
         "7": "Edicicios/casas/...",
         "8": "Cielo",
         "9": "Diverso"
+    },
+    "eWasteCategories": {
+        "1": "Metálico (varios)",
+        "2": "Plástico (varios)",
+        "3": "Papel (varios)",
+        "4": "Vidrio (varios)",
+        "5": "Mineral (varios)",
+        "6": "Desechos residuales (varios)",
+        "7": "Compuestos (varios)",
+        "8": "Diverso"
     }
 }
