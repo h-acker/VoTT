@@ -20,6 +20,7 @@ import { IExportFormat } from "vott-react";
 import apiService from "./apiService";
 import { buildTags } from "../react/components/common/tagInput/tagInput";
 import { strings } from "../common/strings";
+
 /**
  * Functions required for a project service
  * @member save - Save a project
