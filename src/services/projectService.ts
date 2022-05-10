@@ -75,7 +75,7 @@ export default class ProjectService implements IProjectService {
             const loadedProject = decryptProject(project, securityToken);
             if (buildTagsRequired) {
                 try {
-                    const litters = await apiService.getLitters()
+                    const litters = await apiService.getLitters();
                     loadedProject.tags = buildTags(litters.data, platformMode);
                 } catch (e) {
                     console.warn(strings.consoleMessages.getLitterFailed);

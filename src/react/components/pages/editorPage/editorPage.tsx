@@ -185,7 +185,7 @@ class EditorPage extends React.Component<IEditorPageProps, IEditorPageState> {
             await this.props.actions.loadProject(project);
         }
         this.activeLearningService = new ActiveLearningService(this.props.project.activeLearningSettings);
-        const litters = await apiService.getLitters()
+        const litters = await apiService.getLitters();
         this.setState({
             litters: litters.data
         });
