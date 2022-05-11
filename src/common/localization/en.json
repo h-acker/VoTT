@@ -570,5 +570,15 @@
         "7": "Buildings/house/...",
         "8": "Sky",
         "9": "Miscellaneous"
+    },
+    "eWasteCategories": {
+        "1": "Metal (various)",
+        "2": "Plastic (various)",
+        "3": "Paper (various)",
+        "4": "Glass (various)",
+        "5": "Mineral (various)",
+        "6": "Residual waste (various)",
+        "7": "Composites (various)",
+        "8": "Miscellaneous"
     }
 }

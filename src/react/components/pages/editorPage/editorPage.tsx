@@ -22,7 +22,8 @@ import {
     IAdditionalPageSettings,
     AppError,
     ErrorCode,
-    IAuth
+    IAuth,
+    PlatformMode
 } from "../../../../models/applicationState";
 import { IToolbarItemRegistration, ToolbarItemFactory } from "../../../../providers/toolbar/toolbarItemFactory";
 import IApplicationActions, * as applicationActions from "../../../../redux/actions/applicationActions";
@@ -32,7 +33,7 @@ import { AssetService } from "../../../../services/assetService";
 import { AssetPreview } from "../../common/assetPreview/assetPreview";
 import { KeyboardBinding } from "../../common/keyboardBinding/keyboardBinding";
 import { KeyEventType } from "../../common/keyboardManager/keyboardManager";
-import { TagInput, buildTagsWithId, buildTags } from "../../common/tagInput/tagInput";
+import { TagInput, buildTagsWithId } from "../../common/tagInput/tagInput";
 import { ToolbarItem } from "../../toolbar/toolbarItem";
 import Canvas from "./canvas";
 import "./editorPage.scss";
@@ -47,7 +48,6 @@ import ITrackingActions, * as trackingActions from "../../../../redux/actions/tr
 import { MagnifierModalMessage } from "./MagnifierModalMessage";
 import apiService, { IActionRequest, ILitter, IImageWithAction } from "../../../../services/apiService";
 import CanvasHelpers from "./canvasHelpers";
-import { mapTrackingActionToApiBody } from "../../../../services/ApiMapper";
 
 /**
  * Properties for Editor Page
