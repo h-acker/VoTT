@@ -19,4 +19,4 @@ services:
       - "traefik.http.routers.${STACK_NAME}.entrypoints=websecure"
       - "traefik.http.routers.${STACK_NAME}.tls.certresolver=cloudflare"
       - "traefik.http.routers.${STACK_NAME}.rule=Host(`${SUBDOMAIN}.${DOMAIN}`)"
-      - "traefik.http.services.${STACK_NAME}.loadbalancer.server.port=5000"
+      - "traefik.http.services.${STACK_NAME}.loadbalancer.server.port=3000"

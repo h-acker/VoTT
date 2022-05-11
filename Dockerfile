@@ -18,6 +18,6 @@ ENV REACT_APP_CORTEXIA_VERSION=$BUILDTIME_CORTEXIA_VERSION
 COPY ./setup_env.sh .
 RUN chmod +x ./setup_env.sh
 
-EXPOSE 5000
+EXPOSE 3000
 
 CMD ["./setup_env.sh"]

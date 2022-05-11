@@ -83,7 +83,7 @@ push-qa: login
 	TAG=qa BUILDTIME_CORTEXIA_VERSION=$(VERSION) bash scripts/docker_build-push.sh
 	TAG=$(VERSION) BUILDTIME_CORTEXIA_VERSION=$(VERSION) bash scripts/docker_build-push.sh
 
-push-prod: login
+push-prod: login config-prod
 	# confirm push to production
 	@python update_release.py confirm --prod
 
@@ -176,7 +176,7 @@ endif
 		STACK_NAME=vott-local \
 		REACT_APP_API_URL=${REACT_APP_API_URL} \
 		docker-compose \
-			-f docker-compose.dev.yml \
+			-f docker-compose.deploy.yml \
 			-f docker-compose.networks.yml \
 		config > docker-stack.yml
 
