@@ -176,7 +176,7 @@ endif
 		STACK_NAME=vott-local \
 		REACT_APP_API_URL=${REACT_APP_API_URL} \
 		docker-compose \
-			-f docker-compose.deploy.yml \
+			-f docker-compose.dev.yml \
 			-f docker-compose.networks.yml \
 		config > docker-stack.yml
 
