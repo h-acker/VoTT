@@ -1,4 +1,4 @@
-{
+Makefile {
     "appName": "Visual Object Tagging Tool",
     "common": {
         "displayName": "Display Name",
@@ -577,8 +577,8 @@
         "3": "Paper (various)",
         "4": "Glass (various)",
         "5": "Mineral (various)",
-        "6": "Residual waste (various)",
-        "7": "Composites (various)",
-        "8": "Miscellaneous"
+        "6": "Composites (various)",
+        "7": "Compostable bag (various)",
+        "8": "Residual waste"
     }
 }
