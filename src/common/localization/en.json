@@ -1,4 +1,4 @@
-Makefile {
+{
     "appName": "Visual Object Tagging Tool",
     "common": {
         "displayName": "Display Name",
