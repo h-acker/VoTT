@@ -3,14 +3,14 @@
 
 # the release comes from git and should not be modified
 # => read-only
-_release = '2021.10.1-5-g2632c98'
+_release = '2022.5.1-6-g258034c'
 
 # you can set the next version number manually
 # if you do not, the system will make sure that version > release
 # => read-write, >_release
-_version = '2022.5.1'
+_version = '2022.5.2'
 
 # the build number will generate conflicts on each PR merge
 # just keep yours every time
 # => read-only
-_build = '2632c98e1d9f626da47761b710f746626c85f2ee'
+_build = '258034cc6134e0d9287af2e7329539f9760b1d3a'
