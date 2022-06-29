@@ -82,7 +82,7 @@ export class ApiService implements IApiService {
             baseURL: Env.getApiUrl(),
             timeout: 10 * 1000,
             headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
+                "Content-Type": "application/json"
             }
         });
         this.client.interceptors.request.use(
@@ -100,7 +100,15 @@ export class ApiService implements IApiService {
     }
 
     public loginWithCredentials = (data: ILoginRequestPayload): AxiosPromise<IUserCredentials> => {
-        return this.client.post(Api.LoginAccessToken, qs.stringify(data));
+        let config = {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+          }
+        let formData = new FormData()
+        formData.append('username', data.username)
+        formData.append('password', data.password)
+        return this.client.post(Api.LoginAccessToken, formData, config);
     };
 
     public testToken = (): AxiosPromise<IUser> => {
@@ -143,8 +151,8 @@ export class ApiService implements IApiService {
         return this.client.get(Api.ImagesWithLastAction);
     };
 
-    public getLitters = (data: number[] = []): AxiosPromise<ILitter[]> => {
-        return this.client.post(Api.Litters, data);
+    public getLitters = (): AxiosPromise<ILitter[]> => {
+        return this.client.post(Api.Litters, []);
     };
 }
 
