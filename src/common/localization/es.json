@@ -558,7 +558,8 @@
         "61": "Robydog",
         "62": "Caja de plástico/madera ",
         "63": "Mascarilla",
-        "79": "Diverso"
+        "79": "Diverso",
+        "80": "Botella de óxido nitroso"
     },
     "segmentationCategories": {
         "1": "Carretera principal",

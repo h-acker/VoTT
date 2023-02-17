@@ -531,6 +531,7 @@ export interface IAppStrings {
         62: string;
         63: string;
         79: string;
+        80: string;
     };
     segmentationCategories: {
         1: string;
