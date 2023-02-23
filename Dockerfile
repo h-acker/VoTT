@@ -1,4 +1,4 @@
-FROM node:10.16.3-alpine
+FROM node:12-alpine
 
 ADD . /tmp
 WORKDIR /tmp
