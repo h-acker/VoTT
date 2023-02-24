@@ -3,6 +3,7 @@ FROM node:19-alpine
 ADD . /tmp
 WORKDIR /tmp
 
+RUN npm config set legacy-peer-deps true
 RUN npm install -g serve
 RUN npm ci
 
