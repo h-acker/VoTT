@@ -1,8 +1,7 @@
 const path = require("path");
-
 module.exports = {
     node: {
-        __dirname: false,
+        __dirname: false
     },
     target: "electron-main",
     entry: "./src/electron/main.ts",
@@ -10,20 +9,28 @@ module.exports = {
         rules: [
             {
                 test: /\.ts?$/,
-                use: [{
-                    loader: "ts-loader",
-                    options: {
-                        compilerOptions: {
-                            noEmit: false
+                use: [
+                    {
+                        loader: "ts-loader",
+                        options: {
+                            compilerOptions: {
+                                noEmit: false
+                            }
                         }
                     }
-                }],
+                ],
                 exclude: /node_modules/
             }
         ]
     },
     resolve: {
-        extensions: [".ts", ".js", ".json"]
+        extensions: [".ts", ".js", ".json"],
+        fallback: {
+            fs: require.resolve("fs"),
+            os: require.resolve("os-browserify/browser"),
+            path: require.resolve("path-browserify"),
+            buffer: require.resolve("buffer/")
+        }
     },
     output: {
         filename: "main.js",
