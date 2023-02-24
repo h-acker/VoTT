@@ -2,13 +2,14 @@
 # the resulting image should not be pushed to any repository
 # since it wraps all files in the root directory of the project
 
-FROM node:10.16.3-alpine
+FROM node:19-alpine
 
 ADD . /app
 
 WORKDIR /app
 VOLUME ["/app/src"]
 
+RUN npm config set legacy-peer-deps true
 RUN npm ci
 
 ARG BUILDTIME_CORTEXIA_VERSION=0.0.0
