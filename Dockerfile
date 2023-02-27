@@ -8,6 +8,7 @@ RUN npm install -g serve
 RUN npm ci
 
 ENV PUBLIC_URL=.
+ENV NODE_OPTIONS="--openssl-legacy-provider"
 
 RUN npm run build
 RUN npm run webpack:prod

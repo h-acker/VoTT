@@ -24,13 +24,7 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: [".ts", ".js", ".json"],
-        fallback: {
-            fs: require.resolve("fs"),
-            os: require.resolve("os-browserify/browser"),
-            path: require.resolve("path-browserify"),
-            buffer: require.resolve("buffer/")
-        }
+        extensions: [".ts", ".js", ".json"]
     },
     output: {
         filename: "main.js",
