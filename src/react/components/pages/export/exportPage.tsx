@@ -24,13 +24,13 @@ export interface IExportPageProps extends RouteComponentProps, React.Props<Expor
 function mapStateToProps(state: IApplicationState) {
     return {
         project: state.currentProject,
-        recentProjects: state.recentProjects,
+        recentProjects: state.recentProjects
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(projectActions, dispatch),
+        actions: bindActionCreators(projectActions, dispatch)
     };
 }
 
@@ -43,8 +43,8 @@ export default class ExportPage extends React.Component<IExportPageProps> {
     private emptyExportFormat: IExportFormat = {
         providerType: "",
         providerOptions: {
-            assetState: ExportAssetState.All,
-        },
+            assetState: ExportAssetState.All
+        }
     };
 
     constructor(props, context) {
@@ -52,7 +52,7 @@ export default class ExportPage extends React.Component<IExportPageProps> {
 
         const projectId = this.props.match.params["projectId"];
         if (!this.props.project && projectId) {
-            const project = this.props.recentProjects.find((project) => project.id === projectId);
+            const project = this.props.recentProjects.find(project => project.id === projectId);
             this.props.actions.loadProject(project);
         }
 
@@ -61,23 +61,19 @@ export default class ExportPage extends React.Component<IExportPageProps> {
     }
 
     public render() {
-        const exportFormat = this.props.project && this.props.project.exportFormat
-            ? this.props.project.exportFormat
-            : { ...this.emptyExportFormat };
+        const exportFormat =
+            this.props.project && this.props.project.exportFormat
+                ? this.props.project.exportFormat
+                : { ...this.emptyExportFormat };
 
         return (
             <div className="m-3">
                 <h3>
                     <i className="fas fa-sliders-h fa-1x"></i>
-                    <span className="px-2">
-                        {strings.export.settings}
-                    </span>
+                    <span className="px-2">{strings.export.settings}</span>
                 </h3>
                 <div className="m-3">
-                    <ExportForm
-                        settings={exportFormat}
-                        onSubmit={this.onFormSubmit}
-                        onCancel={this.onFormCancel} />
+                    <ExportForm settings={exportFormat} onSubmit={this.onFormSubmit} onCancel={this.onFormCancel} />
                 </div>
             </div>
         );
@@ -86,15 +82,15 @@ export default class ExportPage extends React.Component<IExportPageProps> {
     private onFormSubmit = async (exportFormat: IExportFormat) => {
         const projectToUpdate: IProject = {
             ...this.props.project,
-            exportFormat,
+            exportFormat
         };
 
         await this.props.actions.saveProject(projectToUpdate);
         toast.success(strings.export.messages.saveSuccess);
-        this.props.history.goBack();
-    }
+        this.props.history.back();
+    };
 
     private onFormCancel() {
-        this.props.history.goBack();
+        this.props.history.back();
     }
 }

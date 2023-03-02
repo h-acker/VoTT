@@ -1263,14 +1263,13 @@ export default class MockFactory {
      */
     private static history() {
         return {
-            length: 0,
             action: null,
             location: null,
             push: jest.fn(),
+            back: jest.fn(),
+            forward: jest.fn(),
             replace: jest.fn(),
             go: jest.fn(),
-            goBack: jest.fn(),
-            goForward: jest.fn(),
             block: jest.fn(),
             listen: jest.fn(),
             createHref: jest.fn()

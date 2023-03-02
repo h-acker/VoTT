@@ -16,7 +16,8 @@ import { toast } from "react-toastify";
 describe("App Settings Page", () => {
     function createComponent(
         store: Store<IApplicationState>,
-        props: IAppSettingsProps = null): ReactWrapper<IAppSettingsProps> {
+        props: IAppSettingsProps = null
+    ): ReactWrapper<IAppSettingsProps> {
         props = props || createProps();
 
         return mount(
@@ -24,7 +25,7 @@ describe("App Settings Page", () => {
                 <Router>
                     <AppSettingsPage {...props} />
                 </Router>
-            </Provider>,
+            </Provider>
         );
     }
 
@@ -45,7 +46,7 @@ describe("App Settings Page", () => {
         const store = createStore(appSettings);
         const props = createProps();
         const saveAppSettingsSpy = jest.spyOn(props.actions, "saveAppSettings");
-        const goBackSpy = jest.spyOn(props.history, "goBack");
+        const backSpy = jest.spyOn(props.history, "back");
 
         const wrapper = createComponent(store, props);
         await MockFactory.flushUi(() => wrapper.find("form").simulate("submit"));
@@ -53,18 +54,18 @@ describe("App Settings Page", () => {
 
         expect(saveAppSettingsSpy).toBeCalledWith(appSettings);
         expect(toast.success).toBeCalledWith(expect.any(String));
-        expect(goBackSpy).toBeCalled();
+        expect(backSpy).toBeCalled();
     });
 
     it("Navigates the user back to the previous page on cancel", () => {
         const store = createStore();
         const props = createProps();
-        const goBackSpy = jest.spyOn(props.history, "goBack");
+        const backSpy = jest.spyOn(props.history, "back");
 
         const wrapper = createComponent(store, props);
         wrapper.find("button.btn-cancel").simulate("click");
 
-        expect(goBackSpy).toBeCalled();
+        expect(backSpy).toBeCalled();
     });
 
     it("Toggles on clicking dev tools button", () => {
@@ -95,31 +96,30 @@ describe("App Settings Page", () => {
         return {
             appSettings: null,
             history: {
-                length: 0,
                 action: null,
                 location: null,
                 push: jest.fn(),
                 replace: jest.fn(),
                 go: jest.fn(),
-                goBack: jest.fn(),
-                goForward: jest.fn(),
+                back: jest.fn(),
+                forward: jest.fn(),
                 block: jest.fn(),
                 listen: jest.fn(),
-                createHref: jest.fn(),
+                createHref: jest.fn()
             },
             location: {
                 hash: null,
                 pathname: null,
                 search: null,
-                state: null,
+                state: null
             },
             actions: (applicationActions as any) as IApplicationActions,
             match: {
                 params: {},
                 isExact: true,
                 path: `https://localhost:3000/settings`,
-                url: `https://localhost:3000/settings`,
-            },
+                url: `https://localhost:3000/settings`
+            }
         };
     }
 
@@ -129,7 +129,7 @@ describe("App Settings Page", () => {
             appSettings: appSettings || MockFactory.appSettings(),
             connections: [],
             recentProjects: [],
-            auth: null,
+            auth: null
         };
 
         return createReduxStore(initialState);

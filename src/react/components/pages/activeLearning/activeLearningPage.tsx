@@ -21,20 +21,20 @@ export interface IActiveLearningPageState {
 function mapStateToProps(state: IApplicationState) {
     return {
         project: state.currentProject,
-        recentProjects: state.recentProjects,
+        recentProjects: state.recentProjects
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(projectActions, dispatch),
+        actions: bindActionCreators(projectActions, dispatch)
     };
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class ActiveLearningPage extends React.Component<IActiveLearningPageProps, IActiveLearningPageState> {
     public state: IActiveLearningPageState = {
-        settings: this.props.project ? this.props.project.activeLearningSettings : null,
+        settings: this.props.project ? this.props.project.activeLearningSettings : null
     };
 
     public async componentDidMount() {
@@ -42,7 +42,7 @@ export default class ActiveLearningPage extends React.Component<IActiveLearningP
         // If we are creating a new project check to see if there is a partial
         // project already created in local storage
         if (!this.props.project && projectId) {
-            const projectToLoad = this.props.recentProjects.find((project) => project.id === projectId);
+            const projectToLoad = this.props.recentProjects.find(project => project.id === projectId);
             if (projectToLoad) {
                 await this.props.actions.loadProject(projectToLoad);
             }
@@ -61,15 +61,14 @@ export default class ActiveLearningPage extends React.Component<IActiveLearningP
                 <div className="project-settings-page-settings m-3">
                     <h3>
                         <i className="fas fa-graduation-cap" />
-                        <span className="px-2">
-                            {strings.activeLearning.title}
-                        </span>
+                        <span className="px-2">{strings.activeLearning.title}</span>
                     </h3>
                     <div className="m-3">
                         <ActiveLearningForm
                             settings={this.state.settings}
                             onSubmit={this.onFormSubmit}
-                            onCancel={this.onFormCancel} />
+                            onCancel={this.onFormCancel}
+                        />
                     </div>
                 </div>
             </div>
@@ -79,15 +78,15 @@ export default class ActiveLearningPage extends React.Component<IActiveLearningP
     private onFormSubmit = async (settings: IActiveLearningSettings): Promise<void> => {
         const updatedProject: IProject = {
             ...this.props.project,
-            activeLearningSettings: settings,
+            activeLearningSettings: settings
         };
 
         await this.props.actions.saveProject(updatedProject);
         toast.success(strings.activeLearning.messages.saveSuccess);
-        this.props.history.goBack();
-    }
+        this.props.history.back();
+    };
 
     private onFormCancel = (): void => {
-        this.props.history.goBack();
-    }
+        this.props.history.back();
+    };
 }

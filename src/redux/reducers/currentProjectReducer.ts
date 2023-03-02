@@ -49,7 +49,7 @@ export const reducer = (state: IProject = null, action: AnyAction): IProject => 
                 if (!state.tags || state.tags.length === 0 || !state.tags.find(projectTag => tag === projectTag.name)) {
                     const tagWithId = action.payload.tagsWithId.filter(item => item.name === tag)[0];
                     newTags.push({
-                        name: tag,
+                        name: tag.toString(),
                         color: tagWithId ? tagWithId.color : defaultTagColor
                     });
                     updateTags = true;

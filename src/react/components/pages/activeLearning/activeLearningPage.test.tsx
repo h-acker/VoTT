@@ -19,7 +19,7 @@ describe("Active Learning Page", () => {
                 <Router>
                     <ActiveLearningPage {...props} />
                 </Router>
-            </Provider>,
+            </Provider>
         );
     }
 
@@ -29,16 +29,19 @@ describe("Active Learning Page", () => {
 
     it("renders and loads settings from props", () => {
         const testProject = MockFactory.createTestProject("TestProject");
-        const store = createReduxStore(MockFactory.initialState({
-            currentProject: testProject,
-        }));
+        const store = createReduxStore(
+            MockFactory.initialState({
+                currentProject: testProject
+            })
+        );
 
         const props = MockFactory.activeLearningProps();
         const wrapper = createComponent(store, props);
 
-        const activeLearningPage = wrapper
-            .find(ActiveLearningPage)
-            .childAt(0) as ReactWrapper<IActiveLearningPageProps, IActiveLearningPageState>;
+        const activeLearningPage = wrapper.find(ActiveLearningPage).childAt(0) as ReactWrapper<
+            IActiveLearningPageProps,
+            IActiveLearningPageState
+        >;
 
         expect(activeLearningPage.state().settings).toEqual(testProject.activeLearningSettings);
         expect(wrapper.find(ActiveLearningForm).props().settings).toEqual(testProject.activeLearningSettings);
@@ -51,9 +54,10 @@ describe("Active Learning Page", () => {
         const testProject = props.recentProjects[0];
         const wrapper = createComponent(store, props);
 
-        const activeLearningPage = wrapper
-            .find(ActiveLearningPage)
-            .childAt(0) as ReactWrapper<IActiveLearningPageProps, IActiveLearningPageState>;
+        const activeLearningPage = wrapper.find(ActiveLearningPage).childAt(0) as ReactWrapper<
+            IActiveLearningPageProps,
+            IActiveLearningPageState
+        >;
 
         expect(activeLearningPage.state().settings).toEqual(testProject.activeLearningSettings);
         expect(wrapper.find(ActiveLearningForm).props().settings).toEqual(testProject.activeLearningSettings);
@@ -66,16 +70,18 @@ describe("Active Learning Page", () => {
             modelPathType: ModelPathType.Url,
             modelUrl: "http://myserver.com/custommodel",
             autoDetect: true,
-            predictTag: true,
+            predictTag: true
         };
 
-        const store = createReduxStore(MockFactory.initialState({
-            currentProject: testProject,
-        }));
+        const store = createReduxStore(
+            MockFactory.initialState({
+                currentProject: testProject
+            })
+        );
 
         const projectServiceMock = ProjectService as jest.Mocked<typeof ProjectService>;
-        projectServiceMock.prototype.load = jest.fn((project) => Promise.resolve(project));
-        projectServiceMock.prototype.save = jest.fn((project) => Promise.resolve(project));
+        projectServiceMock.prototype.load = jest.fn(project => Promise.resolve(project));
+        projectServiceMock.prototype.save = jest.fn(project => Promise.resolve(project));
 
         const props = MockFactory.activeLearningProps();
         const saveProjectSpy = jest.spyOn(props.actions, "saveProject");
@@ -88,20 +94,24 @@ describe("Active Learning Page", () => {
 
         await MockFactory.flushUi();
 
-        expect(saveProjectSpy).toBeCalledWith(expect.objectContaining({
-            ...testProject,
-            activeLearningSettings,
-        }));
+        expect(saveProjectSpy).toBeCalledWith(
+            expect.objectContaining({
+                ...testProject,
+                activeLearningSettings
+            })
+        );
 
         expect(toast.success).toBeCalledWith(strings.activeLearning.messages.saveSuccess);
-        expect(props.history.goBack).toBeCalled();
+        expect(props.history.back).toBeCalled();
     });
 
     it("returns to the previous page when the form is cancelled", async () => {
         const testProject = MockFactory.createTestProject("TestProject");
-        const store = createReduxStore(MockFactory.initialState({
-            currentProject: testProject,
-        }));
+        const store = createReduxStore(
+            MockFactory.initialState({
+                currentProject: testProject
+            })
+        );
 
         const props = MockFactory.activeLearningProps();
         const saveProjectSpy = jest.spyOn(props.actions, "saveProject");
@@ -109,10 +119,13 @@ describe("Active Learning Page", () => {
 
         const wrapper = createComponent(store, props);
 
-        wrapper.find(ActiveLearningForm).props().onCancel();
+        wrapper
+            .find(ActiveLearningForm)
+            .props()
+            .onCancel();
 
         await MockFactory.flushUi();
-        expect(props.history.goBack).toBeCalled();
+        expect(props.history.back).toBeCalled();
         expect(saveProjectSpy).not.toBeCalled();
     });
 });
