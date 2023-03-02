@@ -32,13 +32,13 @@ export interface IConnectionPageState {
 
 function mapStateToProps(state: IApplicationState) {
     return {
-        connections: state.connections,
+        connections: state.connections
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(connectionActions, dispatch),
+        actions: bindActionCreators(connectionActions, dispatch)
     };
 }
 
@@ -53,7 +53,7 @@ export default class ConnectionPage extends React.Component<IConnectionPageProps
         super(props, context);
 
         this.state = {
-            connection: null,
+            connection: null
         };
 
         this.confirmDelete = React.createRef<Confirm>();
@@ -69,14 +69,14 @@ export default class ConnectionPage extends React.Component<IConnectionPageProps
         }
     }
 
-    public componentDidUpdate = (prevProps) => {
+    public componentDidUpdate = prevProps => {
         const prevConnectionId = prevProps.match.params["connectionId"];
         const newConnectionId = this.props.match.params["connectionId"];
 
         if (prevConnectionId !== newConnectionId) {
             this.loadConnection(newConnectionId);
         }
-    }
+    };
 
     public render() {
         return (
@@ -85,36 +85,50 @@ export default class ConnectionPage extends React.Component<IConnectionPageProps
                     <CondensedList
                         title={strings.connections.title}
                         newLinkTo={"/connections/create"}
-                        onDelete={(connection) => this.confirmDelete.current.open(connection)}
+                        onDelete={connection => this.confirmDelete.current.open(connection)}
                         Component={ConnectionItem}
-                        items={this.props.connections} />
+                        items={this.props.connections}
+                    />
                 </div>
 
-                <Confirm ref={this.confirmDelete}
+                <Confirm
+                    ref={this.confirmDelete}
                     title="Delete Connection"
                     // tslint:disable-next-line:max-line-length
-                    message={(connection: IConnection) => `Are you sure you want to delete the connection '${connection.name}'?`}
+                    message={(connection: IConnection) =>
+                        `Are you sure you want to delete the connection '${connection.name}'?`
+                    }
                     confirmButtonColor="danger"
-                    onConfirm={(connection) => this.onConnectionDelete(connection)} />
+                    onConfirm={connection => this.onConnectionDelete(connection)}
+                />
 
-                <Route exact path="/connections" render={(props) =>
-                    <div className="app-connections-page-detail m-3">
-                        <h6>{strings.connections.instructions}</h6>
-                    </div>
-                } />
+                <Route
+                    exact
+                    path="/connections"
+                    render={props => (
+                        <div className="app-connections-page-detail m-3">
+                            <h6>{strings.connections.instructions}</h6>
+                        </div>
+                    )}
+                />
 
-                <Route exact path="/connections/:connectionId" render={(props) =>
-                    <ConnectionForm
-                        connection={this.state.connection}
-                        onSubmit={this.onFormSubmit}
-                        onCancel={this.onFormCancel} />
-                } />
+                <Route
+                    exact
+                    path="/connections/:connectionId"
+                    render={props => (
+                        <ConnectionForm
+                            connection={this.state.connection}
+                            onSubmit={this.onFormSubmit}
+                            onCancel={this.onFormCancel}
+                        />
+                    )}
+                />
             </div>
         );
     }
 
     private async loadConnection(connectionId: string) {
-        const connection = this.props.connections.find((connection) => connection.id === connectionId);
+        const connection = this.props.connections.find(connection => connection.id === connectionId);
         if (connection) {
             this.setState({ connection });
         } else {
@@ -131,14 +145,14 @@ export default class ConnectionPage extends React.Component<IConnectionPageProps
             this.props.history.push("/connections");
             this.setState({ connection: null });
         }
-    }
+    };
 
     private onFormSubmit = async (connection: IConnection) => {
         await this.props.actions.saveConnection(connection);
         toast.success(interpolate(strings.connections.messages.saveSuccess, { connection }));
 
         this.props.history.back();
-    }
+    };
 
     private onFormCancel() {
         this.props.history.back();

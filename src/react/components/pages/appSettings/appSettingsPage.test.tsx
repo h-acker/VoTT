@@ -16,7 +16,8 @@ import { toast } from "react-toastify";
 describe("App Settings Page", () => {
     function createComponent(
         store: Store<IApplicationState>,
-        props: IAppSettingsProps = null): ReactWrapper<IAppSettingsProps> {
+        props: IAppSettingsProps = null
+    ): ReactWrapper<IAppSettingsProps> {
         props = props || createProps();
 
         return mount(
@@ -24,7 +25,7 @@ describe("App Settings Page", () => {
                 <Router>
                     <AppSettingsPage {...props} />
                 </Router>
-            </Provider>,
+            </Provider>
         );
     }
 
@@ -104,21 +105,21 @@ describe("App Settings Page", () => {
                 forward: jest.fn(),
                 block: jest.fn(),
                 listen: jest.fn(),
-                createHref: jest.fn(),
+                createHref: jest.fn()
             },
             location: {
                 hash: null,
                 pathname: null,
                 search: null,
-                state: null,
+                state: null
             },
             actions: (applicationActions as any) as IApplicationActions,
             match: {
                 params: {},
                 isExact: true,
                 path: `https://localhost:3000/settings`,
-                url: `https://localhost:3000/settings`,
-            },
+                url: `https://localhost:3000/settings`
+            }
         };
     }
 
@@ -128,7 +129,7 @@ describe("App Settings Page", () => {
             appSettings: appSettings || MockFactory.appSettings(),
             connections: [],
             recentProjects: [],
-            auth: null,
+            auth: null
         };
 
         return createReduxStore(initialState);

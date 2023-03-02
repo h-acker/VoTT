@@ -36,14 +36,14 @@ function mapStateToProps(state: IApplicationState) {
         project: state.currentProject,
         connections: state.connections,
         recentProjects: state.recentProjects,
-        appSettings: state.appSettings,
+        appSettings: state.appSettings
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
         projectActions: bindActionCreators(projectActions, dispatch),
-        applicationActions: bindActionCreators(applicationActions, dispatch),
+        applicationActions: bindActionCreators(applicationActions, dispatch)
     };
 }
 
@@ -56,7 +56,7 @@ const projectFormTempKey = "projectForm";
 @connect(mapStateToProps, mapDispatchToProps)
 export default class ProjectSettingsPage extends React.Component<IProjectSettingsPageProps, IProjectSettingsPageState> {
     public state: IProjectSettingsPageState = {
-        project: this.props.project,
+        project: this.props.project
     };
 
     public async componentDidMount() {
@@ -69,7 +69,7 @@ export default class ProjectSettingsPage extends React.Component<IProjectSetting
                 this.setState({ project: JSON.parse(projectJson) });
             }
         } else if (!this.props.project && projectId) {
-            const projectToLoad = this.props.recentProjects.find((project) => project.id === projectId);
+            const projectToLoad = this.props.recentProjects.find(project => project.id === projectId);
             if (projectToLoad) {
                 await this.props.applicationActions.ensureSecurityToken(projectToLoad);
                 await this.props.projectActions.loadProject(projectToLoad);
@@ -89,9 +89,7 @@ export default class ProjectSettingsPage extends React.Component<IProjectSetting
                 <div className="project-settings-page-settings m-3">
                     <h3>
                         <i className="fas fa-sliders-h" />
-                        <span className="px-2">
-                            {strings.projectSettings.title}
-                        </span>
+                        <span className="px-2">{strings.projectSettings.title}</span>
                     </h3>
                     <div className="m-3">
                         <ProjectForm
@@ -100,14 +98,15 @@ export default class ProjectSettingsPage extends React.Component<IProjectSetting
                             appSettings={this.props.appSettings}
                             onChange={this.onFormChange}
                             onSubmit={this.onFormSubmit}
-                            onCancel={this.onFormCancel} />
+                            onCancel={this.onFormCancel}
+                        />
                     </div>
                 </div>
-                {this.props.project &&
+                {this.props.project && (
                     <div className="project-settings-page-metrics bg-lighter-1">
                         <ProjectMetrics project={this.props.project} />
                     </div>
-                }
+                )}
             </div>
         );
     }
@@ -121,10 +120,10 @@ export default class ProjectSettingsPage extends React.Component<IProjectSetting
         if (this.isPartialProject(project)) {
             localStorage.setItem(projectFormTempKey, JSON.stringify(project));
         }
-    }
+    };
 
     private onFormSubmit = async (project: IProject) => {
-        const isNew = !(!!project.id);
+        const isNew = !!!project.id;
 
         await this.props.applicationActions.ensureSecurityToken(project);
         await this.props.projectActions.saveProject(project);
@@ -137,25 +136,26 @@ export default class ProjectSettingsPage extends React.Component<IProjectSetting
         } else {
             this.props.history.back();
         }
-    }
+    };
 
     private onFormCancel = () => {
         localStorage.removeItem(projectFormTempKey);
         this.props.history.back();
-    }
+    };
 
     /**
      * Checks whether a project is partially populated
      */
     private isPartialProject = (project: IProject): boolean => {
-        return project && !(!!project.id) &&
-            (
-                !!project.name
-                || !!project.description
-                || (project.sourceConnection && Object.keys(project.sourceConnection).length > 0)
-                || (project.targetConnection && Object.keys(project.targetConnection).length > 0)
-                || (project.exportFormat && Object.keys(project.exportFormat).length > 0)
-                || (project.tags && project.tags.length > 0)
-            );
-    }
+        return (
+            project &&
+            !!!project.id &&
+            (!!project.name ||
+                !!project.description ||
+                (project.sourceConnection && Object.keys(project.sourceConnection).length > 0) ||
+                (project.targetConnection && Object.keys(project.targetConnection).length > 0) ||
+                (project.exportFormat && Object.keys(project.exportFormat).length > 0) ||
+                (project.tags && project.tags.length > 0))
+        );
+    };
 }

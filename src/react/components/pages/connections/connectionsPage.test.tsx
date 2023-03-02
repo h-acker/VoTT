@@ -28,12 +28,14 @@ describe("Connections Page", () => {
                 <Router location={route} context={routerContext}>
                     <ConnectionPage {...props} />
                 </Router>
-            </Provider>,
+            </Provider>
         );
     }
 
     function createWrapper(
-        route = connectionsRoute, store = createStore(), props = createProps(connectionsRoute),
+        route = connectionsRoute,
+        store = createStore(),
+        props = createProps(connectionsRoute)
     ): ReactWrapper {
         const context = {};
         return createComponent(context, route, store, props);
@@ -132,7 +134,7 @@ describe("Connections Page", () => {
 
             const connection: IConnection = {
                 ...MockFactory.createTestConnection("test", "azureBlobStorage"),
-                id: expect.any(String),
+                id: expect.any(String)
             };
 
             const assetProvider = MockFactory.createAssetProvider();
@@ -141,12 +143,8 @@ describe("Connections Page", () => {
 
             const options: IAzureCloudStorageOptions = connection.providerOptions as IAzureCloudStorageOptions;
 
-            wrapper
-                .find("input#root_name")
-                .simulate("change", { target: { value: connection.name } });
-            wrapper
-                .find("textarea#root_description")
-                .simulate("change", { target: { value: connection.description } });
+            wrapper.find("input#root_name").simulate("change", { target: { value: connection.name } });
+            wrapper.find("textarea#root_description").simulate("change", { target: { value: connection.description } });
 
             await MockFactory.flushUi(() => {
                 wrapper
@@ -162,12 +160,8 @@ describe("Connections Page", () => {
             wrapper
                 .find("input#root_providerOptions_containerName")
                 .simulate("change", { target: { value: options.containerName } });
-            wrapper
-                .find("input#root_providerOptions_sas")
-                .simulate("change", { target: { value: options.sas } });
-            wrapper
-                .find(Form)
-                .simulate("submit");
+            wrapper.find("input#root_providerOptions_sas").simulate("change", { target: { value: options.sas } });
+            wrapper.find(Form).simulate("submit");
 
             await MockFactory.flushUi();
 
@@ -202,8 +196,18 @@ describe("Connections Page", () => {
             const connectionsPage = wrapper.find(ConnectionPage);
             const items = connectionsPage.find(ConnectionItem);
 
-            expect(items.at(0).find(NavLink).props().to).toEqual("/connections/connection-1");
-            expect(items.at(1).find(NavLink).props().to).toEqual("/connections/connection-2");
+            expect(
+                items
+                    .at(0)
+                    .find(NavLink)
+                    .props().to
+            ).toEqual("/connections/connection-1");
+            expect(
+                items
+                    .at(1)
+                    .find(NavLink)
+                    .props().to
+            ).toEqual("/connections/connection-2");
             wrapper.unmount();
         });
 
@@ -247,7 +251,10 @@ describe("Connections Page", () => {
             deleteButton.simulate("click");
 
             // Accept the modal delete warning
-            wrapper.find(".modal-footer button").first().simulate("click");
+            wrapper
+                .find(".modal-footer button")
+                .first()
+                .simulate("click");
 
             expect(deleteConnection).toBeCalled();
         });
@@ -276,7 +283,10 @@ describe("Connections Page", () => {
             deleteButton.simulate("click");
 
             // Accept the modal delete warning
-            wrapper.find(".modal-footer button").first().simulate("click");
+            wrapper
+                .find(".modal-footer button")
+                .first()
+                .simulate("click");
 
             await MockFactory.flushUi();
 
@@ -299,22 +309,22 @@ function createProps(route: string): IConnectionPageProps {
             forward: jest.fn(),
             block: jest.fn(),
             listen: jest.fn(),
-            createHref: jest.fn(),
+            createHref: jest.fn()
         },
         location: {
             hash: null,
             pathname: null,
             search: null,
-            state: null,
+            state: null
         },
         match: {
             params: {},
             isExact: true,
             path: `https://localhost:3000${route}`,
-            url: `https://localhost:3000${route}`,
+            url: `https://localhost:3000${route}`
         },
         connections: [],
-        actions: (connectionActions as any) as IConnectionActions,
+        actions: (connectionActions as any) as IConnectionActions
     };
 }
 
