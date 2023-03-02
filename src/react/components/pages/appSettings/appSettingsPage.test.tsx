@@ -45,7 +45,7 @@ describe("App Settings Page", () => {
         const store = createStore(appSettings);
         const props = createProps();
         const saveAppSettingsSpy = jest.spyOn(props.actions, "saveAppSettings");
-        const goBackSpy = jest.spyOn(props.history, "goBack");
+        const backSpy = jest.spyOn(props.history, "back");
 
         const wrapper = createComponent(store, props);
         await MockFactory.flushUi(() => wrapper.find("form").simulate("submit"));
@@ -53,18 +53,18 @@ describe("App Settings Page", () => {
 
         expect(saveAppSettingsSpy).toBeCalledWith(appSettings);
         expect(toast.success).toBeCalledWith(expect.any(String));
-        expect(goBackSpy).toBeCalled();
+        expect(backSpy).toBeCalled();
     });
 
     it("Navigates the user back to the previous page on cancel", () => {
         const store = createStore();
         const props = createProps();
-        const goBackSpy = jest.spyOn(props.history, "goBack");
+        const backSpy = jest.spyOn(props.history, "back");
 
         const wrapper = createComponent(store, props);
         wrapper.find("button.btn-cancel").simulate("click");
 
-        expect(goBackSpy).toBeCalled();
+        expect(backSpy).toBeCalled();
     });
 
     it("Toggles on clicking dev tools button", () => {
@@ -95,14 +95,13 @@ describe("App Settings Page", () => {
         return {
             appSettings: null,
             history: {
-                length: 0,
                 action: null,
                 location: null,
                 push: jest.fn(),
                 replace: jest.fn(),
                 go: jest.fn(),
-                goBack: jest.fn(),
-                goForward: jest.fn(),
+                back: jest.fn(),
+                forward: jest.fn(),
                 block: jest.fn(),
                 listen: jest.fn(),
                 createHref: jest.fn(),

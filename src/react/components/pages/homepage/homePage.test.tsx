@@ -82,14 +82,13 @@ describe("Homepage Component", () => {
             project: MockFactory.createTestProject(),
             connections: MockFactory.createTestConnections(),
             history: {
-                length: 0,
                 action: null,
                 location: null,
                 push: jest.fn(),
                 replace: jest.fn(),
                 go: jest.fn(),
-                goBack: jest.fn(),
-                goForward: jest.fn(),
+                back: jest.fn(),
+                forward: jest.fn(),
                 block: jest.fn(),
                 listen: jest.fn(),
                 createHref: jest.fn()

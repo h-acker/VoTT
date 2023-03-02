@@ -94,7 +94,7 @@ describe("Active Learning Page", () => {
         }));
 
         expect(toast.success).toBeCalledWith(strings.activeLearning.messages.saveSuccess);
-        expect(props.history.goBack).toBeCalled();
+        expect(props.history.back).toBeCalled();
     });
 
     it("returns to the previous page when the form is cancelled", async () => {
@@ -112,7 +112,7 @@ describe("Active Learning Page", () => {
         wrapper.find(ActiveLearningForm).props().onCancel();
 
         await MockFactory.flushUi();
-        expect(props.history.goBack).toBeCalled();
+        expect(props.history.back).toBeCalled();
         expect(saveProjectSpy).not.toBeCalled();
     });
 });

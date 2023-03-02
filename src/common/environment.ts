@@ -5,7 +5,7 @@ declare global {
 }
 
 window.env = {
-    REACT_APP_API_URL: "REACT_APP_API_URL_PLACEHOLDER",
+    REACT_APP_API_URL: "http://backend.local",
     NODE_ENV: "NODE_ENV_PLACEHOLDER"
 };
 

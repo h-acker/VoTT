@@ -135,13 +135,13 @@ export default class ProjectSettingsPage extends React.Component<IProjectSetting
         if (isNew) {
             this.props.history.push(`/projects/${this.props.project.id}/edit`);
         } else {
-            this.props.history.goBack();
+            this.props.history.back();
         }
     }
 
     private onFormCancel = () => {
         localStorage.removeItem(projectFormTempKey);
-        this.props.history.goBack();
+        this.props.history.back();
     }
 
     /**

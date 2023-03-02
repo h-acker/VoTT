@@ -137,10 +137,10 @@ export default class ConnectionPage extends React.Component<IConnectionPageProps
         await this.props.actions.saveConnection(connection);
         toast.success(interpolate(strings.connections.messages.saveSuccess, { connection }));
 
-        this.props.history.goBack();
+        this.props.history.back();
     }
 
     private onFormCancel() {
-        this.props.history.goBack();
+        this.props.history.back();
     }
 }

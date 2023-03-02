@@ -98,7 +98,7 @@ describe("Export Page", () => {
         setImmediate(() => {
             expect(saveProjectSpy).toBeCalled();
             expect(exportProjectSpy).not.toBeCalled();
-            expect(props.history.goBack).toBeCalled();
+            expect(props.history.back).toBeCalled();
 
             const state = store.getState() as IApplicationState;
             expect(state.currentProject.exportFormat).not.toBeNull();
@@ -112,14 +112,13 @@ function createProps(projectId: string): IExportPageProps {
         project: null,
         recentProjects: [],
         history: {
-            length: 0,
             action: null,
             location: null,
             push: jest.fn(),
             replace: jest.fn(),
             go: jest.fn(),
-            goBack: jest.fn(),
-            goForward: jest.fn(),
+            back: jest.fn(),
+            forward: jest.fn(),
             block: jest.fn(),
             listen: jest.fn(),
             createHref: jest.fn()

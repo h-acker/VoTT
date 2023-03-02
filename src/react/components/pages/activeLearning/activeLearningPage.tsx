@@ -84,10 +84,10 @@ export default class ActiveLearningPage extends React.Component<IActiveLearningP
 
         await this.props.actions.saveProject(updatedProject);
         toast.success(strings.activeLearning.messages.saveSuccess);
-        this.props.history.goBack();
+        this.props.history.back();
     }
 
     private onFormCancel = (): void => {
-        this.props.history.goBack();
+        this.props.history.back();
     }
 }

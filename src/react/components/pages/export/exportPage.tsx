@@ -91,10 +91,10 @@ export default class ExportPage extends React.Component<IExportPageProps> {
 
         await this.props.actions.saveProject(projectToUpdate);
         toast.success(strings.export.messages.saveSuccess);
-        this.props.history.goBack();
+        this.props.history.back();
     }
 
     private onFormCancel() {
-        this.props.history.goBack();
+        this.props.history.back();
     }
 }
