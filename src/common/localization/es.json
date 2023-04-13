@@ -559,7 +559,12 @@
         "62": "Caja de plástico/madera ",
         "63": "Mascarilla",
         "79": "Diverso",
-        "80": "Botella de óxido nitroso"
+        "80": "Botella de óxido nitroso",
+        "81": "Bandeja de plástico transparente para alimentos",
+        "82": "Bandeja de plástico opaco para alimentos",
+        "83": "bandeja de cartón para alimentos",
+        "84": "Tapa de plástico transparente",
+        "85": "Vaso transparente"
     },
     "segmentationCategories": {
         "1": "Carretera principal",

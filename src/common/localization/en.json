@@ -559,7 +559,12 @@
         "62": "Wooden or plastic crate",
         "63": "Mask",
         "79": "Miscellaneous",
-        "80": "Nitrous oxyde bottle"
+        "80": "Nitrous oxyde bottles",
+        "81": "Transp. plastic food tray",
+        "82": "Opaque plastic food tray",
+        "83": "Cardboard food tray",
+        "84": "Transp. plastic tray lid",
+        "85": "Transparent cup"
     },
     "segmentationCategories": {
         "1": "Main road",
