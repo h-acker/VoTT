@@ -8,7 +8,7 @@ _release = '2023.2.2-7-g80c6eb3'
 # you can set the next version number manually
 # if you do not, the system will make sure that version > release
 # => read-write, >_release
-_version = '2023.3.1'
+_version = '2023.4.1'
 
 # the build number will generate conflicts on each PR merge
 # just keep yours every time
